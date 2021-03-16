@@ -34,6 +34,32 @@ Il file di ANPR è quello originale arricchito delle denominazioni e dell'indica
 
 ## Come eseguire l'applicazione
 
+Si consiglia caldamente di usare la versione dockerizzata.
+
+> Avvertenza: al momento vengono processati solo i primi due elementi di `sources.json` (gli shapefile istat più recenti disponibili).
+
+> Avvertenza: al momento la conversione in topojson è commentata perché fornisce warning su alcuni poligoni
+
+> Avvertenza: al momento la conversione in geobuf è commentata perché va in errore
+
+### Versione dockerizzata
+
+> Modalità consigliata
+
+Clona questo repository con [Git](https://git-scm.com/): `git clone https://github.com/teamdigitale/confini-amministrativi-istat.git`.
+Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
+
+Effettua la build delle immagini: `docker build --target application -t italia-conf-amm-istat .` (puoi usare lo script `build.sh`).
+
+Esegui un container per ogni tipologia di confine amministrativo: `docker run --env DIV=$DIV --volume=$PWD:/app italia-conf-amm-istat:latest`
+con `$DIV` uguale a `ripartizioni-geografiche`, `regioni`, `unita-territoriali-sovracomunali` o `comuni` (puoi usare lo script `run.sh`).
+
+L'esecuzione può richiedere diversi minuti, in output sono mostrati solo `ERROR` e `WARNING`.
+
+### Esecuzione diretta
+
+> Modalità altamente **sconsigliata**, le dipendenze indirette sono molte e si reggono su un equilibrio precario tra le versioni di ogni libreria.
+
 Clona questo repository con [Git](https://git-scm.com/): `git clone https://github.com/teamdigitale/confini-amministrativi-istat.git`.
 Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
 
@@ -42,12 +68,6 @@ Si consiglia di operare sempre in un ambiente isolato creando un apposito *virtu
 Con [pipenv](https://pipenv.kennethreitz.org/en/latest/) è sufficiente entrare nel virtualenv con `pipenv shell` e la prima volta installare le dipendenze con `pipenv install`.
 
 Infine, per eseguire l'applicazione: `python main.py`.
-
-> Avvertenza: al momento vengono processati solo i primi due elementi di `sources.json` (gli shapefile istat più recenti disponibili).
-
-> Avvertenza: al momento la conversione in topojson è commentata perché fornisce warning su alcuni poligoni
-
-> Avvertenza: al momento la conversione in geobuf è commentata perché va in errore
 
 ## Come contribuire
 
