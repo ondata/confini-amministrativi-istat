@@ -260,7 +260,7 @@ with urlopen(sources["anpr"]["url"]) as res:
     ## Nome del file
     csv_filename = Path(sources["anpr"]["name"]).with_suffix(".csv")
     ## Carico come dataframe
-    df = pd.read_csv(StringIO(res.read().decode('utf-8')), dtype = str)
+    df = pd.read_csv(StringIO(res.read().decode('latin-1')), dtype = str)
 
     ## Ciclo su tutte le risorse istat
     for source in sources["istat"]:
