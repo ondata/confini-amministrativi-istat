@@ -29,7 +29,7 @@ RUN cd /tmp/librttopo && \
     make check && \
     make install
 
-ADD https://www.gaia-gis.it/gaia-sins/freexl-1.0.5.tar.gz /tmp
+ADD http://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-1.0.5.tar.gz /tmp
 RUN tar zxf /tmp/freexl-1.0.5.tar.gz -C /tmp && rm /tmp/freexl-1.0.5.tar.gz
 RUN cd /tmp/freexl-1.0.5 && \
     ./configure && \
