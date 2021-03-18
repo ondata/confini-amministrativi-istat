@@ -14,9 +14,33 @@
         "division": { "name": "comuni", "key": "CODISTAT" }
     },
     "istat": [
+    	{
+            "name": "20210101",
+            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip",
+            "rootdir": "Limiti01012021_g/",
+            "divisions": [
+                { "name": "ripartizioni-geografiche", "dirname": "RipGeo01012021_g", "filename": "RipGeo01012021_g_WGS84", "key": "COD_RIP", "fields": ["DEN_RIP"] },
+                { "name": "regioni", "dirname": "Reg01012021_g", "filename": "Reg01012021_g_WGS84", "key": "COD_REG", "fields": ["DEN_REG"], "parents": ["ripartizioni-geografiche"] },
+                { "name": "unita-territoriali-sovracomunali", "dirname": "ProvCM01012021_g", "filename": "ProvCM01012021_g_WGS84", "key": "COD_UTS", "fields": ["DEN_PROV","DEN_CM","DEN_UTS","SIGLA","TIPO_UTS"], "parents": ["regioni","ripartizioni-geografiche"] },
+                { "name": "comuni", "dirname": "Com01012021_g", "filename": "Com01012021_g_WGS84", "key": "PRO_COM_T", "fields": ["DEN_RIP","DEN_REG","DEN_PROV","DEN_CM","DEN_UTS","TIPO_UTS","COMUNE","COMUNE_A","CC_UTS"], "parents": ["unita-territoriali-sovracomunali","regioni","ripartizioni-geografiche"] }
+            ]
+        },
+    	        {
+            "name": "20200101",
+            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012020_g.zip",
+            "rootdir": "Limiti01012020_g/",
+            "divisions": [
+                { "name": "ripartizioni-geografiche", "dirname": "RipGeo01012020_g", "filename": "RipGeo01012020_g_WGS84", "key": "COD_RIP", "fields": ["DEN_RIP"] },
+                { "name": "regioni", "dirname": "Reg01012020_g", "filename": "Reg01012020_g_WGS84", "key": "COD_REG", "fields": ["DEN_REG"], "parents": ["ripartizioni-geografiche"] },
+                { "name": "unita-territoriali-sovracomunali", "dirname": "ProvCM01012020_g", "filename": "ProvCM01012020_g_WGS84", "key": "COD_UTS", "fields": ["DEN_PROV","DEN_CM","DEN_UTS","SIGLA","TIPO_UTS"], "parents": ["regioni","ripartizioni-geografiche"] },
+                { "name": "comuni", "dirname": "Com01012020_g", "filename": "Com01012020_g_WGS84", "key": "PRO_COM_T", "fields": ["DEN_RIP","DEN_REG","DEN_PROV","DEN_CM","DEN_UTS","TIPO_UTS","COMUNE","COMUNE_A","CC_UTS"], "parents": ["unita-territoriali-sovracomunali","regioni","ripartizioni-geografiche"] }
+            ]
+        },
+    	       
         {
             "name": "20190101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip",
+            "rootdir": "Limiti01012019_g/",
             "divisions": [
                 { "name": "ripartizioni-geografiche", "dirname": "RipGeo01012019_g", "filename": "RipGeo01012019_g_WGS84", "key": "COD_RIP", "fields": ["DEN_RIP"] },
                 { "name": "regioni", "dirname": "Reg01012019_g", "filename": "Reg01012019_g_WGS84", "key": "COD_REG", "fields": ["DEN_REG"], "parents": ["ripartizioni-geografiche"] },
@@ -27,6 +51,7 @@
         {
             "name": "20180101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012018_g.zip",
+            "rootdir": "Limiti01012018_g/",
             "divisions": [
                 { "name": "ripartizioni-geografiche", "dirname": "RipGeo01012018_g", "filename": "RipGeo01012018_g_WGS84", "key": "COD_RIP", "fields": ["DEN_RIP"] },
                 { "name": "regioni", "dirname": "Reg01012018_g", "filename": "Reg01012018_g_WGS84", "key": "COD_REG", "fields": ["DEN_REG"], "parents": ["ripartizioni-geografiche"] },
