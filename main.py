@@ -22,7 +22,7 @@ with open("sources.json") as f:
 # ISTAT - Unità territoriali originali
 print("+++ ISTAT +++")
 ## Ciclo su tutte le risorse ISTAT
-for source in sources["istat"][0:2]:
+for source in sources["istat"][0:4]:
 
     print("Processing %s..." % source["name"])
 
@@ -39,11 +39,13 @@ for source in sources["istat"][0:2]:
             ## Lo leggo come archivio zip
             with ZipFile(BytesIO(res.read())) as zfile:
                 ## Individuo il nome della cartella root dell'archivio
-                zip_root_dir = next(dir for dir in zfile.namelist() if dir.count('/') == 1)
+                #print(zfile.namelist())
+                #zip_root_dir = next(dir for dir in zfile.namelist() if dir.count('/') == 1)
+
                 ## Ciclo su ogni file e cartella nell'archivio
                 for zip_info in zfile.infolist():
                     ## Elimino la cartella root dal percorso di ogni file e cartella
-                    zip_info.filename = zip_info.filename.replace(zip_root_dir, "")
+                    zip_info.filename = zip_info.filename.replace(source["rootdir"], "")
                     ## Ciclo sulle divisioni amministrative
                     for division in source["divisions"].values():
                         ## Rinomino le sottocartelle con il nome normalizzato delle divisioni
