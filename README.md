@@ -47,7 +47,7 @@ Effettua la build delle immagini: `docker build --target application -t ondata-c
 Esegui il container per ogni tipologia di confine amministrativo e per tutte le versioni (`docker run -v $PWD:/app ondata-conf-amm-istat:latest`) oppure indicando la singola versione di interesse: `docker run -e SOURCE_NAME=YYYYMMDD -v $PWD:/app ondata-conf-amm-istat:latest`.
 Puoi usare l'utility `bash generate.sh [YYYYMMDD]`.
 
-L'esecuzione può richiedere diversi minuti, in output sono mostrati solo `ERROR` e `WARNING`.
+> Avvertenza: l'esecuzione può richiedere diversi minuti, o anche ore nel caso dell'elaborazione di tutte le versioni.
 
 ### Esecuzione diretta
 
@@ -66,6 +66,10 @@ Infine, per eseguire l'applicazione ed elaborare tutte le versioni: `python main
 
 Ogni contributo è benvenuto, puoi aprire una issue oppure proporre una pull request, così come partecipare alla [discussione su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224).
 
+## Ringraziamenti
+
+Ringraziamo il [Team per la Trasformazione Digitale](https://teamdigitale.governo.it/) per aver ospitato questo progetto nella sua primissima fase di ideazione e realizzazione.
+Un ringraziamento anche a [Datafactor Agrigento](https://www.datafactor.it/) per il supporto e il prezioso contributo di finalizzazione del file di configurazione `sources.json`.
 
 ## Licenza
 L'uso di questo software è concesso sotto licenza [GNU Affero General Public License](https://github.com/ondata/confini-amministrativi-istat/blob/develop/LICENSE).
