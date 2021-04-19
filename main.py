@@ -15,9 +15,11 @@ import pandas as pd
 import topojson
 from simpledbf import Dbf5
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "output")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "v1")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
+
+logging.basicConfig(level=logging.INFO)
 
 # Apro il file con tutte le risorse
 with open(SOURCE_FILE) as f:
