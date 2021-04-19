@@ -4,13 +4,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pre-commit = "*"
 
 [packages]
 simpledbf = "*"
 geopandas = "*"
 topojson = "*"
 geobuf = "*"
-pipenv-to-requirements = "*"
 pandas = "*"
 
 [requires]
@@ -18,3 +18,8 @@ python_version = "3.7"
 
 [pipenv]
 allow_prereleases = true
+
+[scripts]
+build = "docker build --target application -t ondata-conf-amm-istat ."
+generate = "bash generate.sh"
+format = "pre-commit run --files main.py"

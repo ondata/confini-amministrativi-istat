@@ -1,7 +1,5 @@
 .vscode/
 .directory
-/**/
-!_**/
-_vendor/
-!20190101/
-!20190101/**/
+v1/*
+!v1/20210101
+!v1/archivio-storico-comuni.csv
