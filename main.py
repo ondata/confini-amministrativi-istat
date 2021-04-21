@@ -344,98 +344,101 @@ for source in sources["istat"]:  # noqa: C901
         #    with open(geobuf_filename, 'wb') as f:
         #        f.write(pbf)
 
-# ANPR - Archivio dei comuni
-logging.info("+++ ANPR +++")
-# Scarico il file dal permalink di ANPR
-with urlopen(sources["anpr"]["url"]) as res:
+# Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
+if not SOURCE_NAME:
 
-    # Nome del file
-    csv_filename = Path(OUTPUT_DIR, sources["anpr"]["name"]).with_suffix(".csv")
-    # Carico come dataframe
-    try:
-        df = pd.read_csv(StringIO(res.read().decode("latin-1")), dtype=str)
-    except pd.errors.ParserError as e:
-        logging.warning(
-            "!!! ANPR aggiornato non disponibile, uso la cache: {}".format(e)
-        )
+    # ANPR - Archivio dei comuni
+    logging.info("+++ ANPR +++")
+    # Scarico il file dal permalink di ANPR
+    with urlopen(sources["anpr"]["url"]) as res:
+
+        # Nome del file
+        csv_filename = Path(OUTPUT_DIR, sources["anpr"]["name"]).with_suffix(".csv")
+        # Carico come dataframe
         try:
-            df = pd.read_csv(
-                Path(sources["anpr"]["name"]).with_suffix(".csv"),
-                encoding="latin-1",
-                dtype=str,
+            df = pd.read_csv(StringIO(res.read().decode(sources["anpr"]["encoding"])), dtype=str)
+        except pd.errors.ParserError as e:
+            logging.warning(
+                "!!! ANPR aggiornato non disponibile, uso la cache: {}".format(e)
             )
-        except FileNotFoundError as e:
-            logging.error("!!! ANPR non disponibile: {}".format(e))
-            exit(1)
+            try:
+                df = pd.read_csv(
+                    Path(os.path.basename(sources["anpr"]["url"])).with_suffix(".csv"),
+                    encoding=sources["anpr"]["encoding"],
+                    dtype=str,
+                )
+            except FileNotFoundError as e:
+                logging.error("!!! ANPR non disponibile: {}".format(e))
+                exit(1)
 
-    # Ciclo su tutte le risorse istat
-    for source in sources["istat"]:
+        # Ciclo su tutte le risorse istat
+        for source in sources["istat"]:
 
-        if SOURCE_NAME and source["name"] != SOURCE_NAME:
-            continue
+            if SOURCE_NAME and source["name"] != SOURCE_NAME:
+                continue
 
-        # Divisione amministrativa utile per arricchire ANPR (quella comunale)
-        division = source["divisions"].get(sources["anpr"]["division"]["name"])
-        if division:
+            # Divisione amministrativa utile per arricchire ANPR (quella comunale)
+            division = source["divisions"].get(sources["anpr"]["division"]["name"])
+            if division:
 
-            logging.info("Processing {}...".format(source["name"]))
+                logging.info("Processing {}...".format(source["name"]))
 
-            # Carico i dati ISTAT come dataframe
-            jdf = pd.read_csv(
-                Path(
-                    OUTPUT_DIR,
-                    source["name"],
-                    "csv",
-                    division["name"],
-                    division["name"] + ".csv",
-                ),
-                dtype=str,
-            )
-            # Aggiungo un suffisso a tutte le colonne uguale al nome della fonte ISTAT (_YYYYMMDD)
-            jdf.rename(
-                columns={
-                    col: "{}_{}".format(col, source["name"]) for col in jdf.columns
-                },
-                inplace=True,
-            )
-            # Aggiungo una colonna GEO_YYYYMMDD con valore costante YYYYMMDD
-            jdf["GEO_{}".format(source["name"])] = source["name"]
-            # Faccio il join tra ANPR e fonte ISTAT selezionando solo le colonne che mi interessano
-            df = pd.merge(
-                df,
-                jdf[
-                    ["{}_{}".format(division["key"], source["name"])]
-                    + [
-                        "{}_{}".format(col, source["name"])
-                        for col in division["fields"]
-                    ]
-                    + ["GEO_{}".format(source["name"])]
-                ],
-                left_on=sources["anpr"]["division"]["key"],
-                right_on="{}_{}".format(division["key"], source["name"]),
-                how="left",
-            )
-            # Elimino tutte le colonne duplicate (identici valori su tutte le righe)
-            df = df.loc[:, ~df.T.duplicated(keep="first")]
+                # Carico i dati ISTAT come dataframe
+                jdf = pd.read_csv(
+                    Path(
+                        OUTPUT_DIR,
+                        source["name"],
+                        "csv",
+                        division["name"],
+                        division["name"] + ".csv",
+                    ),
+                    dtype=str,
+                )
+                # Aggiungo un suffisso a tutte le colonne uguale al nome della fonte ISTAT (_YYYYMMDD)
+                jdf.rename(
+                    columns={
+                        col: "{}_{}".format(col, source["name"]) for col in jdf.columns
+                    },
+                    inplace=True,
+                )
+                # Aggiungo una colonna GEO_YYYYMMDD con valore costante YYYYMMDD
+                jdf["GEO_{}".format(source["name"])] = source["name"]
+                # Faccio il join tra ANPR e fonte ISTAT selezionando solo le colonne che mi interessano
+                df = pd.merge(
+                    df,
+                    jdf[
+                        ["{}_{}".format(division["key"], source["name"])]
+                        + [
+                            "{}_{}".format(col, source["name"])
+                            for col in division["fields"]
+                        ]
+                        + ["GEO_{}".format(source["name"])]
+                    ],
+                    left_on=sources["anpr"]["division"]["key"],
+                    right_on="{}_{}".format(division["key"], source["name"]),
+                    how="left",
+                )
+                # Elimino tutte le colonne duplicate (identici valori su tutte le righe)
+                df = df.loc[:, ~df.T.duplicated(keep="first")]
 
-    # Sostituisco tutti i NaN con stringhe vuote
-    df.fillna("", inplace=True)
-    # Concateno tutte le colonne GEO_YYYYMMDD in un'unica colonna GEO
-    df["GEO"] = df[[col for col in df.columns if "GEO_" in col]].apply(
-        lambda l: ",".join([str(x) for x in l if x]), axis=1
-    )
-    # Elimino le colonne temporanee GEO_YYYYMMDD
-    df.drop(columns=[col for col in df.columns if "GEO_" in col], inplace=True)
-    # Elimino i suffissi _YYYYMMDD da tutte le colonne
-    df.rename(
-        columns={col: re.sub(r"_\d+", "", col) for col in df.columns}, inplace=True
-    )
-    # Aggiungo la colonna di collegamento con OntoPiA
-    df["ONTOPIA"] = df.apply(
-        lambda row: "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/cities/{}-({})".format(
-            row["CODISTAT"], row["DATAISTITUZIONE"]
-        ),
-        axis=1,
-    )
-    # Salvo il file arricchito
-    df.to_csv(csv_filename, index=False)
+        # Sostituisco tutti i NaN con stringhe vuote
+        df.fillna("", inplace=True)
+        # Concateno tutte le colonne GEO_YYYYMMDD in un'unica colonna GEO
+        df["GEO"] = df[[col for col in df.columns if "GEO_" in col]].apply(
+            lambda l: ",".join([str(x) for x in l if x]), axis=1
+        )
+        # Elimino le colonne temporanee GEO_YYYYMMDD
+        df.drop(columns=[col for col in df.columns if "GEO_" in col], inplace=True)
+        # Elimino i suffissi _YYYYMMDD da tutte le colonne
+        df.rename(
+            columns={col: re.sub(r"_\d+", "", col) for col in df.columns}, inplace=True
+        )
+        # Aggiungo la colonna di collegamento con OntoPiA
+        df["ONTOPIA"] = df.apply(
+            lambda row: "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/cities/{}-({})".format(
+                row["CODISTAT"], row["DATAISTITUZIONE"]
+            ),
+            axis=1,
+        )
+        # Salvo il file arricchito
+        df.to_csv(csv_filename, index=False)
