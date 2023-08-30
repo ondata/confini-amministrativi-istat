@@ -20,6 +20,4 @@ python_version = "3.7"
 allow_prereleases = true
 
 [scripts]
-build = "docker build --target application -t ondata-conf-amm-istat ."
-generate = "bash generate.sh"
 format = "pre-commit run --files main.py"

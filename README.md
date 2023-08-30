@@ -42,10 +42,12 @@ Si consiglia caldamente di usare la versione dockerizzata.
 Clona questo repository con [Git](https://git-scm.com/): `git clone https://github.com/teamdigitale/confini-amministrativi-istat.git`.
 Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
 
-Effettua la build delle immagini: `docker build --target application -t ondata-conf-amm-istat .` (puoi usare lo script `pipenv run build`).
+Effettua la build delle immagini: `docker build --target application -t ondata-conf-amm-istat .`.
+Puoi usare l'utility `bash run.sh build`.
 
-Esegui il container per ogni tipologia di confine amministrativo e per tutte le versioni (`docker run -v $PWD:/app ondata-conf-amm-istat:latest`) oppure indicando la singola versione di interesse: `docker run -e SOURCE_NAME=YYYYMMDD -v $PWD:/app ondata-conf-amm-istat:latest`.
-Puoi usare l'utility `bash generate.sh [YYYYMMDD]`.
+Esegui il container per ogni tipologia di confine amministrativo e per tutte le versioni (`docker run --rm -v $PWD:/app ondata-conf-amm-istat:latest`)
+oppure indicando la singola versione di interesse: `docker run --rm -e SOURCE_NAME=YYYYMMDD -v $PWD:/app ondata-conf-amm-istat:latest`.
+Puoi usare l'utility `bash run.sh generate [YYYYMMDD]`.
 
 > Avvertenza: l'esecuzione può richiedere diversi minuti, o anche ore nel caso dell'elaborazione di tutte le versioni.
 
