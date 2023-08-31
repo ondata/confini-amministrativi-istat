@@ -1,0 +1,476 @@
+openapi: 3.0.3
+info:
+  title: OnData - Confini Amministrativi ISTAT - OpenAPI 3.0
+  description: |-
+    API per facilitare il riuso dei dati ISTAT e ANPR sui confini amministrativi italiani.
+  termsOfService: https://github.com/ondata/confini-amministrativi-istat#licenza
+  contact:
+    email: info@ondata.it
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more
+  url: https://github.com/ondata/confini-amministrativi-istat
+servers:
+  - url: http://dev.ondata.it/confini-amministrativi-istat/v1
+  - url: http://localhost:8081/v1
+tags:
+  - name: OnData
+    description: Promuoviamo l'apertura dei dati pubblici per renderli un bene comune per tuttə, i nostri valori sono la forza motrice di ogni nostra azione.
+    externalDocs:
+      description: Find out more
+      url: https://www.ondata.it/
+  - name: ISTAT
+    description: Istituto Nazionale di Statistica (Italia)
+    externalDocs:
+      description: Find out more
+      url: https://www.istat.it/
+  - name: ANPR
+    description: Anagrafe Nazionale (Italia)
+    externalDocs:
+      description: Find out more
+      url: https://www.anagrafenazionale.interno.it/
+  - name: OntoPiA
+    description: Ontologie e vocabolari controllati sviluppati nell'ambito delle azioni previste dal piano triennale per l'informatica della Pubblica Amministrazione (Italia)
+    externalDocs:
+      description: Find out more
+      url: https://github.com/italia/daf-ontologie-vocabolari-controllati
+paths:
+  /{resourceId}/csv/{division}/{division}.csv:
+    get:
+      tags:
+        - CSV
+      summary: Find resource by ID and DIVISION in CSV format
+      description: Returns a single resource in CSV format
+      operationId: getCSVResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geobuf/{division}/{division}.proto:
+    get:
+      tags:
+        - Geobuf
+      summary: Find resource by ID and DIVISION in GEOBUF format
+      description: Returns a single resource in GEOBUF format
+      operationId: getGEOBUFResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/x-protobuf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geojson/{division}/{division}.json:
+    get:
+      tags:
+        - GeoJSON
+      summary: Find resource by ID and DIVISION in GEOJSON format
+      description: Returns a single resource in GEOJSON format
+      operationId: getGEOJSONResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://geojson.org/schema/GeoJSON.json'
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geopkg/{division}/{division}.gpkg:
+    get:
+      tags:
+        - GeoPackage
+      summary: Find resource by ID and DIVISION in GEOPKG format
+      description: Returns a single resource in GEOPKG format
+      operationId: getGEOPKGResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/geopackage+vnd.sqlite3:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/json/{division}/{division}.json:
+    get:
+      tags:
+        - JSON
+      summary: Find resource by ID and DIVISION in JSON format
+      description: Returns a single resource in JSON format
+      operationId: getJSONResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JSONResource'
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{division}.shp:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and DIVISION in SHP format
+      description: Returns a single resource in SHP format
+      operationId: getSHPResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{division}.dbf:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and DIVISION in DBF format
+      description: Returns a single resource in DBF format
+      operationId: getDBFResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/x-dbf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{division}.shx:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and DIVISION in SHX format
+      description: Returns a single resource in SHX format
+      operationId: getSHXResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{division}.prj:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and DIVISION in PRJ format
+      description: Returns a single resource in PRJ format
+      operationId: getPRJResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{division}.zip:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and DIVISION in ZIP format
+      description: Returns a single resource in ZIP format
+      operationId: getZIPResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/topojson/{division}/{division}.json:
+    get:
+      tags:
+        - TopoJSON
+      summary: Find resource by ID and DIVISION in TOPOJSON format
+      description: Returns a single resource in TOPOJSON format
+      operationId: getTOPOJSONResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/nhuebel/TopoJSON_schema/master/topojson.json'
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+components:
+  schemas:
+    ResourceId:
+      type: string
+      pattern: "[0-9]{8}"
+    Division:
+      type: string
+      enum:
+        - "ripartizioni-geografiche"
+        - "regioni"
+        - "unita-territoriali-sovracomunali"
+        - "comuni"
+    JSONResource:
+      type: array
+      items:
+        type: object
+        properties:
+          COD_RIP:
+            type: string
+            pattern: "[0-9]+"
+          COD_REG:
+            type: string
+            pattern: "[0-9]+"
+          COD_PROV:
+            type: string
+            pattern: "[0-9]+"
+          COD_CM:
+            type: string
+            pattern: "[0-9]d+"
+          COD_UTS:
+            type: string
+            pattern: "[0-9]d+"
+          PRO_COM:
+            type: string
+            pattern: "[0-9]d+"
+          PRO_COM_T:
+            type: string
+            pattern: "[0-9]d+"
+          COMUNE:
+            type: string
+          COMUNE_A:
+            type: string
+          CC_UTS:
+            type: string
+            pattern: "[0-9]d+"
+          DEN_PROV:
+            type: string
+          DEN_CM:
+            type: string
+          DEN_UTS:
+            type: string
+          SIGLA:
+            type: string
+            pattern: "[A-Z]{2}"
+          TIPO_UTS:
+            type: string
+            enum:
+              - "Citta metropolitana"
+              - "Provincia"
+              - "Provincia autonoma"
+          DEN_REG:
+            type: string
+          DEN_RIP:
+            type: string
+          ONTOPIA:
+            type: string
+            format: url
