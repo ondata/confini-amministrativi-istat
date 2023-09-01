@@ -105,6 +105,95 @@ paths:
           description: Invalid resource ID or DIVISION supplied
         '404':
           description: Resource not found
+  /{resourceId}/geobuf/{division}/{divisionId}/{divisionId}.pbf:
+    get:
+      tags:
+        - Geobuf
+      summary: Find single DIVISION by ID in GEOBUF format
+      description: Returns a single DIVISION in GEOBUF format
+      operationId: getGEOBUFDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/x-protobuf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geobuf/{division}/{divisionId}/{subDivision}/{subDivision}.pbf:
+    get:
+      tags:
+        - Geobuf
+      summary: Find resource by ID and SUBDIVISION in GEOBUF format
+      description: Returns a single SUBDIVISION in GEOBUF format
+      operationId: getGEOBUFSubDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION to return
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/x-protobuf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID or SUBDIVISION supplied
+        '404':
+          description: Resource not found
   /{resourceId}/geojson/{division}/{division}.json:
     get:
       tags:
@@ -136,6 +225,93 @@ paths:
                 $ref: 'https://geojson.org/schema/GeoJSON.json'
         '400':
           description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geojson/{division}/{divisionId}/{divisionId}.json:
+    get:
+      tags:
+        - GeoJSON
+      summary: Find single DIVISION by ID in GEOJSON format
+      description: Returns a single DIVISION in GEOJSON format
+      operationId: getGEOJSONDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://geojson.org/schema/GeoJSON.json'
+        '400':
+          description: Invalid resource ID or DIVISION or division ID supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geojson/{division}/{divisionId}/{subDivision}/{subDivision}.json:
+    get:
+      tags:
+        - GeoJSON
+      summary: Find resource by ID and SUBDIVISION in GEOJSON format
+      description: Returns a single SUBDIVISION in GEOJSON format
+      operationId: getGEOJSONSubDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION to return
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://geojson.org/schema/GeoJSON.json'
+        '400':
+          description: Invalid resource ID or DIVISION or division ID or SUBDIVISION supplied
         '404':
           description: Resource not found
   /{resourceId}/geopkg/{division}/{division}.gpkg:
@@ -170,6 +346,95 @@ paths:
                 format: binary
         '400':
           description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geopkg/{division}/{divisionId}/{divisionId}.gpkg:
+    get:
+      tags:
+        - GeoPackage
+      summary: Find single DIVISION by ID in GEOPKG format
+      description: Returns a single DIVISION in GEOPKG format
+      operationId: getGEOPKGDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/geopackage+vnd.sqlite3:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/geopkg/{division}/{divisionId}/{subDivision}/{subDivision}.gpkg:
+    get:
+      tags:
+        - GeoPackage
+      summary: Find resource by ID and SUBDIVISION in GEOPKG format
+      description: Returns a single SUBDIVISION in GEOPKG format
+      operationId: getGEOPKGSubDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION to return
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/geopackage+vnd.sqlite3:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID or SUBDIVISION supplied
         '404':
           description: Resource not found
   /{resourceId}/json/{division}/{division}.json:
@@ -374,6 +639,95 @@ paths:
           description: Invalid resource ID or DIVISION supplied
         '404':
           description: Resource not found
+  /{resourceId}/shp/{division}/{divisionId}/{divisionId}.zip:
+    get:
+      tags:
+        - Shapefile
+      summary: Find single DIVISION by ID in ZIP format
+      description: Returns a single DIVISION in ZIP format
+      operationId: getZIPDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/shp/{division}/{divisionId}/{subDivision}/{subDivision}.zip:
+    get:
+      tags:
+        - Shapefile
+      summary: Find resource by ID and SUBDIVISION in ZIP format
+      description: Returns a single SUBDIVISION in ZIP format
+      operationId: getZIPSubDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION to return
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource ID or DIVISION or division ID or SUBDIVISION supplied
+        '404':
+          description: Resource not found
   /{resourceId}/topojson/{division}/{division}.json:
     get:
       tags:
@@ -405,6 +759,93 @@ paths:
                 $ref: 'https://raw.githubusercontent.com/nhuebel/TopoJSON_schema/master/topojson.json'
         '400':
           description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/topojson/{division}/{divisionId}/{divisionId}.json:
+    get:
+      tags:
+        - TopoJSON
+      summary: Find single DIVISION by ID in TOPOJSON format
+      description: Returns a single DIVISION in TOPOJSON format
+      operationId: getTOPOJSONDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/nhuebel/TopoJSON_schema/master/topojson.json'
+        '400':
+          description: Invalid resource ID or DIVISION or division ID supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/topojson/{division}/{divisionId}/{subDivision}/{subDivision}.json:
+    get:
+      tags:
+        - TopoJSON
+      summary: Find resource by ID and SUBDIVISION in TOPOJSON format
+      description: Returns a single SUBDIVISION in TOPOJSON format
+      operationId: getTOPOJSONSubDivisionById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: divisionId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/DivisionId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION to return
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: 'https://raw.githubusercontent.com/nhuebel/TopoJSON_schema/master/topojson.json'
+        '400':
+          description: Invalid resource ID or DIVISION or division ID or SUBDIVISION supplied
         '404':
           description: Resource not found
   /{resourceId}/zip/{division}/{division}.zip:
@@ -453,6 +894,9 @@ components:
         - "regioni"
         - "unita-territoriali-sovracomunali"
         - "comuni"
+    DivisionId:
+      type: string
+      pattern: "[0-9]+"
     JSONResource:
       type: array
       items:

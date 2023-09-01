@@ -47,9 +47,11 @@ for source in sources["istat"]:  # noqa: C901
 
     logging.info("Processing {}...".format(source["name"]))
 
-    # ZIP - Zip of original shapefile
+
+    # ZIP - Archives of original shapefile
     # Cartella di output
     output_zip = Path(OUTPUT_DIR, source["name"], "zip")
+
     # Se non esiste...
     if not output_zip.exists():
         logging.info("-- zip")
@@ -79,9 +81,107 @@ for source in sources["istat"]:  # noqa: C901
                     if item.is_file() and item.suffix != ".zip":
                         zf.write(item, arcname=item.name)
 
-    # SHP - Corrected shapefile
+
+    # CSV (Comma Separated Values)
+    # Cartella di output
+    output_csv = Path(OUTPUT_DIR, source["name"], "csv")
+
+    # Se non esiste...
+    if not output_csv.exists():
+        logging.info("-- csv")
+        # ... la crea
+        output_csv.mkdir(parents=True, exist_ok=True)
+        # Ciclo su tutti i file dbf degli shapefile disponibili
+        for dbf_filename in output_zip.glob("**/*.dbf"):
+            # File di output (CSV)
+            csv_filename = Path(
+                output_csv, *dbf_filename.parts[4 if OUTPUT_DIR else 2 :]
+            ).with_suffix(".csv")
+            # Creo le eventuali sotto cartelle
+            csv_filename.parent.mkdir(parents=True, exist_ok=True)
+            # Carico il file dbf
+            dbf = Dbf5(dbf_filename)
+            dbf.columns = [c.upper() for c in dbf.columns]
+            # Lo converto in CSV e lo salvo
+            dbf.to_csv(csv_filename)
+        # Ciclo su tutti i file CSV
+        for csv_filename in output_csv.glob("**/*.csv"):
+            # Carico il CSV come dataframe
+            df = pd.read_csv(csv_filename, dtype=str)
+            # Per ogni divisione amministrativa superiore a quella corrente
+            for parent in (
+                source["divisions"][division_id]
+                for division_id in source["divisions"][csv_filename.stem].get(
+                    "parents", []
+                )
+            ):
+                # Carico il CSV come dataframe
+                jdf = pd.read_csv(
+                    Path(output_csv, parent["name"], parent["name"] + ".csv"), dtype=str
+                )
+                # Faccio il join selezionando le colonne che mi interessano
+                df = pd.merge(
+                    df,
+                    jdf[[parent["key"]] + parent["fields"]],
+                    on=parent["key"],
+                    how="left",
+                )
+            # Sostituisco tutti i NaN con stringhe vuote
+            df.fillna("", inplace=True)
+            # Aggiungo l'URI di OntoPiA
+            if "key" in sources["ontopia"]["divisions"][csv_filename.stem]:
+                df["ONTOPIA"] = df[
+                    sources["ontopia"]["divisions"][csv_filename.stem].get("key")
+                ].apply(
+                    lambda x: "{host:s}/{path:s}/{code:0{digits:d}d}".format(
+                        host=sources["ontopia"].get("url", ""),
+                        path=sources["ontopia"]["divisions"][csv_filename.stem].get(
+                            "url", ""
+                        ),
+                        code=int(x),
+                        digits=sources["ontopia"]["divisions"][csv_filename.stem].get(
+                            "digits", 1
+                        ),
+                    )
+                )
+            # Salvo il file arricchito
+            df.to_csv(
+                csv_filename,
+                index=False,
+                columns=[
+                    col
+                    for col in df.columns
+                    if "shape_" not in col.lower() and "pkuid" not in col.lower()
+                ],
+            )
+
+    # JSON (JavaScript Object Notation)
+    # Cartella di output
+    output_json = Path(OUTPUT_DIR, source["name"], "json")
+
+    # Se non esiste...
+    if not output_json.exists():
+        logging.info("-- json")
+        # ... la crea
+        output_json.mkdir(parents=True, exist_ok=True)
+        # Ciclo su tutti i file csv
+        for csv_filename in output_csv.glob("**/*.csv"):
+            # Carico il CSV come dataframe
+            df = pd.read_csv(csv_filename, dtype=str)
+            # File di output (JSON)
+            json_filename = Path(
+                output_json, *csv_filename.parts[4 if OUTPUT_DIR else 2 :]
+            ).with_suffix(".json")
+            # Creo le eventuali sotto cartelle
+            json_filename.parent.mkdir(parents=True, exist_ok=True)
+            # Salvo il file
+            df.to_json(json_filename, orient="records")
+
+
+    # SHP (Shapefile) - Corrected shapefile
     # Cartella di output
     output_shp = Path(OUTPUT_DIR, source["name"], "shp")
+
     # Se non esiste...
     if not output_shp.exists():
         logging.info("-- shp")
@@ -178,109 +278,58 @@ for source in sources["istat"]:  # noqa: C901
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            # Pulizia file temporanei
-            os.remove(output_sqlite)
-        # Comprimo i file di ogni divisione amministrativa
-        for division in source["divisions"]:
-            with ZipFile(Path(output_shp, division, division).with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
-                for item in Path(output_shp, division).iterdir():
+
+        # Creazione shapefile di livello inferiore
+        for division in source["divisions"].values():
+            # Ricavo tutti gli id dei territori
+            with open(Path(output_json, division["name"], division["name"]).with_suffix(".json")) as f:
+                division_ids = [item[division["key"]] for item in json.load(f)]
+            # Per ogni territorio individuo le suddivisioni amministrative inferiori
+            for division_id in division_ids:
+                # Creazione cartella
+                output_division_id = Path(output_shp, division["name"], division_id)
+                output_division_id.mkdir(parents=True, exist_ok=True)
+                subprocess.run(
+                    [
+                        "ogr2ogr",
+                        Path(output_division_id, division_id).with_suffix(".shp"),
+                        Path(output_shp, division["name"]).with_suffix(".sqlite"),
+                        "{}_clean".format(division["name"]),
+                        "-where", "{}=\"{}\"".format(division["key"], division_id)
+                    ],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                for sub_division_name in division.get("children", []):
+                    output_sub_division = Path(output_division_id, sub_division_name)
+                    output_sub_division.mkdir(parents=True, exist_ok=True)
+                    subprocess.run(
+                        [
+                            "ogr2ogr",
+                            Path(output_sub_division, sub_division_name).with_suffix(".shp"),
+                            Path(output_shp, sub_division_name).with_suffix(".sqlite"),
+                            "{}_clean".format(sub_division_name),
+                            "-where", "{}=\"{}\"".format(division["key"], division_id)
+                        ],
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+        
+        # Pulizia dei file temporanei
+        for sqlite_filename in output_shp.glob("**/*.sqlite"):
+            os.remove(sqlite_filename)
+
+        # ZIP - Archives of corrected shapefiles
+        for shp_filename in output_shp.glob("**/*.shp"):
+            # Comprimo i file di ogni divisione amministrativa
+            with ZipFile(shp_filename.with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
+                for item in shp_filename.parent.iterdir():
                     if item.is_file() and item.suffix != ".zip":
                         zf.write(item, arcname=item.name)
 
-    # CSV - Comma Separated Values
-    # Cartella di output
-    output_csv = Path(OUTPUT_DIR, source["name"], "csv")
-    # Se non esiste...
-    if not output_csv.exists():
-        logging.info("-- csv")
-        # ... la crea
-        output_csv.mkdir(parents=True, exist_ok=True)
-        # Ciclo su tutti i file dbf degli shapefile disponibili
-        for dbf_filename in output_zip.glob("**/*.dbf"):
-            # File di output (CSV)
-            csv_filename = Path(
-                output_csv, *dbf_filename.parts[4 if OUTPUT_DIR else 2 :]
-            ).with_suffix(".csv")
-            # Creo le eventuali sotto cartelle
-            csv_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Carico il file dbf
-            dbf = Dbf5(dbf_filename)
-            dbf.columns = [c.upper() for c in dbf.columns]
-            # Lo converto in CSV e lo salvo
-            dbf.to_csv(csv_filename)
-        # Ciclo su tutti i file CSV
-        for csv_filename in output_csv.glob("**/*.csv"):
-            # Carico il CSV come dataframe
-            df = pd.read_csv(csv_filename, dtype=str)
-            # Per ogni divisione amministrativa superiore a quella corrente
-            for parent in (
-                source["divisions"][division_id]
-                for division_id in source["divisions"][csv_filename.stem].get(
-                    "parents", []
-                )
-            ):
-                # Carico il CSV come dataframe
-                jdf = pd.read_csv(
-                    Path(output_csv, parent["name"], parent["name"] + ".csv"), dtype=str
-                )
-                # Faccio il join selezionando le colonne che mi interessano
-                df = pd.merge(
-                    df,
-                    jdf[[parent["key"]] + parent["fields"]],
-                    on=parent["key"],
-                    how="left",
-                )
-            # Sostituisco tutti i NaN con stringhe vuote
-            df.fillna("", inplace=True)
-            # Aggiungo l'URI di OntoPiA
-            if "key" in sources["ontopia"]["divisions"][csv_filename.stem]:
-                df["ONTOPIA"] = df[
-                    sources["ontopia"]["divisions"][csv_filename.stem].get("key")
-                ].apply(
-                    lambda x: "{host:s}/{path:s}/{code:0{digits:d}d}".format(
-                        host=sources["ontopia"].get("url", ""),
-                        path=sources["ontopia"]["divisions"][csv_filename.stem].get(
-                            "url", ""
-                        ),
-                        code=int(x),
-                        digits=sources["ontopia"]["divisions"][csv_filename.stem].get(
-                            "digits", 1
-                        ),
-                    )
-                )
-            # Salvo il file arricchito
-            df.to_csv(
-                csv_filename,
-                index=False,
-                columns=[
-                    col
-                    for col in df.columns
-                    if "shape_" not in col.lower() and "pkuid" not in col.lower()
-                ],
-            )
+    # Geojson + GeoPKG + Topojson + Geobuf
+    logging.info("-- geojson + geopkg + topojson + geobuf")
 
-        # JSON - Javascript Object Notation
-        # Cartella di output
-        output_json = Path(OUTPUT_DIR, source["name"], "json")
-        # Se non esiste...
-        if not output_json.exists():
-            logging.info("-- json")
-            # ... la crea
-            output_json.mkdir(parents=True, exist_ok=True)
-            # Ciclo su tutti i file csv
-            for csv_filename in output_csv.glob("**/*.csv"):
-                # Carico il CSV come dataframe
-                df = pd.read_csv(csv_filename, dtype=str)
-                # File di output (JSON)
-                json_filename = Path(
-                    output_json, *csv_filename.parts[4 if OUTPUT_DIR else 2 :]
-                ).with_suffix(".json")
-                # Creo le eventuali sotto cartelle
-                json_filename.parent.mkdir(parents=True, exist_ok=True)
-                # Salvo il file
-                df.to_json(json_filename, orient="records")
-
-    # Geojson + Topojson + Geobuf
     # Cartelle di output
     output_geojson = Path(OUTPUT_DIR, source["name"], "geojson")
     output_geopkg = Path(OUTPUT_DIR, source["name"], "geopkg")
@@ -295,7 +344,6 @@ for source in sources["istat"]:  # noqa: C901
 
     # Ciclo su tutti gli shapefile
     for shp_filename in output_shp.glob("**/*.shp"):
-
         # Carico gli shapefile come geodataframe
         gdf = gpd.read_file(shp_filename)
 
@@ -306,7 +354,6 @@ for source in sources["istat"]:  # noqa: C901
         ).with_suffix(".json")
         # Se non esiste...
         if not geojson_filename.exists():
-            logging.info("-- geojson")
             # ... ne creo il percorso
             geojson_filename.parent.mkdir(parents=True, exist_ok=True)
             # Converto in GEOJSON e salvo il file
@@ -319,10 +366,9 @@ for source in sources["istat"]:  # noqa: C901
         ).with_suffix(".gpkg")
         # Se non esiste...
         if not geopkg_filename.exists():
-            logging.info("-- geopkg")
             # ... ne creo il percorso
             geopkg_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Converto in GEOJSON e salvo il file
+            # Converto in GeoPackage e salvo il file
             gdf.to_file(geopkg_filename, driver="GPKG")
 
         # Topojson - https://github.com/topojson/topojson
@@ -332,10 +378,9 @@ for source in sources["istat"]:  # noqa: C901
         ).with_suffix(".json")
         # Se non esiste...
         if not topojson_filename.exists():
-            logging.info("-- topojson")
             # ... ne creo il percorso
             topojson_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Carico e converto il GEOJSON in TOPOJSON
+            # Converto in TOPOJSON
             tj = topojson.Topology(gdf, prequantize=False, topology=True)
             # Salvo il file
             with open(topojson_filename, 'w') as f:
@@ -348,7 +393,6 @@ for source in sources["istat"]:  # noqa: C901
         ).with_suffix('.pbf')
         # Se non esiste...
         if not geobuf_filename.exists() and geojson_filename.exists():
-            logging.info("-- geobuf")
             # ... ne creo il percorso
             geobuf_filename.parent.mkdir(parents=True, exist_ok=True)
             # Carico il GEOJSON e lo converto in GEOBUF
