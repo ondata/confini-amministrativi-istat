@@ -50,6 +50,18 @@ documentation () {
     (trap 'kill 0' SIGINT; swagger_ui & swagger_ed)
 }
 
+deploy () {
+    git push origin `git subtree split --prefix api main`:gh-pages --force
+}
+
+shell () {
+    docker run --rm -it -v $DOCKER_VOLUME --entrypoint /bin/bash $DOCKER_IMAGE
+}
+
+lint () {
+    poetry run pre-commit run --files main.py
+}
+
 help () {
     echo "Usage: $0 [build | generate | serve | documentation] [YYYYMMDD | PORT]"
     echo "Examples:"
@@ -74,6 +86,15 @@ case $ACTION in
         ;;
     documentation)
         documentation
+        ;;
+    deploy)
+        deploy
+        ;;
+    shell)
+        shell
+        ;;
+    lint)
+        lint
         ;;
     help)
         help
