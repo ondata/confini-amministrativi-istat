@@ -1,3 +1,23 @@
+[tool.poetry]
+name = "confini-amministrativi-istat"
+version = "1.0.0"
+description = "Collezione di utilities per facilitare il riuso dei dati [ISTAT](https://www.istat.it/it/archivio/222527) e [ANPR](https://www.anpr.interno.it/) sui confini amministrativi italiani."
+authors = ["Alessio Cimarelli <alessio.cimarelli@sparkfabrik.com>"]
+license = "AGPL"
+readme = "README.md"
+packages = [{include = "confini_amministrativi_istat"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+simpledbf = "^0.2.6"
+geopandas = "^0.13.2"
+topojson = "^1.5"
+pandas = "^2.1.0"
+pybind11-geobuf = "^0.1.6"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.3"
+
 [tool.black]
 line-length = 88
 include = '\.pyi?$'
@@ -14,3 +34,7 @@ exclude = '''
   | dist
 )/
 '''
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

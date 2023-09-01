@@ -1,4 +1,4 @@
-FROM python:3.7-slim AS environment
+FROM python:3.9-slim AS environment
 
 RUN apt-get update
 RUN apt-get install -y \

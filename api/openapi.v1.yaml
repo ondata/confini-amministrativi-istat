@@ -7,15 +7,15 @@ info:
   contact:
     email: info@ondata.it
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    name: AGPL
+    url: https://github.com/ondata/confini-amministrativi-istat/blob/main/LICENSE
   version: 1.0.0
 externalDocs:
   description: Find out more
   url: https://github.com/ondata/confini-amministrativi-istat
 servers:
+  - url: ./v1
   - url: http://dev.ondata.it/confini-amministrativi-istat/v1
-  - url: http://localhost:8081/v1
 tags:
   - name: OnData
     description: Promuoviamo l'apertura dei dati pubblici per renderli un bene comune per tuttə, i nostri valori sono la forza motrice di ogni nostra azione.
@@ -71,7 +71,7 @@ paths:
           description: Invalid resource ID or DIVISION supplied
         '404':
           description: Resource not found
-  /{resourceId}/geobuf/{division}/{division}.proto:
+  /{resourceId}/geobuf/{division}/{division}.pbf:
     get:
       tags:
         - Geobuf
@@ -403,6 +403,40 @@ paths:
             application/json:
               schema:
                 $ref: 'https://raw.githubusercontent.com/nhuebel/TopoJSON_schema/master/topojson.json'
+        '400':
+          description: Invalid resource ID or DIVISION supplied
+        '404':
+          description: Resource not found
+  /{resourceId}/zip/{division}/{division}.zip:
+    get:
+      tags:
+        - Zip (original)
+      summary: Find original resource by ID and DIVISION in ZIP format
+      description: Returns a single original resource in ZIP format
+      operationId: getOZIPResourceById
+      parameters:
+        - name: resourceId
+          in: path
+          description: ID of resource to return
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceId'
+        - name: division
+          in: path
+          description: DIVISION of resource to return
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
         '400':
           description: Invalid resource ID or DIVISION supplied
         '404':

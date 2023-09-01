@@ -17,13 +17,13 @@ Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli 
 
 Al momento sono supportati i seguenti formati di output:
 
-* [ESRI shapefile](https://it.wikipedia.org/wiki/Shapefile) nella cartella `shp/` (formato originale)
+* [ESRI shapefile](https://it.wikipedia.org/wiki/Shapefile) (formato originale) nelle cartelle `zip/` (version originale) e `shp/` (versione ripulita e corretta)
 * [Comma-separated values](https://it.wikipedia.org/wiki/Comma-separated_values) nella cartella `csv/`
 * [Javascript Object Notation](https://it.wikipedia.org/wiki/JavaScript_Object_Notation) nella cartella `json/`
 * [Geojson](https://it.wikipedia.org/wiki/GeoJSON) nella cartella `geojson/`
 * [Geopackage](https://en.wikipedia.org/wiki/GeoPackage) nella cartella `geopkg/`
 * [Topojson](https://it.wikipedia.org/wiki/GeoJSON#TopoJSON) nella cartella `topojson/`
-* ~~[Geobuf](https://github.com/pygeobuf/pygeobuf) nella cartella `geobuf/`~~
+* [Geobuf](https://github.com/cubao/geobuf-cpp) nella cartella `geobuf/`
 
 Il file di ANPR è quello originale arricchito delle denominazioni e dell'indicazione degli shapefile in cui i comuni sono presenti.
 
@@ -51,6 +51,9 @@ Puoi usare l'utility `bash run.sh generate [YYYYMMDD]`.
 
 > Avvertenza: l'esecuzione può richiedere diversi minuti, o anche ore nel caso dell'elaborazione di tutte le versioni.
 
+Naviga le API e la loro documentazione eseguendo un web server in locale: `docker run --rm -p 8080:80 -v $PWD/api:/usr/share/nginx/html:ro nginx`.
+Puoi usare l'utility `bash run.sh serve [PORT]`, la porta di default è la `8080`.
+
 ### Esecuzione diretta
 
 > Modalità altamente **sconsigliata**, le dipendenze indirette sono molte e si reggono su un equilibrio precario tra le versioni di ogni libreria.
@@ -60,9 +63,10 @@ Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
 
 Il file `requirements.txt` elenca tutte le dipendenze necessarie a eseguire l'applicazione.
 Si consiglia di operare sempre in un ambiente isolato creando un apposito *virtual environment*.
-Con [pipenv](https://pipenv.kennethreitz.org/en/latest/) è sufficiente entrare nel virtualenv con `pipenv shell` e la prima volta installare le dipendenze con `pipenv install`.
+Con [Poetry](https://python-poetry.org/) è sufficiente entrare nel virtualenv con `poetry shell` e la prima volta installare le dipendenze con `poetry install`.
 
-Infine, per eseguire l'applicazione ed elaborare tutte le versioni: `python main.py`. Per specificare una singola versione di interesse: `SOURCE_NAME=YYYYMMDD python main.py`.
+Infine, per eseguire l'applicazione ed elaborare tutte le versioni: `python main.py`.
+Per specificare una singola versione di interesse: `SOURCE_NAME=YYYYMMDD python main.py`.
 
 ## Come contribuire
 
@@ -74,4 +78,4 @@ Ringraziamo il [Team per la Trasformazione Digitale](https://teamdigitale.govern
 Un ringraziamento anche a [Datafactor Agrigento](https://www.datafactor.it/) per il supporto e il prezioso contributo di finalizzazione del file di configurazione `sources.json`.
 
 ## Licenza
-L'uso di questo software è concesso sotto licenza [GNU Affero General Public License](https://github.com/ondata/confini-amministrativi-istat/blob/develop/LICENSE).
+L'uso di questo software è concesso sotto licenza [GNU Affero General Public License](https://github.com/ondata/confini-amministrativi-istat/blob/main/LICENSE).

@@ -5,17 +5,17 @@ import re
 import subprocess
 from io import BytesIO, StringIO
 from pathlib import Path
-from urllib.parse import urlparse
 from urllib.request import urlopen
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
-import geobuf
+from pybind11_geobuf import Encoder
+geobuf = Encoder(max_precision=int(10**8))
 import geopandas as gpd
 import pandas as pd
 import topojson
 from simpledbf import Dbf5
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "v1")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "api/v1")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
 
@@ -55,7 +55,7 @@ for source in sources["istat"]:  # noqa: C901
         logging.info("-- zip")
         # ... la crea
         output_zip.mkdir(parents=True, exist_ok=True)
-        # Scarico il file dal sito ISTAT
+        # Lo decomprimo
         with urlopen(source["url"]) as res:
             # Lo leggo come archivio zip
             with ZipFile(BytesIO(res.read())) as zfile:
@@ -72,6 +72,12 @@ for source in sources["istat"]:  # noqa: C901
                     # Estraggo file e cartelle con un percorso non vuoto
                     if zip_info.filename:
                         zfile.extract(zip_info, output_zip)
+        # Comprimo i file di ogni divisione amministrativa
+        for division in source["divisions"]:
+            with ZipFile(Path(output_zip, division, division).with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
+                for item in Path(output_zip, division).iterdir():
+                    if item.is_file() and item.suffix != ".zip":
+                        zf.write(item, arcname=item.name)
 
     # SHP - Corrected shapefile
     # Cartella di output
@@ -174,6 +180,12 @@ for source in sources["istat"]:  # noqa: C901
             )
             # Pulizia file temporanei
             os.remove(output_sqlite)
+        # Comprimo i file di ogni divisione amministrativa
+        for division in source["divisions"]:
+            with ZipFile(Path(output_shp, division, division).with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
+                for item in Path(output_shp, division).iterdir():
+                    if item.is_file() and item.suffix != ".zip":
+                        zf.write(item, arcname=item.name)
 
     # CSV - Comma Separated Values
     # Cartella di output
@@ -187,7 +199,7 @@ for source in sources["istat"]:  # noqa: C901
         for dbf_filename in output_zip.glob("**/*.dbf"):
             # File di output (CSV)
             csv_filename = Path(
-                output_csv, *dbf_filename.parts[3 if OUTPUT_DIR else 2 :]
+                output_csv, *dbf_filename.parts[4 if OUTPUT_DIR else 2 :]
             ).with_suffix(".csv")
             # Creo le eventuali sotto cartelle
             csv_filename.parent.mkdir(parents=True, exist_ok=True)
@@ -261,7 +273,7 @@ for source in sources["istat"]:  # noqa: C901
                 df = pd.read_csv(csv_filename, dtype=str)
                 # File di output (JSON)
                 json_filename = Path(
-                    output_json, *csv_filename.parts[3 if OUTPUT_DIR else 2 :]
+                    output_json, *csv_filename.parts[4 if OUTPUT_DIR else 2 :]
                 ).with_suffix(".json")
                 # Creo le eventuali sotto cartelle
                 json_filename.parent.mkdir(parents=True, exist_ok=True)
@@ -290,7 +302,7 @@ for source in sources["istat"]:  # noqa: C901
         # Geojson - https://geojson.org/
         # File di output
         geojson_filename = Path(
-            output_geojson, *shp_filename.parts[3 if OUTPUT_DIR else 2 :]
+            output_geojson, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
         ).with_suffix(".json")
         # Se non esiste...
         if not geojson_filename.exists():
@@ -303,7 +315,7 @@ for source in sources["istat"]:  # noqa: C901
         # Geopackage - https://www.geopackage.org/
         # File di output
         geopkg_filename = Path(
-            output_geopkg, *shp_filename.parts[3 if OUTPUT_DIR else 2 :]
+            output_geopkg, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
         ).with_suffix(".gpkg")
         # Se non esiste...
         if not geopkg_filename.exists():
@@ -316,7 +328,7 @@ for source in sources["istat"]:  # noqa: C901
         # Topojson - https://github.com/topojson/topojson
         # File di output
         topojson_filename = Path(
-            output_topojson, *shp_filename.parts[3 if OUTPUT_DIR else 2 :]
+            output_topojson, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
         ).with_suffix(".json")
         # Se non esiste...
         if not topojson_filename.exists():
@@ -326,23 +338,25 @@ for source in sources["istat"]:  # noqa: C901
             # Carico e converto il GEOJSON in TOPOJSON
             tj = topojson.Topology(gdf, prequantize=False, topology=True)
             # Salvo il file
-            with open(topojson_filename, "w") as f:
+            with open(topojson_filename, 'w') as f:
                 f.write(tj.to_json())
 
-        # Geobuf - https://github.com/pygeobuf/pygeobuf
+        # Geobuf - https://github.com/cubao/geobuf-cpp
         # File di output
-        # geobuf_filename = Path(output_geobuf, *shp_filename.parts[3 if OUTPUT_DIR else 2:]).with_suffix('.pbf')
+        geobuf_filename = Path(
+            output_geobuf, *shp_filename.parts[4 if OUTPUT_DIR else 2:]
+        ).with_suffix('.pbf')
         # Se non esiste...
-        # if not geobuf_filename.exists() and geojson_filename.exists():
-        #    logging.info("-- geobuf")
-        # ... ne creo il percorso
-        #    geobuf_filename.parent.mkdir(parents=True, exist_ok=True)
-        # Carico il GEOJSON e lo converto in GEOBUF
-        #    with open(geojson_filename) as f:
-        #        pbf = geobuf.encode(json.load(f))
-        # Salvo il file
-        #    with open(geobuf_filename, 'wb') as f:
-        #        f.write(pbf)
+        if not geobuf_filename.exists() and geojson_filename.exists():
+            logging.info("-- geobuf")
+            # ... ne creo il percorso
+            geobuf_filename.parent.mkdir(parents=True, exist_ok=True)
+            # Carico il GEOJSON e lo converto in GEOBUF
+            with open(geojson_filename) as f:
+                pbf = geobuf.encode(geojson=f.read())
+            # Salvo il file
+            with open(geobuf_filename, 'wb') as f:
+                f.write(pbf)
 
 # Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
 if not SOURCE_NAME:
