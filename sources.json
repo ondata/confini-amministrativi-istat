@@ -1,28 +1,30 @@
 {
     "ontopia": {
-        "url": "https://w3id.org/italia/controlled-vocabulary/territorial-classifications",
+        "url": "https://w3id.org/italia",
         "divisions": [
             {
                 "name": "ripartizioni-geografiche",
-                "url": "geographical-distribution",
+                "url": "controlled-vocabulary/territorial-classifications/geographical-distribution",
                 "key": "COD_RIP",
                 "digits": 1
             },
             {
                 "name": "regioni",
-                "url": "regions",
+                "url": "controlled-vocabulary/territorial-classifications/regions",
                 "key": "COD_REG",
                 "digits": 2
             },
             {
                 "name": "unita-territoriali-sovracomunali",
-                "url": "provinces",
+                "url": "controlled-vocabulary/territorial-classifications/provinces",
                 "key": "COD_PROV",
                 "digits": 3
             },
             {
                 "name": "comuni",
-                "url": "cities"
+                "url": "data/identifiers/cities-identifiers/alphanumeric-istat-code",
+                "key": "PRO_COM_T",
+                "digits": 6
             }
         ]
     },
@@ -32,7 +34,9 @@
         "encoding": "utf-8",
         "division": {
             "name": "comuni",
-            "key": "CODISTAT"
+            "url": "https://w3id.org/italia/data/identifiers/cities-identifiers/alphanumeric-istat-code",
+            "key": "CODISTAT",
+            "digits": 6
         }
     },
     "istat": [
@@ -40,6 +44,7 @@
             "name": "20230101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2023/Limiti01012023_g.zip",
             "rootdir": "Limiti01012023_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -119,6 +124,7 @@
             "name": "20220101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012022_g.zip",
             "rootdir": "Limiti01012022_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -198,6 +204,7 @@
             "name": "20210101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip",
             "rootdir": "Limiti01012021_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -277,6 +284,7 @@
             "name": "20200101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012020_g.zip",
             "rootdir": "Limiti01012020_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -356,6 +364,7 @@
             "name": "20190101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip",
             "rootdir": "Limiti01012019_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -435,6 +444,7 @@
             "name": "20180101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012018_g.zip",
             "rootdir": "Limiti01012018_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -509,6 +519,7 @@
             "name": "20170101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012017_g.zip",
             "rootdir": "Limiti01012017_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -583,6 +594,7 @@
             "name": "20160101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012016_g.zip",
             "rootdir": "Limiti01012016_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -657,6 +669,7 @@
             "name": "20150101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012015_g.zip",
             "rootdir": "Limiti01012015_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -731,6 +744,7 @@
             "name": "20140101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012014_g.zip",
             "rootdir": "Limiti01012014_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -801,6 +815,7 @@
             "name": "20130101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012013_g.zip",
             "rootdir": "Limiti01012013_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -871,6 +886,7 @@
             "name": "20120101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012012_g.zip",
             "rootdir": "Limiti01012012_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -941,6 +957,7 @@
             "name": "20111009",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2011_g.zip",
             "rootdir": "Limiti2011_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1011,6 +1028,7 @@
             "name": "20100101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012010_g.zip",
             "rootdir": "Limiti01012010_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1081,6 +1099,7 @@
             "name": "20090101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012009_g.zip",
             "rootdir": "Limiti01012009_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1151,6 +1170,7 @@
             "name": "20080101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012008_g.zip",
             "rootdir": "Limiti01012008_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1221,6 +1241,7 @@
             "name": "20070101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012007_g.zip",
             "rootdir": "Limiti01012007_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1291,6 +1312,7 @@
             "name": "20060101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012006_g.zip",
             "rootdir": "Limiti01012006_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1361,6 +1383,7 @@
             "name": "20050101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012005_g.zip",
             "rootdir": "Limiti01012005_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1431,6 +1454,7 @@
             "name": "20040101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012004_g.zip",
             "rootdir": "Limiti01012004_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1501,6 +1525,7 @@
             "name": "20030101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012003_g.zip",
             "rootdir": "Limiti01012003_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1571,6 +1596,7 @@
             "name": "20020101",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012002_g.zip",
             "rootdir": "Limiti01012002_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1641,6 +1667,7 @@
             "name": "20011021",
             "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2001_g.zip",
             "rootdir": "Limiti2001_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",
@@ -1711,6 +1738,7 @@
             "name": "19911020",
             "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti1991_g.zip",
             "rootdir": "Limiti1991_g/",
+            "encoding": "iso-8859-1",
             "divisions": [
                 {
                     "name": "ripartizioni-geografiche",

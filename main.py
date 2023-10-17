@@ -1,4 +1,5 @@
 import json
+import csv
 import logging
 import os
 import re
@@ -13,11 +14,12 @@ geobuf = Encoder(max_precision=int(10**8))
 import geopandas as gpd
 import pandas as pd
 import topojson
-from simpledbf import Dbf5
+from dbfread import DBF
 
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "api/v1")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
+SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx"]
 
 logging.basicConfig(level=logging.INFO)
 
@@ -26,10 +28,10 @@ with open(SOURCE_FILE) as f:
     # Carico le risorse (JSON)
     sources = json.load(f)
     # Ciclo su tutte le risorse ISTAT
-    for source in sources["istat"]:
+    for release in sources["istat"]:
         # Trasforma la lista di divisioni amministrative (comuni, province, ecc.) in un dizionario indicizzato
-        source["divisions"] = {
-            division["name"]: division for division in source.get("divisions", [])
+        release["divisions"] = {
+            division["name"]: division for division in release.get("divisions", [])
         }
     # Trasforma la lista di divisioni amministrative (comuni, province, ecc.) in un dizionario indicizzato
     sources["ontopia"]["divisions"] = {
@@ -40,161 +42,49 @@ with open(SOURCE_FILE) as f:
 # ISTAT - Unità territoriali originali
 logging.info("+++ ISTAT +++")
 # Ciclo su tutte le risorse ISTAT
-for source in sources["istat"]:  # noqa: C901
+for release in sources["istat"]:  # noqa: C901
 
-    if SOURCE_NAME and source["name"] != SOURCE_NAME:
+    if SOURCE_NAME and release["name"] != SOURCE_NAME:
         continue
 
-    logging.info("Processing {}...".format(source["name"]))
+    logging.info(f"Processing {release['name']}...")
 
-
-    # ZIP - Archives of original shapefile
     # Cartella di output
-    output_zip = Path(OUTPUT_DIR, source["name"], "zip")
+    output_release = Path(OUTPUT_DIR, release["name"])
 
     # Se non esiste...
-    if not output_zip.exists():
-        logging.info("-- zip")
-        # ... la crea
-        output_zip.mkdir(parents=True, exist_ok=True)
-        # Lo decomprimo
-        with urlopen(source["url"]) as res:
-            # Lo leggo come archivio zip
+    if not output_release.exists():
+        # ... la creo
+        output_release.mkdir(parents=True, exist_ok=True)
+        
+        # Scarico la risorsa remota
+        with urlopen(release["url"]) as res:
+            # La leggo come archivio zip
             with ZipFile(BytesIO(res.read())) as zfile:
                 # Ciclo su ogni file e cartella nell'archivio
                 for zip_info in zfile.infolist():
                     # Elimino la cartella root dal percorso di ogni file e cartella
-                    zip_info.filename = zip_info.filename.replace(source["rootdir"], "")
+                    zip_info.filename = zip_info.filename.replace(release["rootdir"], "")
                     # Ciclo sulle divisioni amministrative
-                    for division in source["divisions"].values():
+                    for division in release["divisions"].values():
                         # Rinomino le sottocartelle con il nome normalizzato delle divisioni
                         zip_info.filename = zip_info.filename.replace(
-                            division["dirname"] + "/", division["name"] + "/"
-                        ).replace(division["filename"] + ".", division["name"] + ".")
+                            f"{division['dirname']}/", ""
+                        ).replace(
+                            f"{division['filename']}.", f"{division['name']}."
+                        )
                     # Estraggo file e cartelle con un percorso non vuoto
                     if zip_info.filename:
-                        zfile.extract(zip_info, output_zip)
-        # Comprimo i file di ogni divisione amministrativa
-        for division in source["divisions"]:
-            with ZipFile(Path(output_zip, division, division).with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
-                for item in Path(output_zip, division).iterdir():
-                    if item.is_file() and item.suffix != ".zip":
-                        zf.write(item, arcname=item.name)
+                        zfile.extract(zip_info, output_release)
 
-
-    # CSV (Comma Separated Values)
-    # Cartella di output
-    output_csv = Path(OUTPUT_DIR, source["name"], "csv")
-
-    # Se non esiste...
-    if not output_csv.exists():
-        logging.info("-- csv")
-        # ... la crea
-        output_csv.mkdir(parents=True, exist_ok=True)
-        # Ciclo su tutti i file dbf degli shapefile disponibili
-        for dbf_filename in output_zip.glob("**/*.dbf"):
-            # File di output (CSV)
-            csv_filename = Path(
-                output_csv, *dbf_filename.parts[4 if OUTPUT_DIR else 2 :]
-            ).with_suffix(".csv")
-            # Creo le eventuali sotto cartelle
-            csv_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Carico il file dbf
-            dbf = Dbf5(dbf_filename)
-            dbf.columns = [c.upper() for c in dbf.columns]
-            # Lo converto in CSV e lo salvo
-            dbf.to_csv(csv_filename)
-        # Ciclo su tutti i file CSV
-        for csv_filename in output_csv.glob("**/*.csv"):
-            # Carico il CSV come dataframe
-            df = pd.read_csv(csv_filename, dtype=str)
-            # Per ogni divisione amministrativa superiore a quella corrente
-            for parent in (
-                source["divisions"][division_id]
-                for division_id in source["divisions"][csv_filename.stem].get(
-                    "parents", []
-                )
-            ):
-                # Carico il CSV come dataframe
-                jdf = pd.read_csv(
-                    Path(output_csv, parent["name"], parent["name"] + ".csv"), dtype=str
-                )
-                # Faccio il join selezionando le colonne che mi interessano
-                df = pd.merge(
-                    df,
-                    jdf[[parent["key"]] + parent["fields"]],
-                    on=parent["key"],
-                    how="left",
-                )
-            # Sostituisco tutti i NaN con stringhe vuote
-            df.fillna("", inplace=True)
-            # Aggiungo l'URI di OntoPiA
-            if "key" in sources["ontopia"]["divisions"][csv_filename.stem]:
-                df["ONTOPIA"] = df[
-                    sources["ontopia"]["divisions"][csv_filename.stem].get("key")
-                ].apply(
-                    lambda x: "{host:s}/{path:s}/{code:0{digits:d}d}".format(
-                        host=sources["ontopia"].get("url", ""),
-                        path=sources["ontopia"]["divisions"][csv_filename.stem].get(
-                            "url", ""
-                        ),
-                        code=int(x),
-                        digits=sources["ontopia"]["divisions"][csv_filename.stem].get(
-                            "digits", 1
-                        ),
-                    )
-                )
-            # Salvo il file arricchito
-            df.to_csv(
-                csv_filename,
-                index=False,
-                columns=[
-                    col
-                    for col in df.columns
-                    if "shape_" not in col.lower() and "pkuid" not in col.lower()
-                ],
-            )
-
-    # JSON (JavaScript Object Notation)
-    # Cartella di output
-    output_json = Path(OUTPUT_DIR, source["name"], "json")
-
-    # Se non esiste...
-    if not output_json.exists():
-        logging.info("-- json")
-        # ... la crea
-        output_json.mkdir(parents=True, exist_ok=True)
-        # Ciclo su tutti i file csv
-        for csv_filename in output_csv.glob("**/*.csv"):
-            # Carico il CSV come dataframe
-            df = pd.read_csv(csv_filename, dtype=str)
-            # File di output (JSON)
-            json_filename = Path(
-                output_json, *csv_filename.parts[4 if OUTPUT_DIR else 2 :]
-            ).with_suffix(".json")
-            # Creo le eventuali sotto cartelle
-            json_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Salvo il file
-            df.to_json(json_filename, orient="records")
-
-
-    # SHP (Shapefile) - Corrected shapefile
-    # Cartella di output
-    output_shp = Path(OUTPUT_DIR, source["name"], "shp")
-
-    # Se non esiste...
-    if not output_shp.exists():
-        logging.info("-- shp")
-        # ... la crea
-        output_shp.mkdir(parents=True, exist_ok=True)
-        # Ciclo su ogni suddivisione amministrativa
-        for division in source["divisions"]:
-            # Creazione cartella
-            output_div = Path(output_shp, division)
-            output_div.mkdir(parents=True, exist_ok=True)
+        # SHP (Shapefile) - Corrected shapefile
+        # Per ogni divisione amministrativa...
+        for division in release["divisions"].values():
             # Database spaziale temporaneo
-            output_sqlite = output_div.with_suffix(".sqlite")
-            # Crea il db sqlite e poi lo inizializza come db spaziale
+            output_sqlite = Path(output_release, division["name"]).with_suffix(".sqlite")
+            # Shapefile di output
+            shp_filename = output_sqlite.with_suffix(".shp")
+            # Creo il db sqlite e poi lo inizializzo come db spaziale
             subprocess.run(
                 [
                     "sqlite3",
@@ -209,7 +99,7 @@ for source in sources["istat"]:  # noqa: C901
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            # Analisi dello shp originale
+            # Analizzo lo shapefile originale
             subprocess.run(
                 [
                     "sqlite3",
@@ -218,32 +108,26 @@ for source in sources["istat"]:  # noqa: C901
                         [
                             "SELECT load_extension('mod_spatialite');",
                             # "-- importa shp come tabella virtuale",
-                            "CREATE VIRTUAL TABLE \"{}\" USING VirtualShape('{}', UTF-8, 32632);".format(
-                                division, Path(output_zip, division, division)
-                            ),
+                            f"CREATE VIRTUAL TABLE \"{division['name']}\" USING VirtualShape('{Path(output_release, division['name'])}', UTF-8, 32632);",
                             # "-- crea tabella con output check geometrico",
-                            'CREATE TABLE "{}_check" AS SELECT PKUID,GEOS_GetLastWarningMsg() msg,ST_AsText(GEOS_GetCriticalPointFromMsg()) punto FROM "{}" WHERE ST_IsValid(geometry) <> 1;'.format(
-                                division, division
-                            ),
+                            f"CREATE TABLE \"{division['name']}_check\" AS SELECT PKUID,GEOS_GetLastWarningMsg() msg,ST_AsText(GEOS_GetCriticalPointFromMsg()) punto FROM \"{division['name']}\" WHERE ST_IsValid(geometry) <> 1;",
                         ]
                     ),
                 ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            # Conteggio degli errori rilevati
+            # Conto gli errori rilevati
             errori = subprocess.check_output(
                 [
                     "sqlite3",
                     output_sqlite,
-                    "\n".join(['SELECT count(*) FROM "{}_check"'.format(division)]),
+                    "\n".join([f"SELECT count(*) FROM \"{division['name']}_check\""]),
                 ],
                 stderr=subprocess.DEVNULL,
             )
-            # Se ci sono errori crea nuova tabella con geometrie corrette
-            logging.warning(
-                "!!! Errori {}: {} geometrie corrette".format(division, int(errori))
-            )
+            # Se ci sono errori creo una nuova tabella con geometrie corrette
+            logging.warning(f"!!! Errori {division['name']}: {int(errori)} geometrie corrette")
             if int(errori) > 0:
                 subprocess.run(
                     [
@@ -252,135 +136,179 @@ for source in sources["istat"]:  # noqa: C901
                         "\n".join(
                             [
                                 "SELECT load_extension('mod_spatialite');",
-                                'CREATE table "{}_clean" AS SELECT * FROM "{}";'.format(
-                                    division, division
-                                ),
-                                "SELECT RecoverGeometryColumn('{}_clean','geometry',32632,'MULTIPOLYGON','XY');".format(
-                                    division
-                                ),
-                                'UPDATE "{}_clean" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;'.format(
-                                    division
-                                ),
+                                f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
+                                f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',32632,'MULTIPOLYGON','XY');",
+                                f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;",
                             ]
                         ),
                     ],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
-            # Creazione shapefile con geometrie corrette
+            # Creo uno shapefile con geometrie corrette
             subprocess.run(
                 [
                     "ogr2ogr",
-                    Path(output_div, division).with_suffix(".shp"),
+                    shp_filename,
                     output_sqlite,
-                    "{}_clean".format(division),
+                    f"{division['name']}_clean",
                 ],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
 
-        # Creazione shapefile di livello inferiore
-        for division in source["divisions"].values():
-            # Ricavo tutti gli id dei territori
-            with open(Path(output_json, division["name"], division["name"]).with_suffix(".json")) as f:
-                division_ids = [item[division["key"]] for item in json.load(f)]
-            # Per ogni territorio individuo le suddivisioni amministrative inferiori
-            for division_id in division_ids:
-                # Creazione cartella
-                output_division_id = Path(output_shp, division["name"], division_id)
-                output_division_id.mkdir(parents=True, exist_ok=True)
+    # SHP (Shapefile) - Nested shapefile
+    # Per ogni divisione amministrativa...
+    for division in release["divisions"].values():
+        # Cartella di output
+        output_div = Path(output_release, division["name"])
+        output_div.mkdir(parents=True, exist_ok=True)
+        # Ricavo tutti gli id dei territori
+        dbf_filename = output_div.with_suffix(".dbf")
+        division_ids = [str(row[division["key"].lower()]) for row in DBF(dbf_filename)]
+        # Per ogni territorio individuo le suddivisioni amministrative inferiori
+        for division_id in division_ids:
+            # Creazione cartella
+            output_division_id = Path(output_div, division_id)
+            # File di output
+            shp_filename = output_division_id.with_suffix(".shp")
+            # Estrazione del singolo territorio
+            if not shp_filename.exists():
                 subprocess.run(
                     [
                         "ogr2ogr",
-                        Path(output_division_id, division_id).with_suffix(".shp"),
-                        Path(output_shp, division["name"]).with_suffix(".sqlite"),
-                        "{}_clean".format(division["name"]),
-                        "-where", "{}=\"{}\"".format(division["key"], division_id)
+                        shp_filename,
+                        Path(output_release, division["name"]).with_suffix(".sqlite"),
+                        f"{division['name']}_clean",
+                        "-where", f"{division['key']}=\"{division_id}\""
                     ],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
-                for sub_division_name in division.get("children", []):
-                    output_sub_division = Path(output_division_id, sub_division_name)
-                    output_sub_division.mkdir(parents=True, exist_ok=True)
+            for sub_division_name in division.get("children", []):
+                # File di output
+                shp_filename = Path(output_division_id, sub_division_name).with_suffix(".shp")
+                # Estrazione delle suddivisioni amministrative del singolo territorio
+                if not shp_filename.exists():
                     subprocess.run(
                         [
                             "ogr2ogr",
-                            Path(output_sub_division, sub_division_name).with_suffix(".shp"),
-                            Path(output_shp, sub_division_name).with_suffix(".sqlite"),
-                            "{}_clean".format(sub_division_name),
-                            "-where", "{}=\"{}\"".format(division["key"], division_id)
+                            shp_filename,
+                            Path(output_release, sub_division_name).with_suffix(".sqlite"),
+                            f"{sub_division_name}_clean",
+                            "-where", f"{division['key']}=\"{division_id}\""
                         ],
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,
                     )
         
-        # Pulizia dei file temporanei
-        for sqlite_filename in output_shp.glob("**/*.sqlite"):
-            os.remove(sqlite_filename)
-
-        # ZIP - Archives of corrected shapefiles
-        for shp_filename in output_shp.glob("**/*.shp"):
-            # Comprimo i file di ogni divisione amministrativa
-            with ZipFile(shp_filename.with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
-                for item in shp_filename.parent.iterdir():
-                    if item.is_file() and item.suffix != ".zip":
-                        zf.write(item, arcname=item.name)
-
-    # Geojson + GeoPKG + Topojson + Geobuf
-    logging.info("-- geojson + geopkg + topojson + geobuf")
-
-    # Cartelle di output
-    output_geojson = Path(OUTPUT_DIR, source["name"], "geojson")
-    output_geopkg = Path(OUTPUT_DIR, source["name"], "geopkg")
-    output_topojson = Path(OUTPUT_DIR, source["name"], "topojson")
-    output_geobuf = Path(OUTPUT_DIR, source["name"], "geobuf")
-
-    # Le creo se non esistono
-    output_geojson.mkdir(parents=True, exist_ok=True)
-    output_geopkg.mkdir(parents=True, exist_ok=True)
-    output_topojson.mkdir(parents=True, exist_ok=True)
-    output_geobuf.mkdir(parents=True, exist_ok=True)
+    # CSV (Comma Separated Values)
+    # Ciclo su tutti i file DBF
+    for dbf_filename in output_release.glob("**/*.dbf"):
+        # Carico il DBF come dataframe
+        df = pd.DataFrame(
+            iter(DBF(
+                dbf_filename,
+                encoding=release["encoding"]),
+            ),
+            dtype=str,
+        ).rename(columns=str.upper)
+        # Individuo il nome della suddivisione di appartenenza
+        division = dbf_filename.stem if dbf_filename.stem in release["divisions"] else dbf_filename.parent.stem
+        # File di output (CSV e JSON)
+        csv_filename = dbf_filename.with_suffix(".csv")
+        json_filename = csv_filename.with_suffix(".json")
+        # Per ogni divisione amministrativa superiore a quella corrente
+        if not csv_filename.exists() or not json_filename.exists():
+            for parent in (
+                release["divisions"][division_id]
+                for division_id in release["divisions"][division].get(
+                    "parents", []
+                )
+            ):
+                # Carico il DBF come dataframe
+                jdf = pd.DataFrame(
+                    iter(DBF(
+                        Path(output_release, parent["name"]).with_suffix(".dbf"),
+                        encoding=release["encoding"]),
+                    ),
+                    dtype=str,
+                ).rename(columns=str.upper)
+                # Faccio il join selezionando le colonne che mi interessano
+                df = pd.merge(
+                    df,
+                    jdf[[parent["key"]] + parent["fields"]],
+                    on=parent["key"],
+                    how="left",
+                )
+            # Sostituisco tutti i NaN con stringhe vuote
+            df.fillna("", inplace=True)
+            # Aggiungo l'URI di OntoPiA
+            if "key" in sources["ontopia"]["divisions"][division]:
+                df["ONTOPIA"] = df[
+                    sources["ontopia"]["divisions"][division].get("key")
+                ].apply(
+                    lambda x: "{host:s}/{path:s}/{code:0{digits:d}d}".format(
+                        host=sources["ontopia"].get("url", ""),
+                        path=sources["ontopia"]["divisions"][division].get("url", ""),
+                        code=int(x),
+                        digits=sources["ontopia"]["divisions"][division].get("digits", 1),
+                    )
+                )
+            # Salvo il file arricchito
+            df.to_csv(
+                csv_filename,
+                index=False,
+                columns=[
+                    col
+                    for col in df.columns
+                    if "shape_" not in col.lower() and "pkuid" not in col.lower()
+                ],
+            )
+            # JSON (JavaScript Object Notation)
+            df.to_json(json_filename, orient="records")
 
     # Ciclo su tutti gli shapefile
-    for shp_filename in output_shp.glob("**/*.shp"):
+    for shp_filename in output_release.glob("**/*.shp"):
+
+        # ZIP - Archives of corrected shapefiles
+        # Comprimo i file di ogni divisione amministrativa
+        zip_filename = shp_filename.with_suffix(".zip")
+        if not zip_filename.exists():
+            with ZipFile(shp_filename.with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
+                for item in shp_filename.parent.iterdir():
+                    if item.is_file() and item.suffix in SHAPEFILE_EXTENSIONS:
+                        zf.write(item, arcname=item.name)
+
         # Carico gli shapefile come geodataframe
         gdf = gpd.read_file(shp_filename)
 
         # Geojson - https://geojson.org/
         # File di output
-        geojson_filename = Path(
-            output_geojson, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
-        ).with_suffix(".json")
-        # Se non esiste...
+        geojson_filename = shp_filename.with_suffix(".geo.json")
+        # Converto in GEOJSON e salvo il file
         if not geojson_filename.exists():
-            # ... ne creo il percorso
-            geojson_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Converto in GEOJSON e salvo il file
             gdf.to_file(geojson_filename, driver="GeoJSON")
 
         # Geopackage - https://www.geopackage.org/
         # File di output
-        geopkg_filename = Path(
-            output_geopkg, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
-        ).with_suffix(".gpkg")
-        # Se non esiste...
+        geopkg_filename = shp_filename.with_suffix(".gpkg")
+        # Converto in GeoPackage e salvo il file
         if not geopkg_filename.exists():
-            # ... ne creo il percorso
-            geopkg_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Converto in GeoPackage e salvo il file
             gdf.to_file(geopkg_filename, driver="GPKG")
+
+        # GeoParquet - https://geoparquet.org/
+        # File di output
+        geoparquet_filename = shp_filename.with_suffix(".parquet")
+        # Converto in GeoParquet e salvo il file
+        if not geoparquet_filename.exists():
+            gdf.to_parquet(geoparquet_filename)
 
         # Topojson - https://github.com/topojson/topojson
         # File di output
-        topojson_filename = Path(
-            output_topojson, *shp_filename.parts[4 if OUTPUT_DIR else 2 :]
-        ).with_suffix(".json")
-        # Se non esiste...
+        topojson_filename = shp_filename.with_suffix(".topo.json")
+        # Converto in TOPOJSON
         if not topojson_filename.exists():
-            # ... ne creo il percorso
-            topojson_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Converto in TOPOJSON
             tj = topojson.Topology(gdf, prequantize=False, topology=True)
             # Salvo il file
             with open(topojson_filename, 'w') as f:
@@ -388,19 +316,19 @@ for source in sources["istat"]:  # noqa: C901
 
         # Geobuf - https://github.com/cubao/geobuf-cpp
         # File di output
-        geobuf_filename = Path(
-            output_geobuf, *shp_filename.parts[4 if OUTPUT_DIR else 2:]
-        ).with_suffix('.pbf')
-        # Se non esiste...
+        geobuf_filename = shp_filename.with_suffix('.pbf')
+        # Carico il GEOJSON e lo converto in GEOBUF
         if not geobuf_filename.exists() and geojson_filename.exists():
-            # ... ne creo il percorso
-            geobuf_filename.parent.mkdir(parents=True, exist_ok=True)
-            # Carico il GEOJSON e lo converto in GEOBUF
             with open(geojson_filename) as f:
                 pbf = geobuf.encode(geojson=f.read())
             # Salvo il file
             with open(geobuf_filename, 'wb') as f:
                 f.write(pbf)
+
+    # Pulizia dei file temporanei
+    for sqlite_filename in output_release.glob("**/*.sqlite"):
+        os.remove(sqlite_filename)
+
 
 # Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
 if not SOURCE_NAME:
@@ -416,9 +344,7 @@ if not SOURCE_NAME:
         try:
             df = pd.read_csv(StringIO(res.read().decode(sources["anpr"]["encoding"])), dtype=str)
         except pd.errors.ParserError as e:
-            logging.warning(
-                "!!! ANPR aggiornato non disponibile, uso la cache: {}".format(e)
-            )
+            logging.warning(f"!!! ANPR aggiornato non disponibile, uso la cache: {e}")
             try:
                 df = pd.read_csv(
                     Path(os.path.basename(sources["anpr"]["url"])).with_suffix(".csv"),
@@ -426,7 +352,7 @@ if not SOURCE_NAME:
                     dtype=str,
                 )
             except FileNotFoundError as e:
-                logging.error("!!! ANPR non disponibile: {}".format(e))
+                logging.error(f"!!! ANPR non disponibile: {e}")
                 exit(1)
 
         # Ciclo su tutte le risorse istat
@@ -439,7 +365,7 @@ if not SOURCE_NAME:
             division = source["divisions"].get(sources["anpr"]["division"]["name"])
             if division:
 
-                logging.info("Processing {}...".format(source["name"]))
+                logging.info(f"Processing {source['name']}...")
 
                 # Carico i dati ISTAT come dataframe
                 jdf = pd.read_csv(
@@ -448,32 +374,33 @@ if not SOURCE_NAME:
                         source["name"],
                         "csv",
                         division["name"],
-                        division["name"] + ".csv",
+                        f"{division['name']}.csv",
                     ),
                     dtype=str,
                 )
                 # Aggiungo un suffisso a tutte le colonne uguale al nome della fonte ISTAT (_YYYYMMDD)
                 jdf.rename(
                     columns={
-                        col: "{}_{}".format(col, source["name"]) for col in jdf.columns
+                        col: f"{col}_{source['name']}"
+                        for col in jdf.columns
                     },
                     inplace=True,
                 )
                 # Aggiungo una colonna GEO_YYYYMMDD con valore costante YYYYMMDD
-                jdf["GEO_{}".format(source["name"])] = source["name"]
+                jdf[f"GEO_{source['name']}"] = source["name"]
                 # Faccio il join tra ANPR e fonte ISTAT selezionando solo le colonne che mi interessano
                 df = pd.merge(
                     df,
                     jdf[
-                        ["{}_{}".format(division["key"], source["name"])]
+                        [f"{division['key']}_{source['name']}"]
                         + [
-                            "{}_{}".format(col, source["name"])
+                            f"{col}_{source['name']}"
                             for col in division["fields"]
                         ]
-                        + ["GEO_{}".format(source["name"])]
+                        + [f"GEO_{source['name']}"]
                     ],
                     left_on=sources["anpr"]["division"]["key"],
-                    right_on="{}_{}".format(division["key"], source["name"]),
+                    right_on=f"{division['key']}_{source['name']}",
                     how="left",
                 )
                 # Elimino tutte le colonne duplicate (identici valori su tutte le righe)
@@ -493,8 +420,10 @@ if not SOURCE_NAME:
         )
         # Aggiungo la colonna di collegamento con OntoPiA
         df["ONTOPIA"] = df.apply(
-            lambda row: "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/cities/{}-({})".format(
-                row["CODISTAT"], row["DATAISTITUZIONE"]
+            lambda row: "{host:s}/{code:0{digits:d}d}".format(
+                host=sources["anpr"]["division"].get("url", ""),
+                code=int(row["CODISTAT"]),
+                digits=sources["anpr"]["division"].get("digits", 1),
             ),
             axis=1,
         )
