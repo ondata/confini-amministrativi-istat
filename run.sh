@@ -28,6 +28,14 @@ generate () {
     fi
 }
 
+dev () {
+    if [ ! -z "$SOURCE_NAME" ]; then
+        docker run --rm -e SOURCE_NAME=$SOURCE_NAME -v $PWD/sources.json:/app/sources.json -v $PWD/main.py:/app/main.py -v $DOCKER_VOLUME $DOCKER_IMAGE
+    else
+        error
+    fi
+}
+
 serve () {
     echo "API served at http://localhost:$NGINX_PORT"
     docker run --rm -p $NGINX_PORT:80 -v $PWD/nginx.conf:/etc/nginx/conf.d/default.conf -v $PWD/api:/usr/share/nginx/html:ro nginx:$NGINX_VERSION
@@ -62,16 +70,34 @@ lint () {
     poetry run pre-commit run --files main.py
 }
 
+sample () {
+    if [ ! -z "$SOURCE_NAME" ]; then
+        find api/v1/$SOURCE_NAME -type f -exec bash -c 'f=$1; d=$(dirname $1); mkdir -p ${d/$2/00000000} && touch ${f/$2/00000000}' - '{}' $SOURCE_NAME \;
+    else
+        error
+    fi
+}
+
 help () {
     echo "Usage: $0 [build | generate | serve | documentation] [YYYYMMDD | PORT]"
     echo "Examples:"
     echo "- $0 build              # Build the Docker image"
     echo "- $0 generate           # Generate all resources listed in sources.json file"
     echo "- $0 generate 20230101  # Generate a custom resource only"
+    echo "- $0 dev 20230101       # Generate a custom resource in dev mode (no build required)"
     echo "- $0 serve              # Serve API on port $NGINX_PORT (default)"
     echo "- $0 serve 8081         # Serve API on custom port"
     echo "- $0 documentation      # Run Swagger UI on port $SWAGGER_UI_PORT and Swagger Editor on port $SWAGGER_ED_PORT"    
+    echo "- $0 deploy             # Deploy sample"
+    echo "- $0 shell              # Open a shell inside the container"
+    echo "- $0 lint               # Run linter on code"
+    echo "- $0 sample 20230101    # Generate an empty sample from custom resource"
     echo "You can exit the running process with ctrl+c"
+}
+
+error () {
+    echo "Error, wrong syntax!"
+    help
 }
 
 case $ACTION in
@@ -80,6 +106,9 @@ case $ACTION in
         ;;
     generate)
         generate
+        ;;
+    dev)
+        dev
         ;;
     serve)
         serve
@@ -96,11 +125,13 @@ case $ACTION in
     lint)
         lint
         ;;
+    sample)
+        sample
+        ;;
     help)
         help
         ;;
     *)
-        echo "Error, wrong syntax!"
-        help
+        error
         ;;
 esac
