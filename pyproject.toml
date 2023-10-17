@@ -8,12 +8,13 @@ readme = "README.md"
 packages = [{include = "confini_amministrativi_istat"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-simpledbf = "^0.2.6"
+python = "^3.11"
 geopandas = "^0.13.2"
-topojson = "^1.5"
+topojson = "^1.6"
 pandas = "^2.1.0"
 pybind11-geobuf = "^0.1.6"
+pyarrow = "^13.0.0"
+dbfread = "^2.0.7"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.3"
