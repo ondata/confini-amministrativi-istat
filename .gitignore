@@ -1,5 +1,4 @@
 .vscode/
 .directory
 api/v1/*
-!api/v1/20230101
 !api/v1/archivio-storico-comuni.csv
