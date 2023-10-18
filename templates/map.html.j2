@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnData - Confini Amministrativi ISTAT - /{{ path }}</title>
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css"
+        integrity="sha384-M86HUGbBFILBBZ9ykMAbT3nVb0+2C7yZlF8X2CiKNpDOQjKroMJqIeGZ/Le8N2Qp"
+        crossorigin=""
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+        crossorigin=""
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+        crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"
+        integrity="sha384-pQbeNTZ2fXhFbWb5OozBmu5GVW/mHkxUgFn/3PNt4RPm4IJ98yJSTGu/8LR53NuV"
+        crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/proj4leaflet@1.0.2/lib/proj4-compressed.js"
+        integrity="sha384-R7x++v2MKcATI+D1/GJsn636xbHca492Sdpm8BD36lj5vdWB9+OUBpM1oKkrzqv9"
+        crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/proj4leaflet@1.0.2/src/proj4leaflet.js"
+        integrity="sha384-aDnBHDK9AhLbrYhThBxEVMriFbix8Sz2059IlD3HbZhz7+WNmz+pSkOcI7MY72cE"
+        crossorigin=""
+    ></script>
+    <style>
+        #map {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+        }
+        th {
+            text-align: right;
+        }
+        th::after {
+            content: ":";
+        }
+        .leaflet-touch .leaflet-bar.easy-button-container a {
+            width: auto;
+            padding: 0 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        (async function () {
+
+            // GeoJSON file name
+            const filename = "../{{ filename }}";
+
+            // Leaflet map initialization
+            const map = L.map('map').setView([42.5206995, 13.2275392], 6);
+
+            // Projection definition (see https://github.com/kartena/Proj4Leaflet)
+            proj4.defs("urn:ogc:def:crs:EPSG::32632", "+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
+
+            // Tile layer loading
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            // Watermark
+            L.Control.Watermark = L.Control.extend({
+                onAdd: function(map) {
+                    var img = L.DomUtil.create('img');
+                    img.src = 'https://www.ondata.it/wp-content/uploads/2022/03/logo-onData-corretto-trasparente.png';
+                    img.style.width = '125px';
+                    return img;
+                }
+            });
+
+            L.control.watermark = function(opts) {
+                return new L.Control.Watermark(opts);
+            }
+
+            L.control.watermark({ position: 'bottomleft' }).addTo(map);
+
+            // Download buttons
+            {% for btn in downloads %}
+            L.easyButton('<a href="../{{ btn.filename }}" download="{{ btn.filename }}">{{ btn.name }}</a>', function(btn, map){
+                open("../{{ btn.filename }}");
+            }).addTo(map);
+            {% endfor %}
+
+            // Fetch GeoJSON data
+            const response = await fetch(filename);
+            const geojson = await response.json();
+
+            // Layer loading
+            const layer = L.Proj.geoJson(
+                geojson,
+                {
+                    style: function(feature) {
+                        return {
+                            color: "#EB593C",
+                            weight: 2,
+                            fillColor: "#2E85D1",
+                            fillOpacity: 0.66
+                        };
+                    }
+                }
+            ).bindPopup(function (layer) {
+                return `
+                    <h1>${layer.feature.properties["{{ key }}"]}</h1>
+                    <table>
+                        ${Object.entries(layer.feature.properties).sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join("\n")}
+                    </table>
+                `;
+            }).addTo(map);
+
+            // Adapt map zoom and pan
+            map.fitBounds(layer.getBounds());
+        })();
+    </script>
+</body>
+</html>

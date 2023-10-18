@@ -9,6 +9,13 @@ from pathlib import Path
 from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
+from jinja2 import Environment, PackageLoader, select_autoescape
+tpl_env = Environment(
+    loader=PackageLoader("main"),
+    autoescape=select_autoescape()
+)
+index_tpl = tpl_env.get_template("map.html.j2")
+
 from pybind11_geobuf import Encoder
 geobuf = Encoder(max_precision=int(10**8))
 import geopandas as gpd
@@ -56,6 +63,8 @@ for release in sources["istat"]:  # noqa: C901
     if not output_release.exists():
         # ... la creo
         output_release.mkdir(parents=True, exist_ok=True)
+
+        logging.info(f"Downloading source data...")
         
         # Scarico la risorsa remota
         with urlopen(release["url"]) as res:
@@ -76,6 +85,8 @@ for release in sources["istat"]:  # noqa: C901
                     # Estraggo file e cartelle con un percorso non vuoto
                     if zip_info.filename:
                         zfile.extract(zip_info, output_release)
+
+        logging.info(f"Correcting shapefiles...")
 
         # SHP (Shapefile) - Corrected shapefile
         # Per ogni divisione amministrativa...
@@ -157,6 +168,8 @@ for release in sources["istat"]:  # noqa: C901
                 stderr=subprocess.DEVNULL,
             )
 
+    logging.info(f"Creating nested shapefiles...")
+
     # SHP (Shapefile) - Nested shapefile
     # Per ogni divisione amministrativa...
     for division in release["divisions"].values():
@@ -165,7 +178,7 @@ for release in sources["istat"]:  # noqa: C901
         output_div.mkdir(parents=True, exist_ok=True)
         # Ricavo tutti gli id dei territori
         dbf_filename = output_div.with_suffix(".dbf")
-        division_ids = [str(row[division["key"].lower()]) for row in DBF(dbf_filename)]
+        division_ids = [str(row[division["keys"]["id"].lower()]) for row in DBF(dbf_filename)]
         # Per ogni territorio individuo le suddivisioni amministrative inferiori
         for division_id in division_ids:
             # Creazione cartella
@@ -201,25 +214,27 @@ for release in sources["istat"]:  # noqa: C901
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,
                     )
+
+    logging.info(f"Creating CSV and JSON files...")
         
     # CSV (Comma Separated Values)
     # Ciclo su tutti i file DBF
     for dbf_filename in output_release.glob("**/*.dbf"):
-        # Carico il DBF come dataframe
-        df = pd.DataFrame(
-            iter(DBF(
-                dbf_filename,
-                encoding=release["encoding"]),
-            ),
-            dtype=str,
-        ).rename(columns=str.upper)
-        # Individuo il nome della suddivisione di appartenenza
-        division = dbf_filename.stem if dbf_filename.stem in release["divisions"] else dbf_filename.parent.stem
         # File di output (CSV e JSON)
         csv_filename = dbf_filename.with_suffix(".csv")
         json_filename = csv_filename.with_suffix(".json")
         # Per ogni divisione amministrativa superiore a quella corrente
         if not csv_filename.exists() or not json_filename.exists():
+            # Carico il DBF come dataframe
+            df = pd.DataFrame(
+                iter(DBF(
+                    dbf_filename,
+                    encoding=release["encoding"]),
+                ),
+                dtype=str,
+            ).rename(columns=str.upper)
+            # Individuo il nome della suddivisione di appartenenza
+            division = dbf_filename.stem if dbf_filename.stem in release["divisions"] else dbf_filename.parent.stem
             for parent in (
                 release["divisions"][division_id]
                 for division_id in release["divisions"][division].get(
@@ -237,8 +252,8 @@ for release in sources["istat"]:  # noqa: C901
                 # Faccio il join selezionando le colonne che mi interessano
                 df = pd.merge(
                     df,
-                    jdf[[parent["key"]] + parent["fields"]],
-                    on=parent["key"],
+                    jdf[[parent["keys"]["id"]] + parent["fields"]],
+                    on=parent["keys"]["id"],
                     how="left",
                 )
             # Sostituisco tutti i NaN con stringhe vuote
@@ -268,8 +283,12 @@ for release in sources["istat"]:  # noqa: C901
             # JSON (JavaScript Object Notation)
             df.to_json(json_filename, orient="records")
 
+    logging.info(f"Converting shapefiles...")
+
     # Ciclo su tutti gli shapefile
     for shp_filename in output_release.glob("**/*.shp"):
+        # Individuo il nome della suddivisione di appartenenza
+        division = shp_filename.stem if shp_filename.stem in release["divisions"] else shp_filename.parent.stem
 
         # ZIP - Archives of corrected shapefiles
         # Comprimo i file di ogni divisione amministrativa
@@ -277,7 +296,7 @@ for release in sources["istat"]:  # noqa: C901
         if not zip_filename.exists():
             with ZipFile(shp_filename.with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
                 for item in shp_filename.parent.iterdir():
-                    if item.is_file() and item.suffix in SHAPEFILE_EXTENSIONS:
+                    if item.is_file() and item.stem == division and item.suffix in SHAPEFILE_EXTENSIONS:
                         zf.write(item, arcname=item.name)
 
         # Carico gli shapefile come geodataframe
@@ -324,6 +343,29 @@ for release in sources["istat"]:  # noqa: C901
             # Salvo il file
             with open(geobuf_filename, 'wb') as f:
                 f.write(pbf)
+
+        # HTML - https://leafletjs.com/
+        # File di output
+        html_filename = Path(shp_filename.parent, shp_filename.stem, "index").with_suffix(".html")
+        # Compilo il template e salvo il file
+        if not html_filename.exists():
+            html_filename.parent.mkdir(parents=True, exist_ok=True)
+            with open(html_filename, 'w') as f:
+                f.write(index_tpl.render(
+                    filename=geojson_filename.name,
+                    path=geojson_filename,
+                    key=release["divisions"][division]["keys"]["label"].lower(),
+                    downloads=[
+                        { "name": "Shapefile", "filename": zip_filename.name },
+                        { "name": "GeoJSON", "filename": geojson_filename.name },
+                        { "name": "GeoPKG", "filename": geopkg_filename.name },
+                        { "name": "GeoParquet", "filename": geoparquet_filename.name },
+                        { "name": "TopoJSON", "filename": topojson_filename.name },
+                        { "name": "GeoBUF", "filename": geobuf_filename.name }
+                    ]
+                ))
+
+    logging.info(f"Cleaning temporary files...")
 
     # Pulizia dei file temporanei
     for sqlite_filename in output_release.glob("**/*.sqlite"):

@@ -58,6 +58,7 @@ RUN mkdir -p /app
 WORKDIR /app
 ADD requirements.txt /app
 RUN pip install -r requirements.txt
+ADD templates /app
 ADD main.py /app
 
 VOLUME ["/app"]
