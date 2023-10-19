@@ -14,7 +14,8 @@ DOCKER_VOLUME=$PWD:/app
 
 NGINX_VERSION=latest
 SWAGGER_UI_VERSION=v5.4.2
-SWAGGER_ED_VERSION=v4-latest
+SWAGGER_ED_VERSION=next-v5-unprivileged
+OAS_SPEC_VERSION=v1
 
 build () {
     docker build --target application -t $DOCKER_IMAGE_NAME .
@@ -44,13 +45,13 @@ serve () {
 
 swagger_ui () {
     echo "Swagger UI running at http://localhost:$SWAGGER_UI_PORT"
-    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/api/openapi.v1.yaml:/tmp/openapi.v1.yaml -e SWAGGER_JSON=/tmp/openapi.v1.yaml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
+    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/api/$OAS_SPEC_VERSION/openapi.$OAS_SPEC_VERSION.yaml:/tmp/openapi.$OAS_SPEC_VERSION.yaml -e SWAGGER_JSON=/tmp/openapi.$OAS_SPEC_VERSION.yaml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
     echo "Shutdown Swagger UI"
 }
 
 swagger_ed () {
     echo "Swagger Editor running at http://localhost:$SWAGGER_ED_PORT"
-    docker run --rm -p $SWAGGER_ED_PORT:8080 -v $PWD/api/openapi.v1.yaml:/tmp/openapi.v1.yaml -e SWAGGER_FILE=/tmp/openapi.v1.yaml swaggerapi/swagger-editor:$SWAGGER_ED_VERSION
+    docker run --rm -p $SWAGGER_ED_PORT:8080 swaggerapi/swagger-editor:$SWAGGER_ED_VERSION
     echo "Shutdown Swagger Editor"
 }
 
@@ -70,14 +71,6 @@ lint () {
     poetry run pre-commit run --files main.py
 }
 
-sample () {
-    if [ ! -z "$SOURCE_NAME" ]; then
-        find api/v1/$SOURCE_NAME -type f -exec bash -c 'f=$1; d=$(dirname $1); mkdir -p ${d/$2/00000000} && touch ${f/$2/00000000}' - '{}' $SOURCE_NAME \;
-    else
-        error
-    fi
-}
-
 help () {
     echo "Usage: $0 [build | generate | serve | documentation] [YYYYMMDD | PORT]"
     echo "Examples:"
@@ -91,7 +84,6 @@ help () {
     echo "- $0 deploy             # Deploy sample"
     echo "- $0 shell              # Open a shell inside the container"
     echo "- $0 lint               # Run linter on code"
-    echo "- $0 sample 20230101    # Generate an empty sample from custom resource"
     echo "You can exit the running process with ctrl+c"
 }
 
@@ -124,9 +116,6 @@ case $ACTION in
         ;;
     lint)
         lint
-        ;;
-    sample)
-        sample
         ;;
     help)
         help

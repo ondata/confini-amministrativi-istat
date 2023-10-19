@@ -23,7 +23,7 @@ import pandas as pd
 import topojson
 from dbfread import DBF
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "api/v1")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "dist/api/v1/it")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
 SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx"]

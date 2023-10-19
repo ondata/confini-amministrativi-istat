@@ -1,5 +1,5 @@
 .vscode/
 .directory
 __pycache__/
-api/v1/*
-!api/v1/archivio-storico-comuni.csv
+dist/api/v1/it/*
+!dist/api/v1/it/archivio-storico-comuni.csv
