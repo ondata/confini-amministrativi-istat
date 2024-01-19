@@ -39,7 +39,7 @@ dev () {
 
 serve () {
     echo "API served at http://localhost:$NGINX_PORT"
-    docker run --rm -p $NGINX_PORT:80 -v $PWD/nginx.conf:/etc/nginx/conf.d/default.conf -v $PWD/api:/usr/share/nginx/html:ro nginx:$NGINX_VERSION
+    docker run --rm -p $NGINX_PORT:80 -v $PWD/nginx.conf:/etc/nginx/conf.d/default.conf -v $PWD/dist:/usr/share/nginx/html:ro nginx:$NGINX_VERSION
     echo "Shutdown API"
 }
 

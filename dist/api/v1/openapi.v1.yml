@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: '3.1.0'
 info:
   title: OnData - Confini Amministrativi ISTAT - OpenAPI 3.1
   description: |-
@@ -1320,6 +1320,81 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':
           description: Page not found
+  /index.json:
+    get:
+      tags:
+        - JSON-HAL (Hypertext Application Language)
+      summary: Find resource in JSON-HAL format
+      description: Returns a single resource in JSON-HAL format
+      operationId: getJSONHALResource
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/hal+json:
+              schema:
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
+        '404':
+          description: Resource not found
+  /{countryId}/index.json:
+    get:
+      tags:
+        - JSON-HAL (Hypertext Application Language)
+      summary: Find resource by COUNTRY in JSON-HAL format
+      description: Returns a single resource in JSON-HAL format
+      operationId: getJSONHALResourceByCountry
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/hal+json:
+              schema:
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
+        '400':
+          description: Invalid COUNTRY parameter supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/index.json:
+    get:
+      tags:
+        - JSON-HAL (Hypertext Application Language)
+      summary: Find resource by COUNTRY and RELEASE in JSON-HAL format
+      description: Returns a single resource in JSON-HAL format
+      operationId: getJSONHALResourceByRelease
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/hal+json:
+              schema:
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
+        '400':
+          description: Invalid COUNTRY or RELEASE parameters supplied
+        '404':
+          description: Resource not found
   /{countryId}/{releaseId}/{division}/index.json:
     get:
       tags:
@@ -1355,7 +1430,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/scottsmith130/hal-json-schema/master/hal.json'
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
         '400':
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
@@ -1402,7 +1477,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/scottsmith130/hal-json-schema/master/hal.json'
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
         '400':
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
@@ -1456,7 +1531,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/scottsmith130/hal-json-schema/master/hal.json'
+                $ref: 'https://jenkin.dev/json-schema-bricks/hal.schema.min.json'
         '400':
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':

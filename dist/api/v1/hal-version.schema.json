@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.confini-amministrativi.it/api/v1/hal-version.schema.json",
+    "title": "JSON-HAL schema for versions",
+    "type": "object",
+    "properties": {
+        "_links": {
+            "type": "object",
+            "properties": {
+                "self": {
+                    "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
+                },
+                "item": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
+                    }
+                }
+            }
+        }
+    }
+}

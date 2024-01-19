@@ -1,5 +1,4 @@
 import json
-import csv
 import logging
 import os
 import re
@@ -8,6 +7,9 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
+
+import warnings
+warnings.filterwarnings('ignore', module='fiona')
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 tpl_env = Environment(
@@ -23,10 +25,28 @@ import pandas as pd
 import topojson
 from dbfread import DBF
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "dist/api/v1/it")
+DIST_DIR = os.getenv("DIST_DIR", "dist")
+PUBLIC_DIR = os.getenv("PUBLIC_DIR", "api/v1")
+COUNTRY_CODE = os.getenv("COUNTRY_CODE", "it")
+COUNTRY_NAME = os.getenv("COUNTRY_NAME", "Italia")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", f"{DIST_DIR}/{PUBLIC_DIR}/{COUNTRY_CODE}")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
+SHAPEFILE_ENCODING = "UTF-8"
+SHAPEFILE_PROJECTION = "EPSG:4326" # WGS84 World: https://epsg.io/?q=4326
 SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx"]
+MIME_TYPES = [
+    ("SHP", "shp", "application/vnd.shp"),
+    ("DBF", "dbf", "application/vnd.dbf"),
+    ("SHX", "shx", "application/vnd.shx"),
+    ("PRJ", "prj", "text/plain"),
+    ("ZIP", "zip", "application/zip"),
+    ("GeoJSON", "geo.json", "application/geo+json"),
+    ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
+    ("GeoParquet", "geo.parquet", "application/vnd.apache.parquet"),
+    ("TopoJSON", "topo.json", "application/json"),
+    ("Geobuf", "geo.pbf", "application/octet-stream")
+]
 
 logging.basicConfig(level=logging.INFO)
 
@@ -49,7 +69,7 @@ with open(SOURCE_FILE) as f:
 # ISTAT - Unità territoriali originali
 logging.info("+++ ISTAT +++")
 # Ciclo su tutte le risorse ISTAT
-for release in sources["istat"]:  # noqa: C901
+for release in sources["istat"]: # noqa: C901
 
     if SOURCE_NAME and release["name"] != SOURCE_NAME:
         continue
@@ -119,7 +139,7 @@ for release in sources["istat"]:  # noqa: C901
                         [
                             "SELECT load_extension('mod_spatialite');",
                             # "-- importa shp come tabella virtuale",
-                            f"CREATE VIRTUAL TABLE \"{division['name']}\" USING VirtualShape('{Path(output_release, division['name'])}', UTF-8, 32632);",
+                            f"CREATE VIRTUAL TABLE \"{division['name']}\" USING VirtualShape('{Path(output_release, division['name'])}',{release['charset']},{release['srid']});",
                             # "-- crea tabella con output check geometrico",
                             f"CREATE TABLE \"{division['name']}_check\" AS SELECT PKUID,GEOS_GetLastWarningMsg() msg,ST_AsText(GEOS_GetCriticalPointFromMsg()) punto FROM \"{division['name']}\" WHERE ST_IsValid(geometry) <> 1;",
                         ]
@@ -148,7 +168,7 @@ for release in sources["istat"]:  # noqa: C901
                             [
                                 "SELECT load_extension('mod_spatialite');",
                                 f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
-                                f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',32632,'MULTIPOLYGON','XY');",
+                                f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');",
                                 f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;",
                             ]
                         ),
@@ -156,11 +176,13 @@ for release in sources["istat"]:  # noqa: C901
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
-            # Creo uno shapefile con geometrie corrette
+            # Creo uno shapefile con geometrie corrette e proiezione normalizzata
             subprocess.run(
                 [
                     "ogr2ogr",
                     shp_filename,
+                    "-t_srs", SHAPEFILE_PROJECTION,
+                    "-lco", f"ENCODING={SHAPEFILE_ENCODING}",
                     output_sqlite,
                     f"{division['name']}_clean",
                 ],
@@ -178,42 +200,183 @@ for release in sources["istat"]:  # noqa: C901
         output_div.mkdir(parents=True, exist_ok=True)
         # Ricavo tutti gli id dei territori
         dbf_filename = output_div.with_suffix(".dbf")
-        division_ids = [str(row[division["keys"]["id"].lower()]) for row in DBF(dbf_filename)]
+        division_territories = [
+            (
+                str(row[division["keys"]["id"].lower()]),
+                str(row[division["keys"]["label"].lower()])
+            )
+            for row in DBF(dbf_filename, encoding=SHAPEFILE_ENCODING)
+        ]
         # Per ogni territorio individuo le suddivisioni amministrative inferiori
-        for division_id in division_ids:
+        for territory_id, territory_label in division_territories:
             # Creazione cartella
-            output_division_id = Path(output_div, division_id)
+            output_territory = Path(output_div, territory_id)
+            output_territory.mkdir(parents=True, exist_ok=True)
             # File di output
-            shp_filename = output_division_id.with_suffix(".shp")
+            shp_filename = output_territory.with_suffix(".shp")
             # Estrazione del singolo territorio
             if not shp_filename.exists():
                 subprocess.run(
                     [
                         "ogr2ogr",
                         shp_filename,
+                        "-t_srs", SHAPEFILE_PROJECTION,
+                        "-lco", f"ENCODING={SHAPEFILE_ENCODING}",
                         Path(output_release, division["name"]).with_suffix(".sqlite"),
                         f"{division['name']}_clean",
-                        "-where", f"{division['key']}=\"{division_id}\""
+                        "-where", f"{division['keys']['id'].lower()}=\"{territory_id}\""
                     ],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
-            for sub_division_name in division.get("children", []):
+            for subdivision_name in division.get("children", []):
+                # Creazione cartella
+                output_subdivision = Path(output_territory, subdivision_name)
+                output_subdivision.mkdir(parents=True, exist_ok=True)
                 # File di output
-                shp_filename = Path(output_division_id, sub_division_name).with_suffix(".shp")
+                shp_filename = output_subdivision.with_suffix(".shp")
                 # Estrazione delle suddivisioni amministrative del singolo territorio
                 if not shp_filename.exists():
                     subprocess.run(
                         [
                             "ogr2ogr",
                             shp_filename,
-                            Path(output_release, sub_division_name).with_suffix(".sqlite"),
-                            f"{sub_division_name}_clean",
-                            "-where", f"{division['key']}=\"{division_id}\""
+                            "-t_srs", SHAPEFILE_PROJECTION,
+                            "-lco", f"ENCODING={SHAPEFILE_ENCODING}",
+                            Path(output_release, subdivision_name).with_suffix(".sqlite"),
+                            f"{subdivision_name}_clean",
+                            "-where", f"{division['keys']['id'].lower()}=\"{territory_id}\"",
                         ],
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,
                     )
+
+                # JSON-HAL - https://stateless.group/hal_specification.html
+                # File di output
+                hal_filename = Path(output_subdivision, "index").with_suffix(".json")
+                with open(hal_filename, 'w') as f:
+                    json.dump({
+                        "_links": {
+                            "self": {
+                                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/{subdivision_name}/index.json",
+                                "hreflang": COUNTRY_CODE,
+                                "name": subdivision_name,
+                                "title": f"{territory_label} / {release['divisions'][subdivision_name]['title']}",
+                                "type": "application/hal+json",
+                                "profile": f"/{PUBLIC_DIR}/hal-subdivision.schema.json"
+                            },
+                            "up": {
+                                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/index.json",
+                                "hreflang": COUNTRY_CODE,
+                                "name": territory_id,
+                                "title": territory_label,
+                                "type": "application/hal+json",
+                                "profile": f"/{PUBLIC_DIR}/hal-territory.schema.json"
+                            },
+                            "enclosure": [
+                                {
+                                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/{subdivision_name}.{mime_extension}",
+                                    "hreflang": "it",
+                                    "name": f"{subdivision_name}.{mime_extension}",
+                                    "title": f"{territory_label} / {release['divisions'][subdivision_name]['title']} ({mime_label})",
+                                    "type": mime_type
+                                }
+                                for mime_label, mime_extension, mime_type in MIME_TYPES
+                            ]
+                        }
+                    }, f)
+
+            # JSON-HAL - https://stateless.group/hal_specification.html
+            # File di output
+            hal_filename = Path(output_territory, "index").with_suffix(".json")
+            with open(hal_filename, 'w') as f:
+                json.dump({
+                    "_links": {
+                        "self": {
+                            "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/index.json",
+                            "hreflang": COUNTRY_CODE,
+                            "name": territory_id,
+                            "title": territory_label,
+                            "type": "application/hal+json",
+                            "profile": f"/{PUBLIC_DIR}/hal-territory.schema.json"
+                        },
+                        "up": {
+                            "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/index.json",
+                            "hreflang": COUNTRY_CODE,
+                            "name": division['name'],
+                            "title": division['title'],
+                            "type": "application/hal+json",
+                            "profile": f"/{PUBLIC_DIR}/hal-division.schema.json"
+                        },
+                        "item": [
+                            {
+                                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/{subdivision_name}/index.json",
+                                "hreflang": COUNTRY_CODE,
+                                "name": subdivision_name,
+                                "title": release["divisions"][subdivision_name]["title"],
+                                "type": "application/hal+json",
+                                "profile": f"/{PUBLIC_DIR}/hal-subdivision.schema.json"
+                            }
+                            for subdivision_name in division.get("children", [])
+                        ],
+                        "enclosure": [
+                            {
+                                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}.{mime_extension}",
+                                "hreflang": "it",
+                                "name": f"{territory_id}.{mime_extension}",
+                                "title": f"{territory_label} ({mime_label})",
+                                "type": mime_type
+                            }
+                            for mime_label, mime_extension, mime_type in MIME_TYPES
+                        ]
+                    }
+                }, f)
+
+        # JSON-HAL - https://stateless.group/hal_specification.html
+        # File di output
+        hal_filename = Path(output_div, "index").with_suffix(".json")
+        with open(hal_filename, 'w') as f:
+            json.dump({
+                "_links": {
+                    "self": {
+                        "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/index.json",
+                        "hreflang": COUNTRY_CODE,
+                        "name": division["name"],
+                        "title": division["title"],
+                        "type": "application/hal+json",
+                        "profile": f"/{PUBLIC_DIR}/hal-division.schema.json"
+                    },
+                    "up": {
+                        "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/index.json",
+                        "hreflang": COUNTRY_CODE,
+                        "name": release['name'],
+                        "title": release['name'],
+                        "type": "application/hal+json",
+                        "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
+                    },
+                    "item": [
+                        {
+                            "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/index.json",
+                            "hreflang": COUNTRY_CODE,
+                            "name": territory_id,
+                            "title": territory_label,
+                            "type": "application/hal+json",
+                            "profile": f"/{PUBLIC_DIR}/hal-territory.schema.json"
+                        }
+                        for territory_id, territory_label in division_territories
+                    ],
+                    "enclosure": [
+                        {
+                            "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}.{mime_extension}",
+                            "hreflang": "it",
+                            "name": f"{division['name']}.{mime_extension}",
+                            "title": f"{division['title']} ({mime_label})",
+                            "type": mime_type
+                        }
+                        for mime_label, mime_extension, mime_type in MIME_TYPES
+                    ]
+                }
+            }, f)
 
     logging.info(f"Creating CSV and JSON files...")
         
@@ -229,10 +392,10 @@ for release in sources["istat"]:  # noqa: C901
             df = pd.DataFrame(
                 iter(DBF(
                     dbf_filename,
-                    encoding=release["encoding"]),
+                    encoding=SHAPEFILE_ENCODING),
                 ),
                 dtype=str,
-            ).rename(columns=str.upper)
+            ).rename(columns=str.lower)
             # Individuo il nome della suddivisione di appartenenza
             division = dbf_filename.stem if dbf_filename.stem in release["divisions"] else dbf_filename.parent.stem
             for parent in (
@@ -245,23 +408,23 @@ for release in sources["istat"]:  # noqa: C901
                 jdf = pd.DataFrame(
                     iter(DBF(
                         Path(output_release, parent["name"]).with_suffix(".dbf"),
-                        encoding=release["encoding"]),
+                        encoding=SHAPEFILE_ENCODING),
                     ),
                     dtype=str,
-                ).rename(columns=str.upper)
+                ).rename(columns=str.lower)
                 # Faccio il join selezionando le colonne che mi interessano
                 df = pd.merge(
                     df,
-                    jdf[[parent["keys"]["id"]] + parent["fields"]],
-                    on=parent["keys"]["id"],
+                    jdf[[parent["keys"]["id"].lower()] + [field.lower() for field in parent["fields"]]],
+                    on=parent["keys"]["id"].lower(),
                     how="left",
                 )
             # Sostituisco tutti i NaN con stringhe vuote
             df.fillna("", inplace=True)
             # Aggiungo l'URI di OntoPiA
             if "key" in sources["ontopia"]["divisions"][division]:
-                df["ONTOPIA"] = df[
-                    sources["ontopia"]["divisions"][division].get("key")
+                df["ontopia"] = df[
+                    sources["ontopia"]["divisions"][division].get("key").lower()
                 ].apply(
                     lambda x: "{host:s}/{path:s}/{code:0{digits:d}d}".format(
                         host=sources["ontopia"].get("url", ""),
@@ -271,15 +434,7 @@ for release in sources["istat"]:  # noqa: C901
                     )
                 )
             # Salvo il file arricchito
-            df.to_csv(
-                csv_filename,
-                index=False,
-                columns=[
-                    col
-                    for col in df.columns
-                    if "shape_" not in col.lower() and "pkuid" not in col.lower()
-                ],
-            )
+            df.to_csv(csv_filename, index=False)
             # JSON (JavaScript Object Notation)
             df.to_json(json_filename, orient="records")
 
@@ -290,6 +445,15 @@ for release in sources["istat"]:  # noqa: C901
         # Individuo il nome della suddivisione di appartenenza
         division = shp_filename.stem if shp_filename.stem in release["divisions"] else shp_filename.parent.stem
 
+        # Carico lo shapefile come geodataframe
+        gdf = gpd.read_file(shp_filename, encoding=SHAPEFILE_ENCODING)
+        # Carico i dati arricchiti precedentemente
+        df = pd.read_json(shp_filename.with_suffix(".json"))
+        # Arricchisco lo shapefile e lo salvo
+        if len(df.columns.difference(gdf.columns)) > 0:
+            gdf = gdf.merge(df[df.columns.difference(gdf.columns).union(["pkuid"])], on="pkuid")
+            gdf.to_file(shp_filename, encoding=SHAPEFILE_ENCODING)
+
         # ZIP - Archives of corrected shapefiles
         # Comprimo i file di ogni divisione amministrativa
         zip_filename = shp_filename.with_suffix(".zip")
@@ -298,9 +462,6 @@ for release in sources["istat"]:  # noqa: C901
                 for item in shp_filename.parent.iterdir():
                     if item.is_file() and item.stem == division and item.suffix in SHAPEFILE_EXTENSIONS:
                         zf.write(item, arcname=item.name)
-
-        # Carico gli shapefile come geodataframe
-        gdf = gpd.read_file(shp_filename)
 
         # Geojson - https://geojson.org/
         # File di output
@@ -318,7 +479,7 @@ for release in sources["istat"]:  # noqa: C901
 
         # GeoParquet - https://geoparquet.org/
         # File di output
-        geoparquet_filename = shp_filename.with_suffix(".parquet")
+        geoparquet_filename = shp_filename.with_suffix(".geo.parquet")
         # Converto in GeoParquet e salvo il file
         if not geoparquet_filename.exists():
             gdf.to_parquet(geoparquet_filename)
@@ -335,7 +496,7 @@ for release in sources["istat"]:  # noqa: C901
 
         # Geobuf - https://github.com/cubao/geobuf-cpp
         # File di output
-        geobuf_filename = shp_filename.with_suffix('.pbf')
+        geobuf_filename = shp_filename.with_suffix('.geo.pbf')
         # Carico il GEOJSON e lo converto in GEOBUF
         if not geobuf_filename.exists() and geojson_filename.exists():
             with open(geojson_filename) as f:
@@ -352,6 +513,7 @@ for release in sources["istat"]:  # noqa: C901
             html_filename.parent.mkdir(parents=True, exist_ok=True)
             with open(html_filename, 'w') as f:
                 f.write(index_tpl.render(
+                    lang=COUNTRY_CODE,
                     filename=geojson_filename.name,
                     path=geojson_filename,
                     key=release["divisions"][division]["keys"]["label"].lower(),
@@ -361,7 +523,7 @@ for release in sources["istat"]:  # noqa: C901
                         { "name": "GeoPKG", "filename": geopkg_filename.name },
                         { "name": "GeoParquet", "filename": geoparquet_filename.name },
                         { "name": "TopoJSON", "filename": topojson_filename.name },
-                        { "name": "GeoBUF", "filename": geobuf_filename.name }
+                        { "name": "Geobuf", "filename": geobuf_filename.name }
                     ]
                 ))
 
@@ -370,6 +532,42 @@ for release in sources["istat"]:  # noqa: C901
     # Pulizia dei file temporanei
     for sqlite_filename in output_release.glob("**/*.sqlite"):
         os.remove(sqlite_filename)
+
+    # JSON-HAL - https://stateless.group/hal_specification.html
+    # File di output
+    hal_filename = Path(output_release, "index").with_suffix(".json")
+    with open(hal_filename, 'w') as f:
+        json.dump({
+            "_links": {
+                "self": {
+                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/index.json",
+                    "hreflang": COUNTRY_CODE,
+                    "name": release["name"],
+                    "title": release["name"],
+                    "type": "application/hal+json",
+                    "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
+                },
+                "up": {
+                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/index.json",
+                    "hreflang": COUNTRY_CODE,
+                    "name": COUNTRY_CODE,
+                    "title": COUNTRY_NAME,
+                    "type": "application/hal+json",
+                    "profile": f"/{PUBLIC_DIR}/hal-country.schema.json"
+                },
+                "item": [
+                    {
+                        "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/index.json",
+                        "hreflang": COUNTRY_CODE,
+                        "name": division["name"],
+                        "title": division["title"],
+                        "type": "application/hal+json",
+                        "profile": f"/{PUBLIC_DIR}/hal-division.schema.json"
+                    }
+                    for division in release["divisions"].values()
+                ]
+            }
+        }, f)
 
 
 # Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
@@ -384,13 +582,13 @@ if not SOURCE_NAME:
         csv_filename = Path(OUTPUT_DIR, sources["anpr"]["name"]).with_suffix(".csv")
         # Carico come dataframe
         try:
-            df = pd.read_csv(StringIO(res.read().decode(sources["anpr"]["encoding"])), dtype=str)
+            df = pd.read_csv(StringIO(res.read().decode(sources["anpr"]["charset"])), dtype=str)
         except pd.errors.ParserError as e:
             logging.warning(f"!!! ANPR aggiornato non disponibile, uso la cache: {e}")
             try:
                 df = pd.read_csv(
                     Path(os.path.basename(sources["anpr"]["url"])).with_suffix(".csv"),
-                    encoding=sources["anpr"]["encoding"],
+                    encoding=sources["anpr"]["charset"],
                     dtype=str,
                 )
             except FileNotFoundError as e:
@@ -414,10 +612,8 @@ if not SOURCE_NAME:
                     Path(
                         OUTPUT_DIR,
                         source["name"],
-                        "csv",
                         division["name"],
-                        f"{division['name']}.csv",
-                    ),
+                    ).with_suffix(".csv"),
                     dtype=str,
                 )
                 # Aggiungo un suffisso a tutte le colonne uguale al nome della fonte ISTAT (_YYYYMMDD)
@@ -436,7 +632,7 @@ if not SOURCE_NAME:
                     jdf[
                         [f"{division['key']}_{source['name']}"]
                         + [
-                            f"{col}_{source['name']}"
+                            f"{col.lower()}_{source['name']}"
                             for col in division["fields"]
                         ]
                         + [f"GEO_{source['name']}"]

@@ -1,0 +1,21 @@
+{
+    "_links": {
+        "self": {
+            "href": "/api/v1/index.json",
+            "name": "v1",
+            "title": "v1",
+            "type": "application/hal+json",
+            "profile": "/api/v1/hal-version.schema.json"
+        },
+        "item": [
+            {
+                "href": "/api/v1/it/index.json",
+                "hreflang": "it",
+                "name": "it",
+                "title": "Italia",
+                "type": "application/hal+json",
+                "profile": "/api/v1/hal-country.schema.json"
+            }
+        ]
+    }    
+}

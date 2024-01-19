@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +18,6 @@
     ></script>
     <script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"
         integrity="sha384-pQbeNTZ2fXhFbWb5OozBmu5GVW/mHkxUgFn/3PNt4RPm4IJ98yJSTGu/8LR53NuV"
-        crossorigin=""
-    ></script>
-    <script src="https://unpkg.com/proj4leaflet@1.0.2/lib/proj4-compressed.js"
-        integrity="sha384-R7x++v2MKcATI+D1/GJsn636xbHca492Sdpm8BD36lj5vdWB9+OUBpM1oKkrzqv9"
-        crossorigin=""
-    ></script>
-    <script src="https://unpkg.com/proj4leaflet@1.0.2/src/proj4leaflet.js"
-        integrity="sha384-aDnBHDK9AhLbrYhThBxEVMriFbix8Sz2059IlD3HbZhz7+WNmz+pSkOcI7MY72cE"
         crossorigin=""
     ></script>
     <style>
@@ -59,9 +51,6 @@
 
             // Leaflet map initialization
             const map = L.map('map').setView([42.5206995, 13.2275392], 6);
-
-            // Projection definition (see https://github.com/kartena/Proj4Leaflet)
-            proj4.defs("urn:ogc:def:crs:EPSG::32632", "+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
 
             // Tile layer loading
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -97,7 +86,7 @@
             const geojson = await response.json();
 
             // Layer loading
-            const layer = L.Proj.geoJson(
+            const layer = L.geoJson(
                 geojson,
                 {
                     style: function(feature) {
