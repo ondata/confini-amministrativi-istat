@@ -1,0 +1,20 @@
+{
+  "name": "confini-amministrativi-istat",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build --dist-dir ../../dist"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "parcel": "^2.11.0",
+    "postcss": "^8.4.33",
+    "process": "^0.11.10",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-select": "^5.8.0"
+  }
+}

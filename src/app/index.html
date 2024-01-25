@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnData - Confini Amministrativi Italiani</title>
+
+    <!-- Swagger UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css"
+        integrity="sha512-XtsDvxKBBCfSB54eyZVPobezzETL6eAP6QqJ1C5/tjEVSuxXJd+cwyaCCMMkIEJkuu7ciVAmzX08T86VaRxlsg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.min.js"
+        integrity="sha512-pav19M3lwaqcA1QfOtzKRBYB3UG8eaI3OxHhL7TOqH8btgyLyh+XdxLCPkfUEiS8e5TKrItNrnM843TDnpa6Dg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.min.js"
+        integrity="sha512-CmA7gkSTJVrv10bRXMQEsGSxG7cXOGMrLUjn4kwfKOQk/1bW7gyKy8WxYa6oZFDVjWDKquG2DXbaZHoATi7Ukw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+        integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+        integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Custom style -->
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <!-- Header: Hero -->
+    <header class="min-h-screen bg-gray-800 text-gray-100">
+        <div
+            class="container flex flex-col justify-center p-6 mx-auto sm:py-12 lg:py-24 lg:flex-row lg:justify-between">
+            <div class="flex flex-col justify-center p-6 text-center rounded-sm lg:max-w-md xl:max-w-lg lg:text-left">
+                <h1 class="text-5xl font-bold leadi sm:text-6xl">
+                    Confini <span class="text-violet-400">amministrativi</span> italiani
+                </h1>
+                <p class="mt-6 mb-8 text-lg sm:mb-12">
+                    Tutte le risorse geografiche di cui hai bisogno
+                    <br class="hidden md:inline lg:hidden">
+                    per il tuo prossimo progetto.
+                </p>
+                <div
+                    class="flex flex-col space-y-4 sm:items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
+                    <a rel="noopener noreferrer" href="#map"
+                        class="px-8 py-3 text-lg font-semibold rounded bg-violet-400 text-gray-900">Esplora</a>
+                    <a rel="noopener noreferrer" href="#docs"
+                        class="px-8 py-3 text-lg font-semibold border rounded border-gray-100">Vai alla documentazione</a>
+                </div>
+            </div>
+            <div class="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
+                <img src="assets/business.svg" alt="" class="object-contain h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
+            </div>
+        </div>
+    </header>
+    <!-- Header: Hero -->
+
+    <!-- Main: Map container -->
+    <main class="min-h-screen bg-gray-100 text-gray-800 flex flex-row">
+        <!-- Section: Controls -->
+        <section class="p-6 max-w-md">
+            <p id="info" class="mb-4">
+                Questo progetto nasce nel <a rel="noopener noreferrer" target="_blank" href="https://github.com/teamdigitale/confini-amministrativi-istat" class="underline">novembre del 2019</a>
+                nell'ambito delle attività del <a rel="noopener noreferrer" target="_blank" href="https://teamdigitale.governo.it/" class="underline">Team per la Trasformazione Digitale</a>.
+                Dopo più di un anno di inattività viene preso in mano dall'<a rel="noopener noreferrer" target="_blank" href="https://www.ondata.it/" class="underline">associazione OnData</a>
+                nel <a rel="noopener noreferrer" target="_blank" href="https://github.com/ondata/confini-amministrativi-istat" class="underline">marzo del 2021</a>.
+                Questa è l'ultima evoluzione del progetto originale sviluppata nel corso del 2023.
+            </p>
+            <p id="credits" class="mb-4">
+                La fonte ufficiale delle risorse geografiche è l'<a rel="noopener noreferrer" target="_blank" href="https://www.istat.it/it/archivio/222527" class="underline">ISTAT</a>.
+                Altre fonti ufficiali con cui i dati sono arricchiti sono l'<a rel="noopener noreferrer" target="_blank" href="https://www.anagrafenazionale.interno.it/" class="underline">ANPR</a> e
+                il progetto <a rel="noopener noreferrer" target="_blank" href="https://www.agid.gov.it/it/dati/vocabolari-controllati" class="underline">OntoPiA</a>.
+            </p>
+            <p id="help" class="mb-12">
+                Usa i controlli sottostanti per selezionare la risorsa geografica di interesse.
+                Seleziona il paese, l'edizione dei dati e il livello di suddivisione amministrativa.
+                Eventualmente seleziona anche il territorio specifico e la sotto suddivisione amministrativa.
+                Puoi vedere i confini amministrativi nella mappa qui a fianco.
+                Ogni territorio è cliccabile e il tooltip mostra i dati associati.
+                Puoi scaricare la risorsa geografica selezionata in uno qualsiasi dei formati supportati.
+                Tutte le risorse qui presenti sono rilasciate con <a rel="noopener noreferrer" target="_blank" href="https://www.agid.gov.it/it/dati/open-data" class="underline">licenza Open Data</a>.
+            </p>
+            <section id="controls"></section>
+        </section>
+        <!-- Section: Controls -->
+
+        <!-- Section: Map -->
+        <section id="map" class="grow overflow-hidden"></section>
+        <!-- Section: Map -->
+    </main>
+    <!-- Main: Map container -->
+
+    <!-- Main: Documentation -->
+    <main id="docs"></main>
+    <!-- Main: Documentation -->
+
+    <!-- Footer: Credits -->
+    <footer id="credits" class="bg-gray-800 text-gray-100 text-l font-bold leadi flex flex-row gap-6 p-6">
+        <p class="grow">&copy; <span id="year"></span> Ondata APS</p>
+        <p><a rel="noopener noreferrer" target="_blank" href="https://www.ondata.it/">Home</a></p>
+        <p><a rel="noopener noreferrer" target="_blank" href="https://github.com/ondata/confini-amministrativi-istat">Github</a></p>
+        <p><a rel="noopener noreferrer" target="_blank" href="https://www.ondata.it/dona/">Dona</a></p>
+        <p><a rel="noopener noreferrer" target="_blank" href="https://www.ondata.it/privacy-policy/">Privacy Policy</a></p>
+    </footer>
+
+    <footer id="policy" class="bg-gray-800 text-gray-100 text-xs leadi p-6">
+        <p>
+            Questo sito fa esclusivamente uso di cookie tecnici per cui non è necessario il previo consenso dell'utente.
+            L'archiviazione tecnica o l'accesso sono strettamente necessari al fine legittimo di consentire l'uso del servizio specifico esplicitamente richiesto,
+            o al solo scopo di effettuare la trasmissione di una comunicazione su una rete di comunicazione elettronica.
+        </p>
+    </footer>
+    <!-- Footer: Credits -->
+
+    <!-- Custom script -->
+    <script type="module" src="index.js"></script>
+</body>
+
+</html>

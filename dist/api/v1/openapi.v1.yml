@@ -14,9 +14,12 @@ externalDocs:
   description: Find out more
   url: https://github.com/ondata/confini-amministrativi-istat
 servers:
-  - url: .
-  - url: http://dev.ondata.it/confini-amministrativi-it/api/v1
-  - url: https://www.confini-amministrativi.it/api/v1
+  - description: Local server
+    url: .
+  - description: Development server
+    url: http://dev.ondata.it/confini-amministrativi-it/api/v1
+  - description: Production server
+    url: https://www.confini-amministrativi.it/api/v1
 tags:
   - name: OnData
     description: Promuoviamo l'apertura dei dati pubblici per renderli un bene comune per tuttə, i nostri valori sono la forza motrice di ogni nostra azione.
@@ -79,7 +82,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.csv:
+  /{countryId}/{releaseId}/{division}/{territoryId}.csv:
     get:
       tags:
         - CSV
@@ -108,13 +111,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -126,7 +129,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.csv:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.csv:
     get:
       tags:
         - CSV
@@ -155,13 +158,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -220,7 +223,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}.json:
     get:
       tags:
         - JSON
@@ -249,13 +252,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -267,7 +270,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.json:
     get:
       tags:
         - JSON
@@ -296,13 +299,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -362,7 +365,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.zip:
+  /{countryId}/{releaseId}/{division}/{territoryId}.zip:
     get:
       tags:
         - Shapefile
@@ -391,13 +394,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -410,7 +413,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.zip:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.zip:
     get:
       tags:
         - Shapefile
@@ -439,13 +442,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -498,14 +501,14 @@ paths:
         '200':
           description: successful operation
           content:
-            application/json:
+            application/geo+json:
               schema:
                 $ref: 'https://geojson.org/schema/GeoJSON.json'
         '400':
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.geo.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}.geo.json:
     get:
       tags:
         - GeoJSON
@@ -534,25 +537,25 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
           content:
-            application/json:
+            application/geo+json:
               schema:
                 $ref: 'https://geojson.org/schema/GeoJSON.json'
         '400':
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.geo.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.geo.json:
     get:
       tags:
         - GeoJSON
@@ -581,13 +584,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -599,7 +602,7 @@ paths:
         '200':
           description: successful operation
           content:
-            application/json:
+            application/geo+json:
               schema:
                 $ref: 'https://geojson.org/schema/GeoJSON.json'
         '400':
@@ -646,7 +649,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.topo.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}.topo.json:
     get:
       tags:
         - TopoJSON
@@ -675,13 +678,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -693,7 +696,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.topo.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.topo.json:
     get:
       tags:
         - TopoJSON
@@ -722,13 +725,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -788,7 +791,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.gpkg:
+  /{countryId}/{releaseId}/{division}/{territoryId}.gpkg:
     get:
       tags:
         - GeoPackage
@@ -817,13 +820,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -836,7 +839,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.gpkg:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.gpkg:
     get:
       tags:
         - GeoPackage
@@ -865,13 +868,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -891,7 +894,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}.parquet:
+  /{countryId}/{releaseId}/{division}.geo.parquet:
     get:
       tags:
         - GeoParquet
@@ -924,7 +927,7 @@ paths:
         '200':
           description: successful operation
           content:
-            application/vnd.apache.parquet:
+            application/vnd.apache.geo.parquet:
               schema:
                 type: string
                 format: binary
@@ -932,7 +935,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.parquet:
+  /{countryId}/{releaseId}/{division}/{territoryId}.geo.parquet:
     get:
       tags:
         - GeoParquet
@@ -961,18 +964,18 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
           content:
-            application/vnd.apache.parquet:
+            application/vnd.apache.geo.parquet:
               schema:
                 type: string
                 format: binary
@@ -980,7 +983,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.parquet:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.geo.parquet:
     get:
       tags:
         - GeoParquet
@@ -1009,13 +1012,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -1027,7 +1030,7 @@ paths:
         '200':
           description: successful operation
           content:
-            application/vnd.apache.parquet:
+            application/vnd.apache.geo.parquet:
               schema:
                 type: string
                 format: binary
@@ -1035,7 +1038,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}.pbf:
+  /{countryId}/{releaseId}/{division}.geo.pbf:
     get:
       tags:
         - Geobuf
@@ -1076,7 +1079,7 @@ paths:
           description: Invalid resource COUNTRY, RELEASE or DIVISION supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}.pbf:
+  /{countryId}/{releaseId}/{division}/{territoryId}.geo.pbf:
     get:
       tags:
         - Geobuf
@@ -1105,13 +1108,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -1124,7 +1127,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}.pbf:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.geo.pbf:
     get:
       tags:
         - Geobuf
@@ -1153,13 +1156,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -1212,14 +1215,14 @@ paths:
         '200':
           description: successful operation
           content:
-            text/csv:
+            text/html:
               schema:
                 type: string
         '400':
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Page not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/index.html:
+  /{countryId}/{releaseId}/{division}/{territoryId}/index.html:
     get:
       tags:
         - HTML (Interactive Map)
@@ -1248,25 +1251,25 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
           content:
-            text/csv:
+            text/html:
               schema:
                 type: string
         '400':
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Page not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}/index.html:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}/index.html:
     get:
       tags:
         - HTML (Interactive Map)
@@ -1295,13 +1298,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -1313,7 +1316,7 @@ paths:
         '200':
           description: successful operation
           content:
-            text/csv:
+            text/html:
               schema:
                 type: string
         '400':
@@ -1435,7 +1438,7 @@ paths:
           description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/index.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}/index.json:
     get:
       tags:
         - JSON-HAL (Hypertext Application Language)
@@ -1464,13 +1467,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division to return
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
       responses:
         '200':
           description: successful operation
@@ -1482,7 +1485,7 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
         '404':
           description: Resource not found
-  /{countryId}/{releaseId}/{division}/{divisionId}/{subDivision}/index.json:
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}/index.json:
     get:
       tags:
         - JSON-HAL (Hypertext Application Language)
@@ -1511,13 +1514,13 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/Division'
-        - name: divisionId
+        - name: territoryId
           in: path
           description: ID of division
           example: "1"
           required: true
           schema:
-            $ref: '#/components/schemas/DivisionId'
+            $ref: '#/components/schemas/territoryId'
         - name: subDivision
           in: path
           description: SUBDIVISION of resource
@@ -1551,7 +1554,7 @@ components:
         - "regioni"
         - "unita-territoriali-sovracomunali"
         - "comuni"
-    DivisionId:
+    territoryId:
       type: string
       pattern: "[0-9]+"
     JSONResource:

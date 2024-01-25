@@ -1,48 +1,60 @@
 <!DOCTYPE html>
 <html lang="{{ lang }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OnData - Confini Amministrativi ISTAT - /{{ path }}</title>
-    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css"
-        integrity="sha384-M86HUGbBFILBBZ9ykMAbT3nVb0+2C7yZlF8X2CiKNpDOQjKroMJqIeGZ/Le8N2Qp"
-        crossorigin=""
-    />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
-        crossorigin=""
-    />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
-        crossorigin=""
-    ></script>
-    <script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"
-        integrity="sha384-pQbeNTZ2fXhFbWb5OozBmu5GVW/mHkxUgFn/3PNt4RPm4IJ98yJSTGu/8LR53NuV"
-        crossorigin=""
-    ></script>
+
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+        integrity="sha512-h9FcoyWjHcOcmEVkxOfTLnmZFWIH0iZhZT1H2TbOq55xssQGEJHEaIm+PgoUaZbRvQTNTluNOEfb1ZRy6D3BOw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+        integrity="sha512-puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Leaflet Easy Button -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js"
+        integrity="sha512-Tndo4y/YJooD/mGXS9D6F1YyBcSyrWnnSWQ5Z9IcKt6bljicjyka9qcP99qMFbQ5+omfOtwwIapv1DjBCZcTJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Custom style -->
     <style>
         #map {
             width: 100vw;
             height: 100vh;
             overflow: hidden;
         }
+
         h1 {
             text-align: center;
         }
+
         th {
             text-align: right;
         }
+
         th::after {
             content: ":";
         }
+
         .leaflet-touch .leaflet-bar.easy-button-container a {
             width: auto;
             padding: 0 1em;
         }
     </style>
 </head>
+
 <body>
     <div id="map"></div>
+
+    <!-- Custom script -->
     <script>
         (async function () {
 
@@ -60,7 +72,7 @@
 
             // Watermark
             L.Control.Watermark = L.Control.extend({
-                onAdd: function(map) {
+                onAdd: function (map) {
                     var img = L.DomUtil.create('img');
                     img.src = 'https://www.ondata.it/wp-content/uploads/2022/03/logo-onData-corretto-trasparente.png';
                     img.style.width = '125px';
@@ -68,7 +80,7 @@
                 }
             });
 
-            L.control.watermark = function(opts) {
+            L.control.watermark = function (opts) {
                 return new L.Control.Watermark(opts);
             }
 
@@ -76,7 +88,7 @@
 
             // Download buttons
             {% for btn in downloads %}
-            L.easyButton('<a href="../{{ btn.filename }}" download="{{ btn.filename }}">{{ btn.name }}</a>', function(btn, map){
+            L.easyButton('<a href="../{{ btn.filename }}" download="{{ btn.filename }}">{{ btn.name }}</a>', function (btn, map) {
                 open("../{{ btn.filename }}");
             }).addTo(map);
             {% endfor %}
@@ -89,7 +101,7 @@
             const layer = L.geoJson(
                 geojson,
                 {
-                    style: function(feature) {
+                    style: function (feature) {
                         return {
                             color: "#EB593C",
                             weight: 2,
@@ -112,4 +124,5 @@
         })();
     </script>
 </body>
+
 </html>
