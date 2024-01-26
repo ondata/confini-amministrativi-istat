@@ -1,19 +1,46 @@
 <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>OnData - Confini Amministrativi ISTAT - OpenAPI 3.0</title>
-    <link rel="stylesheet" type="text/css" href="../swagger-ui.css" />
-    <link rel="stylesheet" type="text/css" href="../index.css" />
-    <link rel="icon" type="image/png" href="../favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="../favicon-16x16.png" sizes="16x16" />
-  </head>
 
-  <body>
-    <div id="swagger-ui"></div>
-    <script src="../swagger-ui-bundle.js" charset="UTF-8"> </script>
-    <script src="../swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-    <script src="./swagger-initializer.js" charset="UTF-8"> </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://www.ondata.it/wp-content/uploads/2021/06/cropped-cropped-ondata_logo-1-1-192x192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="https://www.ondata.it/wp-content/uploads/2021/06/cropped-cropped-ondata_logo-1-1-180x180.png" />
+
+  <title>OnData - Confini Amministrativi Italiani v1 - OpenAPI 3.1</title>
+
+  <!-- Swagger UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css"
+    integrity="sha512-XtsDvxKBBCfSB54eyZVPobezzETL6eAP6QqJ1C5/tjEVSuxXJd+cwyaCCMMkIEJkuu7ciVAmzX08T86VaRxlsg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.min.js"
+    integrity="sha512-pav19M3lwaqcA1QfOtzKRBYB3UG8eaI3OxHhL7TOqH8btgyLyh+XdxLCPkfUEiS8e5TKrItNrnM843TDnpa6Dg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.min.js"
+    integrity="sha512-CmA7gkSTJVrv10bRXMQEsGSxG7cXOGMrLUjn4kwfKOQk/1bW7gyKy8WxYa6oZFDVjWDKquG2DXbaZHoATi7Ukw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <div id="swagger-ui"></div>
+  <script>
+    // Swagger UI
+    (function () {
+      window.ui = SwaggerUIBundle({
+        url: "./openapi.v1.yml",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "BaseLayout"
+      });
+    })();
+  </script>
+</body>
+
 </html>

@@ -1,6 +1,6 @@
 openapi: '3.1.0'
 info:
-  title: OnData - Confini Amministrativi ISTAT - OpenAPI 3.1
+  title: OnData - Confini Amministrativi Italiani
   description: |-
     API per facilitare il riuso dei dati ISTAT e ANPR sui confini amministrativi italiani.
   termsOfService: https://github.com/ondata/confini-amministrativi-istat#licenza
