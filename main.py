@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import warnings
-warnings.filterwarnings('ignore', module='fiona')
+warnings.filterwarnings('ignore', message='^.*due to too larger number with respect to field width.*$')
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 tpl_env = Environment(
@@ -26,7 +26,9 @@ import topojson
 from dbfread import DBF
 
 DIST_DIR = os.getenv("DIST_DIR", "dist")
-PUBLIC_DIR = os.getenv("PUBLIC_DIR", "api/v1")
+API_DIR = os.getenv("API_DIR", "api")
+VERSION_DIR = os.getenv("VERSION_DIR", "v1")
+PUBLIC_DIR = os.getenv("PUBLIC_DIR", f"{API_DIR}/{VERSION_DIR}")
 COUNTRY_CODE = os.getenv("COUNTRY_CODE", "it")
 COUNTRY_NAME = os.getenv("COUNTRY_NAME", "Italia")
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", f"{DIST_DIR}/{PUBLIC_DIR}/{COUNTRY_CODE}")
@@ -34,12 +36,13 @@ SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
 SHAPEFILE_ENCODING = "UTF-8"
 SHAPEFILE_PROJECTION = "EPSG:4326" # WGS84 World: https://epsg.io/?q=4326
-SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx"]
+SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx", ".cpg"]
 MIME_TYPES = [
     ("SHP", "shp", "application/vnd.shp"),
     ("DBF", "dbf", "application/vnd.dbf"),
     ("SHX", "shx", "application/vnd.shx"),
     ("PRJ", "prj", "text/plain"),
+    ("CPG", "cpg", "text/plain"),
     ("ZIP", "zip", "application/zip"),
     ("GeoJSON", "geo.json", "application/geo+json"),
     ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
@@ -568,6 +571,40 @@ for release in sources["istat"]: # noqa: C901
                 ]
             }
         }, f)
+
+# File di output
+hal_filename = Path(OUTPUT_DIR, "index").with_suffix(".json")
+with open(hal_filename, 'w') as f:
+    json.dump({
+        "_links": {
+            "self": {
+                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/index.json",
+                "hreflang": COUNTRY_CODE,
+                "name": COUNTRY_CODE,
+                "title": COUNTRY_NAME,
+                "type": "application/hal+json",
+                "profile": f"/{PUBLIC_DIR}/hal-country.schema.json"
+            },
+            "up": {
+                "href": f"/{PUBLIC_DIR}/index.json",
+                "name": VERSION_DIR,
+                "title": VERSION_DIR,
+                "type": "application/hal+json",
+                "profile": f"/{PUBLIC_DIR}/hal-version.schema.json"
+            },
+            "item": [
+                {
+                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release.name}/index.json",
+                    "hreflang": COUNTRY_CODE,
+                    "name": release.name,
+                    "title": release.name,
+                    "type": "application/hal+json",
+                    "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
+                }
+                for release in Path(OUTPUT_DIR).glob('*') if output_release.is_dir()
+            ]
+        }
+    }, f)
 
 
 # Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
