@@ -18,7 +18,7 @@ SWAGGER_ED_VERSION=next-v5-unprivileged
 OAS_SPEC_VERSION=v1
 
 build () {
-    docker build --target application -t $DOCKER_IMAGE_NAME .
+    docker build -t $DOCKER_IMAGE_NAME .
 }
 
 generate () {
