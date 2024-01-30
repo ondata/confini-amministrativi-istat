@@ -32,7 +32,7 @@ window.API_DOMAIN = process.env.NODE_ENV !== 'production' ? 'http://localhost:80
     let layer;
     const initialCentroid = [42.5206995, 13.2275392];
     const initialZoom = 6;
-    const map = L.map('map').setView(initialCentroid, initialZoom);
+    const map = L.map('map', { scrollWheelZoom: false }).setView(initialCentroid, initialZoom);
 
     // Tile layer loading
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
