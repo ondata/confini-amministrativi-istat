@@ -3,7 +3,8 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build --dist-dir ../../dist"
+    "build": "npm run clean || parcel build --no-cache --dist-dir ../../dist",
+    "clean": "rm -f ../../dist/* 2>/dev/null"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
