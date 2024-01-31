@@ -38,17 +38,19 @@ SHAPEFILE_ENCODING = "UTF-8"
 SHAPEFILE_PROJECTION = "EPSG:4326" # WGS84 World: https://epsg.io/?q=4326
 SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx", ".cpg"]
 MIME_TYPES = [
+    ("Shapefile (ZIP)", "zip", "application/zip"),
+    ("GeoJSON", "geo.json", "application/geo+json"),
+    ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
+    ("GeoParquet", "geo.parquet", "application/vnd.apache.parquet"),
+    ("TopoJSON", "topo.json", "application/json"),
+    ("Geobuf", "geo.pbf", "application/octet-stream"),
+    ("JSON", "json", "application/json"),
+    ("CSV", "csv", "text/csv"),
     ("SHP", "shp", "application/vnd.shp"),
     ("DBF", "dbf", "application/vnd.dbf"),
     ("SHX", "shx", "application/vnd.shx"),
     ("PRJ", "prj", "text/plain"),
     ("CPG", "cpg", "text/plain"),
-    ("ZIP", "zip", "application/zip"),
-    ("GeoJSON", "geo.json", "application/geo+json"),
-    ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
-    ("GeoParquet", "geo.parquet", "application/vnd.apache.parquet"),
-    ("TopoJSON", "topo.json", "application/json"),
-    ("Geobuf", "geo.pbf", "application/octet-stream")
 ]
 
 logging.basicConfig(level=logging.INFO)
