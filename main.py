@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import warnings
-warnings.filterwarnings('ignore', message='^.*due to too larger number with respect to field width.*$')
+warnings.filterwarnings('ignore', message='.*due to too larger number with respect to field width.*')
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 tpl_env = Environment(
