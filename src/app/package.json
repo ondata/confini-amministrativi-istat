@@ -1,5 +1,6 @@
 {
-  "name": "confini-amministrativi-istat",
+  "name": "ondata-confini-amministrativi-it-webapp",
+  "description": "OnData - Confini amministrativi italiani - Webapp",
   "source": "index.html",
   "scripts": {
     "start": "parcel",

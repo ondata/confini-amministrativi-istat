@@ -73,7 +73,7 @@ export function App() {
                 ))
             }
 
-            <li key="download" className="flex flex-col gap-2">
+            <li key="format" className="flex flex-col gap-2">
                 <label className="capitalize" htmlFor="format">Format</label>
                 <Select
                     id="format"
@@ -84,6 +84,9 @@ export function App() {
                     options={resources}
                     onChange={e => setDownloadPath(e?.value ?? '#')}
                 />
+            </li>
+
+            <li key="download" className="flex flex-col gap-2">
                 {resources.length > 0 && downloadPath !== '#'
                     ? (
                         <a
