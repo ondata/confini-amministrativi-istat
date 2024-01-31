@@ -1,20 +1,26 @@
-Copyright (c) 2021 onData APS
+Copyright (c) 2024 onData APS
 
 Owner
 -----
-onData APS
+OnData APS
+
 Website: https://ondata.it/
+
 Github: https://github.com/ondata
+
 Twitter: https://twitter.com/ondatait
 
 Maintainer
 -----------
-Alessio Cimarelli (alessio.cimarelli@ondata.it)
+Alessio Cimarelli (https://github.com/jenkin)
 
 Contributors
 ------------
-Andrea Borruso (andrea.borruso@ondata.it)
-Gaetano Costa (gaetano.costa01@outlook.it)
+Andrea Borruso (https://github.com/aborruso)
+
+Gaetano Costa (https://github.com/GaetanoC01)
+
+Nicola Ghirardi (https://github.com/ghirardinicola)
 
 Previous owner
 ------------

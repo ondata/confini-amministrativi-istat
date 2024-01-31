@@ -1,39 +1,47 @@
-# Confini Amministrativi ISTAT
+# OnData - Confini amministrativi italiani
 
 [![Data and open data on forum.italia.it](https://img.shields.io/badge/Forum-Dati%20e%20open%20data-blue.svg)](https://forum.italia.it/c/dati)
 [![Confini Amministrativi ISTAT on forum.italia.it](https://img.shields.io/badge/Thread-%5BCall%20for%20ideas%5D%20Confini%20amministrativi%20ISTAT-blue.svg)](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224)
 
 Collezione di utilities per facilitare il riuso dei dati [ISTAT](https://www.istat.it/it/archivio/222527) e [ANPR](https://www.anpr.interno.it/) sui confini amministrativi italiani. Per approfondimenti e discussione è aperto un [thread dedicato su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224).
 
-> Work in progress, al momento l'output completo è pubblicato in versione di prova su [dev.ondata.it/confini-amministrativi-istat/v1](https://dev.ondata.it/confini-amministrativi-istat/).
-
 ## Contenuto del repository
 
-Nel file `sources.json` ci sono i link a tutti gli shapefile rilasciati da ISTAT dal 2001 elencati in [questa tabella](https://www.istat.it/it/archivio/222527)
-e il link all'[archivio dei comuni di ANPR](https://www.anpr.interno.it/portale/anpr-archivio-comuni.csv).
+Nel file `sources.json` ci sono i link a tutti gli shapefile rilasciati da ISTAT dal 2001 elencati in [questa tabella](https://www.istat.it/it/archivio/222527), il link all'[archivio dei comuni di ANPR](https://www.anpr.interno.it/portale/anpr-archivio-comuni.csv) e le risorse Linked Open Data del [progetto OntoPiA](https://www.agid.gov.it/it/dati/vocabolari-controllati).
 
-Lo script `main.py` scarica gli archivi zip dal sito ISTAT, li decomprime e li elabora in cartelle nominate con la data di rilascio: `v1/YYYYMMDD/`.
-Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli shapefile.
+Lo script `main.py` scarica gli archivi zip dal sito ISTAT, li decomprime e li elabora in cartelle nominate con la data di rilascio: `dist/api/v1/it/YYYYMMDD/`. Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli shapefile.
 
 Al momento sono supportati i seguenti formati di output:
 
-* [ESRI shapefile](https://it.wikipedia.org/wiki/Shapefile) (formato originale) nelle cartelle `zip/` (version originale) e `shp/` (versione ripulita e corretta)
-* [Comma-separated values](https://it.wikipedia.org/wiki/Comma-separated_values) nella cartella `csv/`
-* [Javascript Object Notation](https://it.wikipedia.org/wiki/JavaScript_Object_Notation) nella cartella `json/`
-* [Geojson](https://it.wikipedia.org/wiki/GeoJSON) nella cartella `geojson/`
-* [Geopackage](https://en.wikipedia.org/wiki/GeoPackage) nella cartella `geopkg/`
-* [Topojson](https://it.wikipedia.org/wiki/GeoJSON#TopoJSON) nella cartella `topojson/`
-* [Geobuf](https://github.com/cubao/geobuf-cpp) nella cartella `geobuf/`
+* [ESRI shapefile (ZIP)](https://it.wikipedia.org/wiki/Shapefile), il formato originario in cui l'ISTAT pubblica i dati ufficiali, ma con le geometrie corrette, la normalizzazione del charset a UTF-8 e la proiezione a [EPSG:4326](https://epsg.io/?q=4326).
+* [Comma-separated values (CSV)](https://it.wikipedia.org/wiki/Comma-separated_values) con la tabella dei dati arricchiti dei territori (UTF-8, virgola come separato, doppie virgolette come delimintatori di stringa, new line come separatore di riga)
+* [JavaScript Object Notation (JSON)](https://it.wikipedia.org/wiki/JavaScript_Object_Notation) con gli stessi dati del CSV
+* [GeoJSON](https://it.wikipedia.org/wiki/GeoJSON) con gli stessi dati dello shapefile
+* [TopoJSON](https://it.wikipedia.org/wiki/GeoJSON#TopoJSON) con gli stessi dati dello shapefile
+* [GeoPackage](https://en.wikipedia.org/wiki/GeoPackage) con gli stessi dati dello shapefile
+* [GeoParquet](https://geoparquet.org/) con gli stessi dati dello shapefile
+* [Geobuf](https://github.com/cubao/geobuf-cpp) con gli stessi dati dello shapefile
 
 Il file di ANPR è quello originale arricchito delle denominazioni e dell'indicazione degli shapefile in cui i comuni sono presenti.
 
-> Avvertenza: al momento è inserita nel repository solo la cartella di output risultante dall'esecuzione dell'applicazione relativa al file ISTAT più recente.
+> Avvertenza: nel repository è incluso solo il codice sorgente dell'applicazione e non i file generati.
+
+## Design e stack tecnologici
+
+L'obiettivo di questo progetto è automatizzare completamente la generazione di risorse geografiche italiane utili in diversi ambiti di mapping e GIS a partire dai dati storici ufficiali rilasciati da ISTAT e ANPR. I task includono il download, l'omogeneizzazione di codifiche e formati, la correzione di errori di geometrie, la generazione di raggruppamenti di territori a tutti i livelli (es. i comuni di una regione), la conversione in diversi formati geografici e la generazione di mappe interattive per una fruizione semplificata di ognuno di essi.
+
+La struttura dell'albero di cartelle di output è conforme allo standard [REST delle Web API](https://en.wikipedia.org/wiki/REST), per cui il risultato finale è effettivamente una API statica, descritta mediante lo [standard OpenAPI](./dist/api/v1/openapi.v1.yml). Tutte le risorse disponibili sono automaticamente raggiungibili grazie alla presenza di file `index.json` in ogni cartella conformi alla specifica [Hypertext Application Language (HAL)](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
+
+Lo script di generazione è scritto in Python (v3.11) e le sue dipendenze dirette sono elencate nel file `requirements.txt`.
+Oltre a queste si richiede che alcune librerie siano installate nel sistema,
+in particolare [GDAL](https://gdal.org/index.html) e [SQLite](https://www.sqlite.org/index.html)
+con l'estensione [Spatialite](https://www.gaia-gis.it/fossil/libspatialite/index).
+
+Per semplificare la portabilità dello script è possibile (e conveniente) eseguirlo in un container Docker.
 
 ## Come eseguire l'applicazione
 
-Si consiglia caldamente di usare la versione dockerizzata.
-
-> Avvertenza: al momento la conversione in geobuf è commentata perché va in errore
+Si consiglia caldamente di usare la versione containerizzata con [Docker](https://www.docker.com/).
 
 ### Versione dockerizzata
 
@@ -42,17 +50,17 @@ Si consiglia caldamente di usare la versione dockerizzata.
 Clona questo repository con [Git](https://git-scm.com/): `git clone https://github.com/teamdigitale/confini-amministrativi-istat.git`.
 Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
 
-Effettua la build delle immagini: `docker build --target application -t ondata-conf-amm-istat .`.
-Puoi usare l'utility `bash run.sh build`.
+L'utility `run.sh` contiene degli shortcut per gestire più facilmente l'immagine docker dell'applicazione (in ambiente windows si raccomanda l'uso di [Git Bash](https://gitforwindows.org/)).
+Per l'elenco di tutti i comandi supportati: `bash run.sh help`.
 
-Esegui il container per ogni tipologia di confine amministrativo e per tutte le versioni (`docker run --rm -v $PWD:/app ondata-conf-amm-istat:latest`)
-oppure indicando la singola versione di interesse: `docker run --rm -e SOURCE_NAME=YYYYMMDD -v $PWD:/app ondata-conf-amm-istat:latest`.
-Puoi usare l'utility `bash run.sh generate [YYYYMMDD]`.
+Effettua la build delle immagini: `bash run.sh build`.
 
-> Avvertenza: l'esecuzione può richiedere diversi minuti, o anche ore nel caso dell'elaborazione di tutte le versioni.
+Esegui il container per ogni tipologia di confine amministrativo e per tutte le versioni con `bash run.sh generate`
+oppure indicando la singola versione di interesse con `bash run.sh generate YYYYMMDD`.
 
-Naviga le API e la loro documentazione eseguendo un web server in locale: `docker run --rm -p 8080:80 -v $PWD/api:/usr/share/nginx/html:ro nginx`.
-Puoi usare l'utility `bash run.sh serve [PORT]`, la porta di default è la `8080`.
+> Avvertenza: l'esecuzione può richiedere alcune ore o anche molte nel caso dell'elaborazione di tutte le versioni.
+
+Naviga le API e la loro documentazione eseguendo un web server in locale: `bash run.sh serve [PORT]`, la porta di default è la `8080`.
 
 ### Esecuzione diretta
 
@@ -63,19 +71,41 @@ Entra nella cartella appena creata: `cd confini-amministrativi-istat/`.
 
 Il file `requirements.txt` elenca tutte le dipendenze necessarie a eseguire l'applicazione.
 Si consiglia di operare sempre in un ambiente isolato creando un apposito *virtual environment*.
-Con [Poetry](https://python-poetry.org/) è sufficiente entrare nel virtualenv con `poetry shell` e la prima volta installare le dipendenze con `poetry install`.
+
+Con [Poetry](https://python-poetry.org/) è sufficiente entrare nel virtualenv con `poetry shell` e la prima volta installare le dipendenze con `poetry install` come descritte nel file `pyproject.toml`.
 
 Infine, per eseguire l'applicazione ed elaborare tutte le versioni: `python main.py`.
 Per specificare una singola versione di interesse: `SOURCE_NAME=YYYYMMDD python main.py`.
 
+### Specifiche OpenAPI
+
+Il file `dist/api/v1/openapi.v1.yml` contiene le specifiche conformi allo standard [OpenAPI v3.1](https://www.openapis.org/).
+
+Con `bash run.sh serve` puoi navigare la documentazione in maniera interattiva sia dalla homepage (http://localhost:8080),
+sia come pagina standalone (http://localhost:8080/api/v1/).
+
+### Homepage
+
+Per il codice sorgente dell'homepage si rimanda al [README dedicato](src/app/README.md).
+
+## Sviluppo
+
+Con `bash run.sh dev YYYYMMDD` è possibile eseguire lo script `main.py` all'interno di un container senza effettuare una nuova build dell'immagine.
+
+Per lo sviluppo dell'homepage si rimanda al [README dedicato](src/app/README.md).
+
 ## Come contribuire
 
-Ogni contributo è benvenuto, puoi aprire una issue oppure proporre una pull request, così come partecipare alla [discussione su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224).
+Ogni contributo è benvenuto, puoi aprire una issue oppure proporre una pull request, così come partecipare alla [discussione su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224). Per favore leggi interamente e con attenzione il [Codice di Condotta](./CODE_OF_CONDUCT.md) e le [Regole di Contribuzione](./CONTRIBUTING.md) prima di farlo.
 
 ## Ringraziamenti
 
 Ringraziamo il [Team per la Trasformazione Digitale](https://teamdigitale.governo.it/) per aver ospitato questo progetto nella sua primissima fase di ideazione e realizzazione.
+
 Un ringraziamento anche a [Datafactor Agrigento](https://www.datafactor.it/) per il supporto e il prezioso contributo di finalizzazione del file di configurazione `sources.json`.
 
+Ringraziamo anche [Dataninja srl](https://www.dataninja.it) per il [lavoro pionieristico](https://github.com/dataninja/geo-shapes) sul tema, [Density Design](https://densitydesign.org/) che con [RAWGraphs](http://rawgraphs.io/) ha fatto emergere per la prima volta l'[esigenza di un'API](https://groups.google.com/g/densitydesign-raw/c/-MIAUtSjkzk) e [SparkFabrik srl](https://www.sparkfabrik.com/) per aver reso possibile la finalizzazione del progetto.
+
 ## Licenza
+
 L'uso di questo software è concesso sotto licenza [GNU Affero General Public License](https://github.com/ondata/confini-amministrativi-istat/blob/main/LICENSE).
