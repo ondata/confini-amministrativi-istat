@@ -1,4 +1,4 @@
 .vscode/
 .directory
 __pycache__/
-dist/api/v1/it/**/
+dist/api/v1/it/
