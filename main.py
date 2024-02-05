@@ -394,11 +394,10 @@ for release in sources["istat"]: # noqa: C901
         # Per ogni divisione amministrativa superiore a quella corrente
         if not csv_filename.exists() or not json_filename.exists():
             # Carico il DBF come dataframe
+            df_dbf = DBF(dbf_filename, encoding=SHAPEFILE_ENCODING)
             df = pd.DataFrame(
-                iter(DBF(
-                    dbf_filename,
-                    encoding=SHAPEFILE_ENCODING),
-                ),
+                iter(df_dbf),
+                columns=df_dbf.field_names,
                 dtype=str,
             ).rename(columns=str.lower)
             # Individuo il nome della suddivisione di appartenenza
@@ -410,11 +409,10 @@ for release in sources["istat"]: # noqa: C901
                 )
             ):
                 # Carico il DBF come dataframe
+                jdf_dbf = DBF(Path(output_release, parent["name"]).with_suffix(".dbf"), encoding=SHAPEFILE_ENCODING)
                 jdf = pd.DataFrame(
-                    iter(DBF(
-                        Path(output_release, parent["name"]).with_suffix(".dbf"),
-                        encoding=SHAPEFILE_ENCODING),
-                    ),
+                    iter(jdf_dbf),
+                    columns=jdf_dbf.field_names,
                     dtype=str,
                 ).rename(columns=str.lower)
                 # Faccio il join selezionando le colonne che mi interessano
