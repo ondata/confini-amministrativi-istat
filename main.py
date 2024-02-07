@@ -9,7 +9,7 @@ from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import warnings
-warnings.filterwarnings('ignore', message='.*due to too larger number with respect to field width.*')
+warnings.filterwarnings('ignore', message=r'.*due to too larger number with respect to field.*')
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 tpl_env = Environment(
@@ -154,33 +154,33 @@ for release in sources["istat"]: # noqa: C901
                 stderr=subprocess.DEVNULL,
             )
             # Conto gli errori rilevati
-            errori = subprocess.check_output(
+            errors = int(subprocess.check_output(
                 [
                     "sqlite3",
                     output_sqlite,
                     "\n".join([f"SELECT count(*) FROM \"{division['name']}_check\""]),
                 ],
                 stderr=subprocess.DEVNULL,
+            ))
+            if errors > 0:
+                logging.warning(f"!!! Errori {division['name']}: {errors} geometrie corrette")
+            # Creo una nuova tabella con geometrie eventualmente corrette
+            subprocess.run(
+                [
+                    "sqlite3",
+                    output_sqlite,
+                    "\n".join(
+                        [
+                            "SELECT load_extension('mod_spatialite');",
+                            f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
+                            f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');" if errors > 0 else "",
+                            f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;" if errors > 0 else "",
+                        ]
+                    ),
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
             )
-            # Se ci sono errori creo una nuova tabella con geometrie corrette
-            logging.warning(f"!!! Errori {division['name']}: {int(errori)} geometrie corrette")
-            if int(errori) > 0:
-                subprocess.run(
-                    [
-                        "sqlite3",
-                        output_sqlite,
-                        "\n".join(
-                            [
-                                "SELECT load_extension('mod_spatialite');",
-                                f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
-                                f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');",
-                                f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;",
-                            ]
-                        ),
-                    ],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
             # Creo uno shapefile con geometrie corrette e proiezione normalizzata
             subprocess.run(
                 [
