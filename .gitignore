@@ -1,4 +1,5 @@
 .vscode/
 .directory
+stats/
 __pycache__/
 dist/api/v1/**/
