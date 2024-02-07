@@ -572,39 +572,39 @@ for release in sources["istat"]: # noqa: C901
             }
         }, f)
 
-# File di output
-hal_filename = Path(OUTPUT_DIR, "index").with_suffix(".json")
-with open(hal_filename, 'w') as f:
-    json.dump({
-        "_links": {
-            "self": {
-                "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/index.json",
-                "hreflang": COUNTRY_CODE,
-                "name": COUNTRY_CODE,
-                "title": COUNTRY_NAME,
-                "type": "application/hal+json",
-                "profile": f"/{PUBLIC_DIR}/hal-country.schema.json"
-            },
-            "up": {
-                "href": f"/{PUBLIC_DIR}/index.json",
-                "name": VERSION_DIR,
-                "title": VERSION_DIR,
-                "type": "application/hal+json",
-                "profile": f"/{PUBLIC_DIR}/hal-version.schema.json"
-            },
-            "item": [
-                {
-                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release.name}/index.json",
+    # File di output
+    hal_filename = Path(OUTPUT_DIR, "index").with_suffix(".json")
+    with open(hal_filename, 'w') as f:
+        json.dump({
+            "_links": {
+                "self": {
+                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/index.json",
                     "hreflang": COUNTRY_CODE,
-                    "name": release.name,
-                    "title": release.name,
+                    "name": COUNTRY_CODE,
+                    "title": COUNTRY_NAME,
                     "type": "application/hal+json",
-                    "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
-                }
-                for release in Path(OUTPUT_DIR).glob('*') if output_release.is_dir()
-            ]
-        }
-    }, f)
+                    "profile": f"/{PUBLIC_DIR}/hal-country.schema.json"
+                },
+                "up": {
+                    "href": f"/{PUBLIC_DIR}/index.json",
+                    "name": VERSION_DIR,
+                    "title": VERSION_DIR,
+                    "type": "application/hal+json",
+                    "profile": f"/{PUBLIC_DIR}/hal-version.schema.json"
+                },
+                "item": [
+                    {
+                        "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release.name}/index.json",
+                        "hreflang": COUNTRY_CODE,
+                        "name": release.name,
+                        "title": release.name,
+                        "type": "application/hal+json",
+                        "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
+                    }
+                    for release in Path(OUTPUT_DIR).glob('*') if release.is_dir()
+                ]
+            }
+        }, f)
 
 
 # Arricchisce anche i dati ANPR solo se si tratta di un'elaborazione completa
