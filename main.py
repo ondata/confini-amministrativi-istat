@@ -173,8 +173,8 @@ for release in sources["istat"]: # noqa: C901
                         [
                             "SELECT load_extension('mod_spatialite');",
                             f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
-                            f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');" if errors > 0 else "",
-                            f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;" if errors > 0 else "",
+                            f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');",
+                            f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;",
                         ]
                     ),
                 ],
