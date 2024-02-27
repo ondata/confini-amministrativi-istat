@@ -45,7 +45,7 @@ serve () {
 
 swagger_ui () {
     echo "Swagger UI running at http://localhost:$SWAGGER_UI_PORT"
-    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/api/$OAS_SPEC_VERSION/openapi.$OAS_SPEC_VERSION.yaml:/tmp/openapi.$OAS_SPEC_VERSION.yaml -e SWAGGER_JSON=/tmp/openapi.$OAS_SPEC_VERSION.yaml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
+    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/dist/api/$OAS_SPEC_VERSION/openapi.$OAS_SPEC_VERSION.yml:/tmp/openapi.$OAS_SPEC_VERSION.yml -e SWAGGER_JSON=/tmp/openapi.$OAS_SPEC_VERSION.yml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
     echo "Shutdown Swagger UI"
 }
 
