@@ -7,6 +7,7 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from urllib.request import urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
+from PIL import Image
 
 import warnings
 warnings.filterwarnings('ignore', message=r'.*due to too larger number with respect to field.*')
@@ -507,6 +508,112 @@ for release in sources["istat"]: # noqa: C901
             # Salvo il file
             with open(geobuf_filename, 'wb') as f:
                 f.write(pbf)
+
+        # SVG - https://developer.mozilla.org/en-US/docs/Web/SVG
+        # File di output
+        svg_filename = shp_filename.with_suffix('.svg')
+        # Carico lo SHAPEFILE e lo converto in SVG
+        # Black lines
+        if not svg_filename.with_suffix('.light.svg').exists() and shp_filename.exists():
+            subprocess.run(
+                [
+                    "svgis", "draw",
+                    "--crs", release["srid"],
+                    "--id-field", release["divisions"][division]["keys"]["id"],
+                    "--data-fields", ",".join([
+                        release["divisions"][division]["keys"]["id"],
+                        release["divisions"][division]["keys"]["label"]
+                    ]),
+                    "--simplify", "75",
+                    "--precision", "3",
+                    "--style", r"polyline,line,rect,path,polygon,.polygon{fill:none;stroke:#000;stroke-width:10px;stroke-linejoin:round;}",
+                    "--scale", "100",
+                    "--no-inline",
+                    "-o", svg_filename.with_suffix('.light.svg'),
+                    shp_filename,
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        # White lines
+        if not svg_filename.with_suffix('.dark.svg').exists() and shp_filename.exists():
+            subprocess.run(
+                [
+                    "svgis", "draw",
+                    "--crs", release["srid"],
+                    "--id-field", release["divisions"][division]["keys"]["id"],
+                    "--data-fields", ",".join([
+                        release["divisions"][division]["keys"]["id"],
+                        release["divisions"][division]["keys"]["label"]
+                    ]),
+                    "--simplify", "75",
+                    "--precision", "3",
+                    "--style", r"polyline,line,rect,path,polygon,.polygon{fill:none;stroke:#fff;stroke-width:10px;stroke-linejoin:round;}",
+                    "--scale", "100",
+                    "--no-inline",
+                    "-o", svg_filename.with_suffix('.dark.svg'),
+                    shp_filename,
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+        # PNG - https://en.wikipedia.org/wiki/PNG
+        # File di output
+        png_filename = shp_filename.with_suffix('.png')
+        # Carico l'SVG e lo converto in PNG
+        # Light mode
+        if not png_filename.with_suffix('.light.png').exists() and svg_filename.with_suffix('.light.svg').exists():
+            subprocess.run(
+                [
+                    "cairosvg",
+                    "--output-height", "2160", # 4K
+                    "-o", png_filename.with_suffix('.light.png'),
+                    svg_filename.with_suffix('.light.svg')
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        # Dark mode
+        if not png_filename.with_suffix('.dark.png').exists() and svg_filename.with_suffix('.dark.svg').exists():
+            subprocess.run(
+                [
+                    "cairosvg",
+                    "--output-height", "2160", # 4K
+                    "--output", png_filename.with_suffix('.dark.png'),
+                    svg_filename.with_suffix('.dark.svg')
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+        # WEBP - https://en.wikipedia.org/wiki/WebP
+        # File di output
+        webp_filename = shp_filename.with_suffix('.webp')
+        # Carico il PNG e lo converto in WEBP
+        # Light mode
+        if not webp_filename.with_suffix('.light.webp').exists() and png_filename.with_suffix('.light.png').exists():
+            Image.open(png_filename.with_suffix('.light.png')).save(webp_filename.with_suffix('.light.webp'), 'WEBP')
+        # Dark mode
+        if not webp_filename.with_suffix('.dark.webp').exists() and png_filename.with_suffix('.dark.png').exists():
+            Image.open(png_filename.with_suffix('.dark.png')).save(webp_filename.with_suffix('.dark.webp'), 'WEBP')
+
+        # JPG - https://en.wikipedia.org/wiki/JPEG
+        # File di output
+        jpg_filename = shp_filename.with_suffix('.jpg')
+        # Carico il PNG e lo converto in JPG
+        # Light mode
+        if not jpg_filename.with_suffix('.light.jpg').exists() and png_filename.with_suffix('.light.png').exists():
+            png = Image.open(png_filename.with_suffix('.light.png')).convert('RGBA')
+            bg = Image.new('RGBA', png.size, (255, 255, 255))
+            alpha_composite = Image.alpha_composite(bg, png).convert('RGB')
+            alpha_composite.save(jpg_filename.with_suffix('.light.jpg'), 'JPEG', quality=80)
+        # Dark mode
+        if not jpg_filename.with_suffix('.dark.jpg').exists() and png_filename.with_suffix('.dark.png').exists():
+            png = Image.open(png_filename.with_suffix('.dark.png')).convert('RGBA')
+            bg = Image.new('RGBA', png.size, (0, 0, 0))
+            alpha_composite = Image.alpha_composite(bg, png).convert('RGB')
+            alpha_composite.save(jpg_filename.with_suffix('.dark.jpg'), 'JPEG', quality=80)
 
         # HTML - https://leafletjs.com/
         # File di output
