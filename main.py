@@ -41,17 +41,28 @@ SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx", ".cpg"]
 MIME_TYPES = [
     ("Shapefile (ZIP)", "zip", "application/zip"),
     ("GeoJSON", "geo.json", "application/geo+json"),
+    ("TopoJSON", "topo.json", "application/json"),
     ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
     ("GeoParquet", "geo.parquet", "application/vnd.apache.parquet"),
-    ("TopoJSON", "topo.json", "application/json"),
-    ("Geobuf", "geo.pbf", "application/octet-stream"),
+    ("Geobuf", "geo.pbf", "application/x-protobuf"),
+
     ("JSON", "json", "application/json"),
     ("CSV", "csv", "text/csv"),
-    ("SHP", "shp", "application/vnd.shp"),
-    ("DBF", "dbf", "application/vnd.dbf"),
-    ("SHX", "shx", "application/vnd.shx"),
-    ("PRJ", "prj", "text/plain"),
-    ("CPG", "cpg", "text/plain"),
+
+    ("SVG (light)", "light.svg", "image/svg+xml"),
+    ("SVG (dark)", "dark.svg", "image/svg+xml"),
+    ("PNG (light)", "light.png", "image/png"),
+    ("PNG (dark)", "dark.png", "image/png"),
+    ("JPEG (light)", "light.jpg", "image/jpeg"),
+    ("JPEG (dark)", "dark.jpg", "image/jpeg"),
+    ("WEBP (light)", "light.webp", "image/webp"),
+    ("WEBP (dark)", "dark.webp", "image/webp"),
+
+    ("Shapefile (SHP)", "shp", "application/vnd.shp"),
+    ("Shapefile (DBF)", "dbf", "application/vnd.dbf"),
+    ("Shapefile (SHX)", "shx", "application/vnd.shx"),
+    ("Shapefile (PRJ)", "prj", "text/plain"),
+    ("Shapefile (CPG)", "cpg", "text/plain"),
 ]
 
 logging.basicConfig(level=logging.INFO)
@@ -630,9 +641,9 @@ for release in sources["istat"]: # noqa: C901
                     downloads=[
                         { "name": "Shapefile", "filename": zip_filename.name },
                         { "name": "GeoJSON", "filename": geojson_filename.name },
+                        { "name": "TopoJSON", "filename": topojson_filename.name },
                         { "name": "GeoPKG", "filename": geopkg_filename.name },
                         { "name": "GeoParquet", "filename": geoparquet_filename.name },
-                        { "name": "TopoJSON", "filename": topojson_filename.name },
                         { "name": "Geobuf", "filename": geobuf_filename.name }
                     ]
                 ))
