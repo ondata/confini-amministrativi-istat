@@ -295,7 +295,7 @@ for release in sources["istat"]: # noqa: C901
                                     "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/{subdivision_name}.{mime_extension}",
                                     "hreflang": "it",
                                     "name": f"{subdivision_name}.{mime_extension}",
-                                    "title": f"{territory_label} / {release['divisions'][subdivision_name]['title']} ({mime_label})",
+                                    "title": mime_label,
                                     "type": mime_type
                                 }
                                 for mime_label, mime_extension, mime_type in MIME_TYPES
@@ -341,7 +341,7 @@ for release in sources["istat"]: # noqa: C901
                                 "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}.{mime_extension}",
                                 "hreflang": "it",
                                 "name": f"{territory_id}.{mime_extension}",
-                                "title": f"{territory_label} ({mime_label})",
+                                "title": mime_label,
                                 "type": mime_type
                             }
                             for mime_label, mime_extension, mime_type in MIME_TYPES
@@ -387,7 +387,7 @@ for release in sources["istat"]: # noqa: C901
                             "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}.{mime_extension}",
                             "hreflang": "it",
                             "name": f"{division['name']}.{mime_extension}",
-                            "title": f"{division['title']} ({mime_label})",
+                            "title": mime_label,
                             "type": mime_type
                         }
                         for mime_label, mime_extension, mime_type in MIME_TYPES
