@@ -102,7 +102,7 @@ for release in sources["istat"]: # noqa: C901
         output_release.mkdir(parents=True, exist_ok=True)
 
         logging.info(f"Downloading source data...")
-        
+
         # Scarico la risorsa remota
         with urlopen(release["url"]) as res:
             # La leggo come archivio zip
@@ -396,7 +396,7 @@ for release in sources["istat"]: # noqa: C901
             }, f)
 
     logging.info(f"Creating CSV and JSON files...")
-        
+
     # CSV (Comma Separated Values)
     # Ciclo su tutti i file DBF
     for dbf_filename in output_release.glob("**/*.dbf"):
@@ -785,7 +785,7 @@ if not SOURCE_NAME:
                 df = pd.merge(
                     df,
                     jdf[
-                        [f"{division['key']}_{source['name']}"]
+                        [f"{division['keys']['id'].lower()}_{source['name']}"]
                         + [
                             f"{col.lower()}_{source['name']}"
                             for col in division["fields"]
@@ -793,7 +793,7 @@ if not SOURCE_NAME:
                         + [f"GEO_{source['name']}"]
                     ],
                     left_on=sources["anpr"]["division"]["key"],
-                    right_on=f"{division['key']}_{source['name']}",
+                    right_on=f"{division['keys']['id'].lower()}_{source['name']}",
                     how="left",
                 )
                 # Elimino tutte le colonne duplicate (identici valori su tutte le righe)
