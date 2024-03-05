@@ -720,7 +720,14 @@ for release in sources["istat"]: # noqa: C901
                         "profile": f"/{PUBLIC_DIR}/hal-release.schema.json"
                     }
                     for release in Path(OUTPUT_DIR).glob('*') if release.is_dir()
-                ], key=lambda item: item["name"], reverse=True)
+                ], key=lambda item: item["name"], reverse=True),
+                "enclosure": {
+                    "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/archivio-storico-comuni.csv",
+                    "hreflang": COUNTRY_CODE,
+                    "name": "archivio-storico-comuni",
+                    "title": "ANPR Archivio Storico dei Comuni",
+                    "type": "text/csv"
+                }
             }
         }, f)
 

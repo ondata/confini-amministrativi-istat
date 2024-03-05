@@ -34,16 +34,16 @@ tags:
     externalDocs:
       description: Find out more
       url: https://www.istat.it/
-  - name: ANPR
-    description: Anagrafe Nazionale (Italia)
-    externalDocs:
-      description: Find out more
-      url: https://www.anagrafenazionale.interno.it/
   - name: OntoPiA
     description: Ontologie e vocabolari controllati sviluppati nell'ambito delle azioni previste dal piano triennale per l'informatica della Pubblica Amministrazione (Italia)
     externalDocs:
       description: Find out more
       url: https://github.com/italia/daf-ontologie-vocabolari-controllati
+  - name: ANPR
+    description: Anagrafe Nazionale (Italia)
+    externalDocs:
+      description: Find out more
+      url: https://www.anagrafenazionale.interno.it/
   - name: CSV
     description: Comma-Separated Values (text/csv)
     externalDocs:
@@ -115,6 +115,32 @@ tags:
       description: Find out more
       url: https://en.wikipedia.org/wiki/Hypertext_Application_Language
 paths:
+  /{countryId}/archivio-storico-comuni.csv:
+    get:
+      tags:
+        - ANPR
+      summary: Get the historical archive of Italian municipalities
+      description: Returns the historical archive of Italian municipalities
+      operationId: getMunicipalitiesArchive
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          description: Invalid COUNTRY parameter supplied
+        '404':
+          description: Resource not found
   /{countryId}/{releaseId}/{division}.csv:
     get:
       tags:
