@@ -21,6 +21,10 @@ build () {
     docker build -t $DOCKER_IMAGE_NAME .
 }
 
+rebuild () {
+    docker build --no-cache -t $DOCKER_IMAGE_NAME .
+}
+
 generate () {
     if [ -z "$SOURCE_NAME" ]; then
         docker run --rm -v $DOCKER_VOLUME $DOCKER_IMAGE
@@ -75,6 +79,7 @@ help () {
     echo "Usage: $0 [build | generate | serve | documentation] [YYYYMMDD | PORT]"
     echo "Examples:"
     echo "- $0 build              # Build the Docker image"
+    echo "- $0 rebuild            # Build the Docker image with --no-cache"
     echo "- $0 generate           # Generate all resources listed in sources.json file"
     echo "- $0 generate 20230101  # Generate a custom resource only"
     echo "- $0 dev 20230101       # Generate a custom resource in dev mode (no build required)"
@@ -95,6 +100,9 @@ error () {
 case $ACTION in
     build)
         build
+        ;;
+    rebuild)
+        rebuild
         ;;
     generate)
         generate
