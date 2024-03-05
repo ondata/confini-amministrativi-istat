@@ -293,7 +293,7 @@ for release in sources["istat"]: # noqa: C901
                             "enclosure": [
                                 {
                                     "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}/{subdivision_name}.{mime_extension}",
-                                    "hreflang": "it",
+                                    "hreflang": COUNTRY_CODE,
                                     "name": f"{subdivision_name}.{mime_extension}",
                                     "title": mime_label,
                                     "type": mime_type
@@ -339,7 +339,7 @@ for release in sources["istat"]: # noqa: C901
                         "enclosure": [
                             {
                                 "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}/{territory_id}.{mime_extension}",
-                                "hreflang": "it",
+                                "hreflang": COUNTRY_CODE,
                                 "name": f"{territory_id}.{mime_extension}",
                                 "title": mime_label,
                                 "type": mime_type
@@ -385,7 +385,7 @@ for release in sources["istat"]: # noqa: C901
                     "enclosure": [
                         {
                             "href": f"/{PUBLIC_DIR}/{COUNTRY_CODE}/{release['name']}/{division['name']}.{mime_extension}",
-                            "hreflang": "it",
+                            "hreflang": COUNTRY_CODE,
                             "name": f"{division['name']}.{mime_extension}",
                             "title": mime_label,
                             "type": mime_type
