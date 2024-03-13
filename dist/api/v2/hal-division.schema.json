@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.confini-amministrativi.it/api/v1/hal-subdivision.schema.json",
-    "title": "JSON-HAL schema for subdivisions",
+    "$id": "https://www.confini-amministrativi.it/api/v2/hal-division.schema.json",
+    "title": "JSON-HAL schema for divisions",
     "type": "object",
     "properties": {
         "_links": {
@@ -12,6 +12,12 @@
                 },
                 "up": {
                     "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
+                },
+                "item": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
+                    }
                 },
                 "enclosure": {
                     "type": "array",

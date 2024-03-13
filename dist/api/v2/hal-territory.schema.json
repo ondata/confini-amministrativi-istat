@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.confini-amministrativi.it/api/v1/hal-division.schema.json",
-    "title": "JSON-HAL schema for divisions",
+    "$id": "https://www.confini-amministrativi.it/api/v2/hal-territory.schema.json",
+    "title": "JSON-HAL schema for territories",
     "type": "object",
     "properties": {
         "_links": {

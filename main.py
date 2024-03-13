@@ -28,7 +28,7 @@ from dbfread import DBF
 
 DIST_DIR = os.getenv("DIST_DIR", "dist")
 API_DIR = os.getenv("API_DIR", "api")
-VERSION_DIR = os.getenv("VERSION_DIR", "v1")
+VERSION_DIR = os.getenv("VERSION_DIR", "v2")
 PUBLIC_DIR = os.getenv("PUBLIC_DIR", f"{API_DIR}/{VERSION_DIR}")
 COUNTRY_CODE = os.getenv("COUNTRY_CODE", "it")
 COUNTRY_NAME = os.getenv("COUNTRY_NAME", "Italia")

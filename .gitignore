@@ -2,4 +2,4 @@
 .directory
 stats/
 __pycache__/
-dist/api/v1/**/
+dist/api/v*/**/

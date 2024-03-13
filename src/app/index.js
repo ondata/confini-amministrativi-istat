@@ -12,7 +12,7 @@ window.API_DOMAIN = process.env.NODE_ENV !== 'production' ? 'http://localhost:80
 // Swagger UI
 (function () {
     window.ui = SwaggerUIBundle({
-        url: `${window.API_DOMAIN}/api/v1/openapi.v1.yml`,
+        url: `${window.API_DOMAIN}/api/v2/openapi.v2.yml`,
         dom_id: '#docs',
         deepLinking: true,
         presets: [

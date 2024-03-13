@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.confini-amministrativi.it/api/v1/hal-release.schema.json",
-    "title": "JSON-HAL schema for releases",
+    "$id": "https://www.confini-amministrativi.it/api/v2/hal-country.schema.json",
+    "title": "JSON-HAL schema for countries",
     "type": "object",
     "properties": {
         "_links": {

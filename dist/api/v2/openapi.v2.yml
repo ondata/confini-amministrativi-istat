@@ -9,7 +9,7 @@ info:
   license:
     name: AGPL
     url: https://github.com/ondata/confini-amministrativi-istat/blob/main/LICENSE
-  version: 1.0.0
+  version: 2.0.0
 externalDocs:
   description: Find out more
   url: https://github.com/ondata/confini-amministrativi-istat
@@ -17,7 +17,7 @@ servers:
   - description: Local server
     url: .
   - description: Production server
-    url: https://www.confini-amministrativi.it/api/v1
+    url: https://www.confini-amministrativi.it/api/v2
 tags:
   - name: Confini Amministrativi Italiani
     description: Tutte le risorse geografiche di cui hai bisogno per il tuo prossimo progetto.

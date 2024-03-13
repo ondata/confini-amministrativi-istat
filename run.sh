@@ -15,7 +15,7 @@ DOCKER_VOLUME=$PWD:/app
 NGINX_VERSION=latest
 SWAGGER_UI_VERSION=v5.4.2
 SWAGGER_ED_VERSION=next-v5-unprivileged
-OAS_SPEC_VERSION=v1
+OAS_SPEC_VERSION=v2
 
 build () {
     docker build -t $DOCKER_IMAGE_NAME .

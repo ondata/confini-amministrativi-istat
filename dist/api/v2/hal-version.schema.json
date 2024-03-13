@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://www.confini-amministrativi.it/api/v1/hal-territory.schema.json",
-    "title": "JSON-HAL schema for territories",
+    "$id": "https://www.confini-amministrativi.it/api/v2/hal-version.schema.json",
+    "title": "JSON-HAL schema for versions",
     "type": "object",
     "properties": {
         "_links": {
@@ -10,16 +10,7 @@
                 "self": {
                     "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
                 },
-                "up": {
-                    "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
-                },
                 "item": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"
-                    }
-                },
-                "enclosure": {
                     "type": "array",
                     "items": {
                         "$ref": "https://jenkin.dev/json-schema-bricks/hal.schema.min.json#/$defs/Link"

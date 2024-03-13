@@ -3,13 +3,14 @@
 [![Data and open data on forum.italia.it](https://img.shields.io/badge/Forum-Dati%20e%20open%20data-blue.svg)](https://forum.italia.it/c/dati)
 [![Confini Amministrativi ISTAT on forum.italia.it](https://img.shields.io/badge/Thread-%5BCall%20for%20ideas%5D%20Confini%20amministrativi%20ISTAT-blue.svg)](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224)
 
-Collezione di utilities per facilitare il riuso dei dati [ISTAT](https://www.istat.it/it/archivio/222527) e [ANPR](https://www.anpr.interno.it/) sui confini amministrativi italiani. Per approfondimenti e discussione è aperto un [thread dedicato su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224).
+Collezione di utilities per facilitare il riuso dei dati [ISTAT](https://www.istat.it/it/archivio/222527) e [ANPR](https://www.anpr.interno.it/) sui confini amministrativi italiani (versione generalizzata).
+Per approfondimenti e discussione è aperto un [thread dedicato su Forum Italia](https://forum.italia.it/t/call-for-ideas-confini-amministrativi-istat/12224).
 
 ## Contenuto del repository
 
 Nel file `sources.json` ci sono i link a tutti gli shapefile rilasciati da ISTAT dal 2001 elencati in [questa tabella](https://www.istat.it/it/archivio/222527), il link all'[archivio dei comuni di ANPR](https://www.anpr.interno.it/portale/anpr-archivio-comuni.csv) e le risorse Linked Open Data del [progetto OntoPiA](https://www.agid.gov.it/it/dati/vocabolari-controllati).
 
-Lo script `main.py` scarica gli archivi zip dal sito ISTAT, li decomprime e li elabora in cartelle nominate con la data di rilascio: `dist/api/v1/it/YYYYMMDD/`. Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli shapefile.
+Lo script `main.py` scarica gli archivi zip dal sito ISTAT, li decomprime e li elabora in cartelle nominate con la data di rilascio: `dist/api/v2/it/YYYYMMDD/`. Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli shapefile.
 
 Al momento sono supportati i seguenti formati di output:
 
@@ -30,7 +31,7 @@ Il file di ANPR è quello originale arricchito delle denominazioni e dell'indica
 
 L'obiettivo di questo progetto è automatizzare completamente la generazione di risorse geografiche italiane utili in diversi ambiti di mapping e GIS a partire dai dati storici ufficiali rilasciati da ISTAT e ANPR. I task includono il download, l'omogeneizzazione di codifiche e formati, la correzione di errori di geometrie, la generazione di raggruppamenti di territori a tutti i livelli (es. i comuni di una regione), la conversione in diversi formati geografici e la generazione di mappe interattive per una fruizione semplificata di ognuno di essi.
 
-La struttura dell'albero di cartelle di output è conforme allo standard [REST delle Web API](https://en.wikipedia.org/wiki/REST), per cui il risultato finale è effettivamente una API statica, descritta mediante lo [standard OpenAPI](./dist/api/v1/openapi.v1.yml). Tutte le risorse disponibili sono automaticamente raggiungibili grazie alla presenza di file `index.json` in ogni cartella conformi alla specifica [Hypertext Application Language (HAL)](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
+La struttura dell'albero di cartelle di output è conforme allo standard [REST delle Web API](https://en.wikipedia.org/wiki/REST), per cui il risultato finale è effettivamente una API statica, descritta mediante lo [standard OpenAPI](./dist/api/v2/openapi.v2.yml). Tutte le risorse disponibili sono automaticamente raggiungibili grazie alla presenza di file `index.json` in ogni cartella conformi alla specifica [Hypertext Application Language (HAL)](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
 
 Lo script di generazione è scritto in Python (v3.11) e le sue dipendenze dirette sono elencate nel file `requirements.txt`.
 Oltre a queste si richiede che alcune librerie siano installate nel sistema,
@@ -79,10 +80,10 @@ Per specificare una singola versione di interesse: `SOURCE_NAME=YYYYMMDD python 
 
 ### Specifiche OpenAPI
 
-Il file `dist/api/v1/openapi.v1.yml` contiene le specifiche conformi allo standard [OpenAPI v3.1](https://www.openapis.org/).
+Il file `dist/api/v2/openapi.v2.yml` contiene le specifiche conformi allo standard [OpenAPI v3.1](https://www.openapis.org/).
 
 Con `bash run.sh serve` puoi navigare la documentazione in maniera interattiva sia dalla homepage (http://localhost:8080),
-sia come pagina standalone (http://localhost:8080/api/v1/).
+sia come pagina standalone (http://localhost:8080/api/v2/).
 
 ### Homepage
 

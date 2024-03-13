@@ -5,10 +5,10 @@ export function App() {
     const selectRefs = useRef({});
     const downloadRef = useRef();
 
-    const firstResource = `${window.API_DOMAIN}/api/v1/index.json`;
+    const firstResource = `${window.API_DOMAIN}/api/v2/index.json`;
     const geoResourceType = "application/geo+json";
     const labels = ["country", "release", "division", "territory", "subdivision"];
-    const profiles = labels.map(s => `/api/v1/hal-${s}.schema.json`);
+    const profiles = labels.map(s => `/api/v2/hal-${s}.schema.json`);
 
     const [options, setOptions] = useState({});
     const [resources, setResources] = useState([]);
@@ -21,7 +21,7 @@ export function App() {
                 .then(data => {
                     const items = data._links.item ?? [];
                     const enclosures = data._links.enclosure ?? [];
-                    const geoResource = enclosures.find(e => e.type === geoResourceType)?.href;
+                    const geoResource = enclosures.length && enclosures.find(e => e.type === geoResourceType)?.href;
 
                     if (items.length > 0) {
                         const target = items[0].profile;
@@ -43,7 +43,7 @@ export function App() {
                     }
 
                     window.updateMap(geoResource ? `${window.API_DOMAIN}${geoResource}` : '');
-                    setResources(enclosures.map(e => ({ value: e.href, label: e.title })));
+                    setResources(enclosures.length ? enclosures.map(e => ({ value: e.href, label: e.title })) : []);
                     downloadRef.current?.clearValue?.();
                     setDownloadPath('#');
                 });
