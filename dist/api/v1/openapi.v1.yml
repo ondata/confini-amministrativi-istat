@@ -16,11 +16,14 @@ externalDocs:
 servers:
   - description: Local server
     url: .
-  - description: Development server
-    url: http://dev.ondata.it/confini-amministrativi-it/api/v1
   - description: Production server
     url: https://www.confini-amministrativi.it/api/v1
 tags:
+  - name: Confini Amministrativi Italiani
+    description: Tutte le risorse geografiche di cui hai bisogno per il tuo prossimo progetto.
+    externalDocs:
+      description: Find out more
+      url: https://www.confini-amministrativi.it/
   - name: OnData
     description: Promuoviamo l'apertura dei dati pubblici per renderli un bene comune per tuttə, i nostri valori sono la forza motrice di ogni nostra azione.
     externalDocs:
@@ -31,17 +34,113 @@ tags:
     externalDocs:
       description: Find out more
       url: https://www.istat.it/
-  - name: ANPR
-    description: Anagrafe Nazionale (Italia)
-    externalDocs:
-      description: Find out more
-      url: https://www.anagrafenazionale.interno.it/
   - name: OntoPiA
     description: Ontologie e vocabolari controllati sviluppati nell'ambito delle azioni previste dal piano triennale per l'informatica della Pubblica Amministrazione (Italia)
     externalDocs:
       description: Find out more
       url: https://github.com/italia/daf-ontologie-vocabolari-controllati
+  - name: ANPR
+    description: Anagrafe Nazionale (Italia)
+    externalDocs:
+      description: Find out more
+      url: https://www.anagrafenazionale.interno.it/
+  - name: CSV
+    description: Comma-Separated Values (text/csv)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/Comma-separated_values
+  - name: JSON
+    description: JavaScript Object Notation (application/json)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/JSON
+  - name: Shapefile
+    description: ESRI Shapefile (shp, dbf, shx, prj, cpg) in a compressed archive (application/zip)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/Shapefile
+  - name: GeoJSON
+    description: GeoJSON (application/geo+json)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/GeoJSON
+  - name: TopoJSON
+    description: TopoJSON (application/json)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/GeoJSON#TopoJSON
+  - name: GeoPackage
+    description: GeoPackage (application/geopackage+vnd.sqlite3)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/GeoPackage
+  - name: GeoParquet
+    description: Apache Parquet (application/vnd.apache.geo.parquet)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/Apache_Parquet
+  - name: Geobuf
+    description: Geo Protocol Buffer (application/x-protobuf)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/Protocol_Buffers
+  - name: SVG
+    description: Scalable Vector Graphics (image/svg+xml)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/SVG
+  - name: PNG
+    description: Portable Network Graphics (image/png)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/PNG
+  - name: JPEG
+    description: Joint Photographic Experts Group (image/jpeg)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/JPEG
+  - name: WebP
+    description: WebP (image/webp)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/WebP
+  - name: HTML
+    description: Web page with an interactive map powered by LeafletJS (text/html)
+    externalDocs:
+      description: Find out more
+      url: https://leafletjs.com/
+  - name: JSON-HAL
+    description: Hypertext Application Language (application/hal+json)
+    externalDocs:
+      description: Find out more
+      url: https://en.wikipedia.org/wiki/Hypertext_Application_Language
 paths:
+  /{countryId}/archivio-storico-comuni.csv:
+    get:
+      tags:
+        - ANPR
+      summary: Get the historical archive of Italian municipalities
+      description: Returns the historical archive of Italian municipalities
+      operationId: getMunicipalitiesArchive
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/csv:
+              schema:
+                type: string
+        '400':
+          description: Invalid COUNTRY parameter supplied
+        '404':
+          description: Resource not found
   /{countryId}/{releaseId}/{division}.csv:
     get:
       tags:
@@ -1182,10 +1281,667 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':
           description: Resource not found
+  /{countryId}/{releaseId}/{division}.{style}.svg:
+    get:
+      tags:
+        - SVG
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in SVG format
+      description: Returns a single resource in SVG format
+      operationId: getSVGResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid resource COUNTRY, RELEASE, DIVISION or STYLE supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.{style}.svg:
+    get:
+      tags:
+        - SVG
+      summary: Find resource by DIVISION ID in SVG format
+      description: Returns a single resource in SVG format
+      operationId: getSVGDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.{style}.svg:
+    get:
+      tags:
+        - SVG
+      summary: Find resource by DIVISION ID and SUBDIVISION in SVG format
+      description: Returns a single resource in SVG format
+      operationId: getSVGSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID, SUBDIVISION or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}.{style}.png:
+    get:
+      tags:
+        - PNG
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in PNG format
+      description: Returns a single resource in PNG format
+      operationId: getPNGResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource COUNTRY, RELEASE, DIVISION or STYLE supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.{style}.png:
+    get:
+      tags:
+        - PNG
+      summary: Find resource by DIVISION ID in PNG format
+      description: Returns a single resource in PNG format
+      operationId: getPNGDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.{style}.png:
+    get:
+      tags:
+        - PNG
+      summary: Find resource by DIVISION ID and SUBDIVISION in PNG format
+      description: Returns a single resource in PNG format
+      operationId: getPNGSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID, SUBDIVISION or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}.{style}.jpg:
+    get:
+      tags:
+        - JPEG
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in JPEG format
+      description: Returns a single resource in JPEG format
+      operationId: getJPEGResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource COUNTRY, RELEASE, DIVISION or STYLE supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.{style}.jpg:
+    get:
+      tags:
+        - JPEG
+      summary: Find resource by DIVISION ID in JPEG format
+      description: Returns a single resource in JPEG format
+      operationId: getJPEGDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.{style}.jpg:
+    get:
+      tags:
+        - JPEG
+      summary: Find resource by DIVISION ID and SUBDIVISION in JPEG format
+      description: Returns a single resource in JPEG format
+      operationId: getJPEGSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID, SUBDIVISION or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}.{style}.webp:
+    get:
+      tags:
+        - WebP
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in WEBP format
+      description: Returns a single resource in WEBP format
+      operationId: getWEBPResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid resource COUNTRY, RELEASE, DIVISION or STYLE supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.{style}.webp:
+    get:
+      tags:
+        - WebP
+      summary: Find resource by DIVISION ID in WEBP format
+      description: Returns a single resource in WEBP format
+      operationId: getWEBPDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or STYLE parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.{style}.webp:
+    get:
+      tags:
+        - WebP
+      summary: Find resource by DIVISION ID and SUBDIVISION in WEBP format
+      description: Returns a single resource in WEBP format
+      operationId: getWEBPSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: style
+          in: path
+          description: STYLE of resource
+          example: "light"
+          required: true
+          schema:
+            $ref: '#/components/schemas/style'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID, SUBDIVISION or STYLE parameters supplied
+        '404':
+          description: Resource not found
   /{countryId}/{releaseId}/{division}/index.html:
     get:
       tags:
-        - HTML (Interactive Map)
+        - HTML
       summary: Find interactive map by COUNTRY, RELEASE and DIVISION in HTML format
       description: Returns a single interactive map in HTML format
       operationId: getHTMLResourceByDivision
@@ -1225,7 +1981,7 @@ paths:
   /{countryId}/{releaseId}/{division}/{territoryId}/index.html:
     get:
       tags:
-        - HTML (Interactive Map)
+        - HTML
       summary: Find interactive map by DIVISION ID in HTML format
       description: Returns a single interactive map in HTML format
       operationId: getHTMLDivisionById
@@ -1272,7 +2028,7 @@ paths:
   /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}/index.html:
     get:
       tags:
-        - HTML (Interactive Map)
+        - HTML
       summary: Find interactive map by DIVISION ID and SUBDIVISION in HTML format
       description: Returns a single interactive map in HTML format
       operationId: getHTMLSubDivisionById
@@ -1326,7 +2082,7 @@ paths:
   /index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALResource
@@ -1342,7 +2098,7 @@ paths:
   /{countryId}/index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource by COUNTRY in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALResourceByCountry
@@ -1368,7 +2124,7 @@ paths:
   /{countryId}/{releaseId}/index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource by COUNTRY and RELEASE in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALResourceByRelease
@@ -1401,7 +2157,7 @@ paths:
   /{countryId}/{releaseId}/{division}/index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource by COUNTRY, RELEASE and DIVISION in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALResourceByDivision
@@ -1441,7 +2197,7 @@ paths:
   /{countryId}/{releaseId}/{division}/{territoryId}/index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource by DIVISION ID in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALDivisionById
@@ -1488,7 +2244,7 @@ paths:
   /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}/index.json:
     get:
       tags:
-        - JSON-HAL (Hypertext Application Language)
+        - JSON-HAL
       summary: Find resource by DIVISION ID and SUBDIVISION in JSON-HAL format
       description: Returns a single resource in JSON-HAL format
       operationId: getJSONHALSubDivisionById
@@ -1557,6 +2313,9 @@ components:
     territoryId:
       type: string
       pattern: "[0-9]+"
+    style:
+      type: "string"
+      enum: ["light", "dark"]
     JSONResource:
       type: array
       items:

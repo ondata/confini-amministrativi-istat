@@ -21,6 +21,10 @@ build () {
     docker build -t $DOCKER_IMAGE_NAME .
 }
 
+rebuild () {
+    docker build --no-cache -t $DOCKER_IMAGE_NAME .
+}
+
 generate () {
     if [ -z "$SOURCE_NAME" ]; then
         docker run --rm -v $DOCKER_VOLUME $DOCKER_IMAGE
@@ -45,7 +49,7 @@ serve () {
 
 swagger_ui () {
     echo "Swagger UI running at http://localhost:$SWAGGER_UI_PORT"
-    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/api/$OAS_SPEC_VERSION/openapi.$OAS_SPEC_VERSION.yaml:/tmp/openapi.$OAS_SPEC_VERSION.yaml -e SWAGGER_JSON=/tmp/openapi.$OAS_SPEC_VERSION.yaml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
+    docker run --rm -p $SWAGGER_UI_PORT:8080 -v $PWD/dist/api/$OAS_SPEC_VERSION/openapi.$OAS_SPEC_VERSION.yml:/tmp/openapi.$OAS_SPEC_VERSION.yml -e SWAGGER_JSON=/tmp/openapi.$OAS_SPEC_VERSION.yml swaggerapi/swagger-ui:$SWAGGER_UI_VERSION
     echo "Shutdown Swagger UI"
 }
 
@@ -75,6 +79,7 @@ help () {
     echo "Usage: $0 [build | generate | serve | documentation] [YYYYMMDD | PORT]"
     echo "Examples:"
     echo "- $0 build              # Build the Docker image"
+    echo "- $0 rebuild            # Build the Docker image with --no-cache"
     echo "- $0 generate           # Generate all resources listed in sources.json file"
     echo "- $0 generate 20230101  # Generate a custom resource only"
     echo "- $0 dev 20230101       # Generate a custom resource in dev mode (no build required)"
@@ -95,6 +100,9 @@ error () {
 case $ACTION in
     build)
         build
+        ;;
+    rebuild)
+        rebuild
         ;;
     generate)
         generate

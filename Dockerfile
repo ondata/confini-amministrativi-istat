@@ -4,7 +4,10 @@ RUN apt-get update
 RUN apt-get install -y \
     gdal-bin \
     sqlite3 \
-    libsqlite3-mod-spatialite
+    libsqlite3-mod-spatialite \
+    python3-cairo \
+    python3-pil \
+    libwebp-dev
 
 RUN mkdir -p /app
 WORKDIR /app
