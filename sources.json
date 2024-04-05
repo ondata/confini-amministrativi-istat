@@ -1,2217 +1,2314 @@
 {
-    "ontopia": {
-        "url": "https://w3id.org/italia",
-        "divisions": [
-            {
-                "name": "ripartizioni-geografiche",
-                "url": "controlled-vocabulary/territorial-classifications/geographical-distribution",
-                "key": "COD_RIP",
-                "digits": 1
-            },
-            {
-                "name": "regioni",
-                "url": "controlled-vocabulary/territorial-classifications/regions",
-                "key": "COD_REG",
-                "digits": 2
-            },
-            {
-                "name": "unita-territoriali-sovracomunali",
-                "url": "controlled-vocabulary/territorial-classifications/provinces",
-                "key": "COD_PROV",
-                "digits": 3
-            },
-            {
-                "name": "comuni",
-                "url": "data/identifiers/cities-identifiers/alphanumeric-istat-code",
-                "key": "PRO_COM_T",
-                "digits": 6
-            }
-        ]
-    },
-    "anpr": {
-        "name": "archivio-storico-comuni",
-        "url": "https://www.anpr.interno.it/wp-content/uploads/ANPR_archivio_comuni.csv",
-        "charset": "utf-8",
-        "division": {
-            "name": "comuni",
-            "url": "https://w3id.org/italia/data/identifiers/cities-identifiers/alphanumeric-istat-code",
-            "key": "CODISTAT",
-            "digits": 6
-        }
-    },
-    "istat": [
-        {
-            "name": "20230101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2023/Limiti01012023_g.zip",
-            "rootdir": "Limiti01012023_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012023_g",
-                    "filename": "RipGeo01012023_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012023_g",
-                    "filename": "Reg01012023_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012023_g",
-                    "filename": "ProvCM01012023_g_WGS84",
-                    "keys": {
-                        "id": "COD_UTS",
-                        "label": "DEN_UTS"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "SIGLA",
-                        "TIPO_UTS"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012023_g",
-                    "filename": "Com01012023_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "TIPO_UTS",
-                        "COMUNE",
-                        "COMUNE_A",
-                        "CC_UTS"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20220101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012022_g.zip",
-            "rootdir": "Limiti01012022_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012022_g",
-                    "filename": "RipGeo01012022_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012022_g",
-                    "filename": "Reg01012022_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012022_g",
-                    "filename": "ProvCM01012022_g_WGS84",
-                    "keys": {
-                        "id": "COD_UTS",
-                        "label": "DEN_UTS"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "SIGLA",
-                        "TIPO_UTS"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012022_g",
-                    "filename": "Com01012022_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "TIPO_UTS",
-                        "COMUNE",
-                        "COMUNE_A",
-                        "CC_UTS"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20210101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip",
-            "rootdir": "Limiti01012021_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012021_g",
-                    "filename": "RipGeo01012021_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012021_g",
-                    "filename": "Reg01012021_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012021_g",
-                    "filename": "ProvCM01012021_g_WGS84",
-                    "keys": {
-                        "id": "COD_UTS",
-                        "label": "DEN_UTS"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "SIGLA",
-                        "TIPO_UTS"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012021_g",
-                    "filename": "Com01012021_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "TIPO_UTS",
-                        "COMUNE",
-                        "COMUNE_A",
-                        "CC_UTS"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20200101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012020_g.zip",
-            "rootdir": "Limiti01012020_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012020_g",
-                    "filename": "RipGeo01012020_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012020_g",
-                    "filename": "Reg01012020_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012020_g",
-                    "filename": "ProvCM01012020_g_WGS84",
-                    "keys": {
-                        "id": "COD_UTS",
-                        "label": "DEN_UTS"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "SIGLA",
-                        "TIPO_UTS"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012020_g",
-                    "filename": "Com01012020_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "TIPO_UTS",
-                        "COMUNE",
-                        "COMUNE_A",
-                        "CC_UTS"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20190101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip",
-            "rootdir": "Limiti01012019_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012019_g",
-                    "filename": "RipGeo01012019_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012019_g",
-                    "filename": "Reg01012019_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012019_g",
-                    "filename": "ProvCM01012019_g_WGS84",
-                    "keys": {
-                        "id": "COD_UTS",
-                        "label": "DEN_UTS"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "SIGLA",
-                        "TIPO_UTS"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012019_g",
-                    "filename": "Com01012019_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_UTS",
-                        "TIPO_UTS",
-                        "COMUNE",
-                        "COMUNE_A",
-                        "CC_UTS"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20180101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012018_g.zip",
-            "rootdir": "Limiti01012018_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012018_g",
-                    "filename": "RipGeo01012018_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012018_g",
-                    "filename": "Reg01012018_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012018_g",
-                    "filename": "ProvCM01012018_g_WGS84",
-                    "keys": {
-                        "id": "COD_PCM",
-                        "label": "DEN_PCM"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012018_g",
-                    "filename": "Com01012018_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20170101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012017_g.zip",
-            "rootdir": "Limiti01012017_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012017_g",
-                    "filename": "RipGeo01012017_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012017_g",
-                    "filename": "Reg01012017_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012017_g",
-                    "filename": "ProvCM01012017_g_WGS84",
-                    "keys": {
-                        "id": "COD_PCM",
-                        "label": "DEN_PCM"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012017_g",
-                    "filename": "Com01012017_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20160101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012016_g.zip",
-            "rootdir": "Limiti01012016_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012016_g",
-                    "filename": "RipGeo01012016_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012016_g",
-                    "filename": "Reg01012016_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012016_g",
-                    "filename": "ProvCM01012016_g_WGS84",
-                    "keys": {
-                        "id": "COD_PCM",
-                        "label": "DEN_PCM"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012016_g",
-                    "filename": "Com01012016_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20150101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012015_g.zip",
-            "rootdir": "Limiti01012015_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012015_g",
-                    "filename": "RipGeo01012015_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012015_g",
-                    "filename": "Reg01012015_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "ProvCM01012015_g",
-                    "filename": "ProvCM01012015_g_WGS84",
-                    "keys": {
-                        "id": "COD_PCM",
-                        "label": "DEN_PCM"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012015_g",
-                    "filename": "Com01012015_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV",
-                        "DEN_CM",
-                        "DEN_PCM"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20140101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012014_g.zip",
-            "rootdir": "Limiti01012014_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012014_g",
-                    "filename": "RipGeo01012014_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012014_g",
-                    "filename": "Reg01012014_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012014_g",
-                    "filename": "Prov01012014_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012014_g",
-                    "filename": "Com01012014_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20130101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012013_g.zip",
-            "rootdir": "Limiti01012013_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012013_g",
-                    "filename": "RipGeo01012013_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012013_g",
-                    "filename": "Reg01012013_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012013_g",
-                    "filename": "Prov01012013_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012013_g",
-                    "filename": "Com01012013_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20120101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012012_g.zip",
-            "rootdir": "Limiti01012012_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012012_g",
-                    "filename": "RipGeo01012012_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012012_g",
-                    "filename": "Reg01012012_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012012_g",
-                    "filename": "Prov01012012_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012012_g",
-                    "filename": "Com01012012_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20111009",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2011_g.zip",
-            "rootdir": "Limiti2011_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo2011_g",
-                    "filename": "RipGeo2011_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg2011_g",
-                    "filename": "Reg2011_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov2011_g",
-                    "filename": "Prov2011_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com2011_g",
-                    "filename": "Com2011_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20100101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012010_g.zip",
-            "rootdir": "Limiti01012010_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012010_g",
-                    "filename": "RipGeo01012010_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012010_g",
-                    "filename": "Reg01012010_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012010_g",
-                    "filename": "Prov01012010_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012010_g",
-                    "filename": "Com01012010_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20090101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012009_g.zip",
-            "rootdir": "Limiti01012009_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012009_g",
-                    "filename": "RipGeo01012009_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012009_g",
-                    "filename": "Reg01012009_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012009_g",
-                    "filename": "Prov01012009_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012009_g",
-                    "filename": "Com01012009_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20080101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012008_g.zip",
-            "rootdir": "Limiti01012008_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012008_g",
-                    "filename": "RipGeo01012008_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012008_g",
-                    "filename": "Reg01012008_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012008_g",
-                    "filename": "Prov01012008_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012008_g",
-                    "filename": "Com01012008_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20070101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012007_g.zip",
-            "rootdir": "Limiti01012007_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012007_g",
-                    "filename": "RipGeo01012007_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012007_g",
-                    "filename": "Reg01012007_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012007_g",
-                    "filename": "Prov01012007_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012007_g",
-                    "filename": "Com01012007_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20060101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012006_g.zip",
-            "rootdir": "Limiti01012006_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012006_g",
-                    "filename": "RipGeo01012006_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012006_g",
-                    "filename": "Reg01012006_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012006_g",
-                    "filename": "Prov01012006_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012006_g",
-                    "filename": "Com01012006_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20050101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012005_g.zip",
-            "rootdir": "Limiti01012005_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012005_g",
-                    "filename": "RipGeo01012005_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012005_g",
-                    "filename": "Reg01012005_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012005_g",
-                    "filename": "Prov01012005_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012005_g",
-                    "filename": "Com01012005_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20040101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012004_g.zip",
-            "rootdir": "Limiti01012004_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012004_g",
-                    "filename": "RipGeo01012004_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012004_g",
-                    "filename": "Reg01012004_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012004_g",
-                    "filename": "Prov01012004_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012004_g",
-                    "filename": "Com01012004_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20030101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012003_g.zip",
-            "rootdir": "Limiti01012003_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012003_g",
-                    "filename": "RipGeo01012003_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012003_g",
-                    "filename": "Reg01012003_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012003_g",
-                    "filename": "Prov01012003_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012003_g",
-                    "filename": "Com01012003_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20020101",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012002_g.zip",
-            "rootdir": "Limiti01012002_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo01012002_g",
-                    "filename": "RipGeo01012002_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg01012002_g",
-                    "filename": "Reg01012002_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov01012002_g",
-                    "filename": "Prov01012002_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com01012002_g",
-                    "filename": "Com01012002_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "20011021",
-            "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2001_g.zip",
-            "rootdir": "Limiti2001_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo2001_g",
-                    "filename": "RipGeo2001_g",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg2001_g",
-                    "filename": "Reg2001_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov2001_g",
-                    "filename": "Prov2001_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com2001_g",
-                    "filename": "Com2001_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "19911020",
-            "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti1991_g.zip",
-            "rootdir": "Limiti1991_g/",
-            "charset": "utf-8",
-            "srid": "32632",
-            "divisions": [
-                {
-                    "name": "ripartizioni-geografiche",
-                    "title": "Ripartizioni Geografiche",
-                    "dirname": "RipGeo1991_g",
-                    "filename": "RipGeo1991_g_WGS84",
-                    "keys": {
-                        "id": "COD_RIP",
-                        "label": "DEN_RIP"
-                    },
-                    "fields": [
-                        "DEN_RIP"
-                    ],
-                    "children": [
-                        "regioni",
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "regioni",
-                    "title": "Regioni",
-                    "dirname": "Reg1991_g",
-                    "filename": "Reg1991_g_WGS84",
-                    "keys": {
-                        "id": "COD_REG",
-                        "label": "DEN_REG"
-                    },
-                    "fields": [
-                        "DEN_REG"
-                    ],
-                    "parents": [
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "unita-territoriali-sovracomunali",
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "unita-territoriali-sovracomunali",
-                    "title": "Unità Territoriali Sovracomunali",
-                    "dirname": "Prov1991_g",
-                    "filename": "Prov1991_g_WGS84",
-                    "keys": {
-                        "id": "COD_PROV",
-                        "label": "DEN_PROV"
-                    },
-                    "fields": [
-                        "DEN_PROV",
-                        "SIGLA"
-                    ],
-                    "parents": [
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ],
-                    "children": [
-                        "comuni"
-                    ]
-                },
-                {
-                    "name": "comuni",
-                    "title": "Comuni",
-                    "dirname": "Com1991_g",
-                    "filename": "Com1991_g_WGS84",
-                    "keys": {
-                        "id": "PRO_COM_T",
-                        "label": "COMUNE"
-                    },
-                    "fields": [
-                        "DEN_RIP",
-                        "DEN_REG",
-                        "DEN_PROV"
-                    ],
-                    "parents": [
-                        "unita-territoriali-sovracomunali",
-                        "regioni",
-                        "ripartizioni-geografiche"
-                    ]
-                }
-            ]
-        }
+  "ontopia": {
+    "url": "https://w3id.org/italia",
+    "divisions": [
+      {
+        "name": "ripartizioni-geografiche",
+        "url": "controlled-vocabulary/territorial-classifications/geographical-distribution",
+        "key": "COD_RIP",
+        "digits": 1
+      },
+      {
+        "name": "regioni",
+        "url": "controlled-vocabulary/territorial-classifications/regions",
+        "key": "COD_REG",
+        "digits": 2
+      },
+      {
+        "name": "unita-territoriali-sovracomunali",
+        "url": "controlled-vocabulary/territorial-classifications/provinces",
+        "key": "COD_PROV",
+        "digits": 3
+      },
+      {
+        "name": "comuni",
+        "url": "data/identifiers/cities-identifiers/alphanumeric-istat-code",
+        "key": "PRO_COM_T",
+        "digits": 6
+      }
     ]
+  },
+  "anpr": {
+    "name": "archivio-storico-comuni",
+    "url": "https://www.anpr.interno.it/wp-content/uploads/ANPR_archivio_comuni.csv",
+    "charset": "utf-8",
+    "division": {
+      "name": "comuni",
+      "url": "https://w3id.org/italia/data/identifiers/cities-identifiers/alphanumeric-istat-code",
+      "key": "CODISTAT",
+      "digits": 6
+    }
+  },
+  "istat": [
+    {
+      "name": "20240101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2024/Limiti01012024_g.zip",
+      "rootdir": "Limiti01012024_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012024_g",
+          "filename": "RipGeo01012024_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012024_g",
+          "filename": "Reg01012024_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012024_g",
+          "filename": "ProvCM01012024_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012024_g",
+          "filename": "Com01012024_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20230101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2023/Limiti01012023_g.zip",
+      "rootdir": "Limiti01012023_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012023_g",
+          "filename": "RipGeo01012023_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012023_g",
+          "filename": "Reg01012023_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012023_g",
+          "filename": "ProvCM01012023_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012023_g",
+          "filename": "Com01012023_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20220101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012022_g.zip",
+      "rootdir": "Limiti01012022_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012022_g",
+          "filename": "RipGeo01012022_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012022_g",
+          "filename": "Reg01012022_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012022_g",
+          "filename": "ProvCM01012022_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012022_g",
+          "filename": "Com01012022_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20210101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012021_g.zip",
+      "rootdir": "Limiti01012021_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012021_g",
+          "filename": "RipGeo01012021_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012021_g",
+          "filename": "Reg01012021_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012021_g",
+          "filename": "ProvCM01012021_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012021_g",
+          "filename": "Com01012021_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20200101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012020_g.zip",
+      "rootdir": "Limiti01012020_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012020_g",
+          "filename": "RipGeo01012020_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012020_g",
+          "filename": "Reg01012020_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012020_g",
+          "filename": "ProvCM01012020_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012020_g",
+          "filename": "Com01012020_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20190101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip",
+      "rootdir": "Limiti01012019_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012019_g",
+          "filename": "RipGeo01012019_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012019_g",
+          "filename": "Reg01012019_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012019_g",
+          "filename": "ProvCM01012019_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012019_g",
+          "filename": "Com01012019_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20180101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012018_g.zip",
+      "rootdir": "Limiti01012018_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012018_g",
+          "filename": "RipGeo01012018_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012018_g",
+          "filename": "Reg01012018_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012018_g",
+          "filename": "ProvCM01012018_g_WGS84",
+          "keys": {
+            "id": "COD_PCM",
+            "label": "DEN_PCM"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012018_g",
+          "filename": "Com01012018_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20170101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012017_g.zip",
+      "rootdir": "Limiti01012017_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012017_g",
+          "filename": "RipGeo01012017_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012017_g",
+          "filename": "Reg01012017_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012017_g",
+          "filename": "ProvCM01012017_g_WGS84",
+          "keys": {
+            "id": "COD_PCM",
+            "label": "DEN_PCM"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012017_g",
+          "filename": "Com01012017_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20160101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012016_g.zip",
+      "rootdir": "Limiti01012016_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012016_g",
+          "filename": "RipGeo01012016_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012016_g",
+          "filename": "Reg01012016_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012016_g",
+          "filename": "ProvCM01012016_g_WGS84",
+          "keys": {
+            "id": "COD_PCM",
+            "label": "DEN_PCM"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012016_g",
+          "filename": "Com01012016_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20150101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012015_g.zip",
+      "rootdir": "Limiti01012015_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012015_g",
+          "filename": "RipGeo01012015_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012015_g",
+          "filename": "Reg01012015_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012015_g",
+          "filename": "ProvCM01012015_g_WGS84",
+          "keys": {
+            "id": "COD_PCM",
+            "label": "DEN_PCM"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012015_g",
+          "filename": "Com01012015_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_PCM"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20140101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012014_g.zip",
+      "rootdir": "Limiti01012014_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012014_g",
+          "filename": "RipGeo01012014_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012014_g",
+          "filename": "Reg01012014_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012014_g",
+          "filename": "Prov01012014_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012014_g",
+          "filename": "Com01012014_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20130101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012013_g.zip",
+      "rootdir": "Limiti01012013_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012013_g",
+          "filename": "RipGeo01012013_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012013_g",
+          "filename": "Reg01012013_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012013_g",
+          "filename": "Prov01012013_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012013_g",
+          "filename": "Com01012013_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20120101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012012_g.zip",
+      "rootdir": "Limiti01012012_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012012_g",
+          "filename": "RipGeo01012012_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012012_g",
+          "filename": "Reg01012012_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012012_g",
+          "filename": "Prov01012012_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012012_g",
+          "filename": "Com01012012_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20111009",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2011_g.zip",
+      "rootdir": "Limiti2011_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo2011_g",
+          "filename": "RipGeo2011_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg2011_g",
+          "filename": "Reg2011_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov2011_g",
+          "filename": "Prov2011_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com2011_g",
+          "filename": "Com2011_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20100101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012010_g.zip",
+      "rootdir": "Limiti01012010_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012010_g",
+          "filename": "RipGeo01012010_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012010_g",
+          "filename": "Reg01012010_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012010_g",
+          "filename": "Prov01012010_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012010_g",
+          "filename": "Com01012010_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20090101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012009_g.zip",
+      "rootdir": "Limiti01012009_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012009_g",
+          "filename": "RipGeo01012009_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012009_g",
+          "filename": "Reg01012009_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012009_g",
+          "filename": "Prov01012009_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012009_g",
+          "filename": "Com01012009_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20080101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012008_g.zip",
+      "rootdir": "Limiti01012008_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012008_g",
+          "filename": "RipGeo01012008_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012008_g",
+          "filename": "Reg01012008_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012008_g",
+          "filename": "Prov01012008_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012008_g",
+          "filename": "Com01012008_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20070101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012007_g.zip",
+      "rootdir": "Limiti01012007_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012007_g",
+          "filename": "RipGeo01012007_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012007_g",
+          "filename": "Reg01012007_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012007_g",
+          "filename": "Prov01012007_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012007_g",
+          "filename": "Com01012007_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20060101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012006_g.zip",
+      "rootdir": "Limiti01012006_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012006_g",
+          "filename": "RipGeo01012006_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012006_g",
+          "filename": "Reg01012006_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012006_g",
+          "filename": "Prov01012006_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012006_g",
+          "filename": "Com01012006_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20050101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012005_g.zip",
+      "rootdir": "Limiti01012005_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012005_g",
+          "filename": "RipGeo01012005_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012005_g",
+          "filename": "Reg01012005_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012005_g",
+          "filename": "Prov01012005_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012005_g",
+          "filename": "Com01012005_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20040101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012004_g.zip",
+      "rootdir": "Limiti01012004_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012004_g",
+          "filename": "RipGeo01012004_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012004_g",
+          "filename": "Reg01012004_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012004_g",
+          "filename": "Prov01012004_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012004_g",
+          "filename": "Com01012004_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20030101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012003_g.zip",
+      "rootdir": "Limiti01012003_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012003_g",
+          "filename": "RipGeo01012003_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012003_g",
+          "filename": "Reg01012003_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012003_g",
+          "filename": "Prov01012003_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012003_g",
+          "filename": "Com01012003_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20020101",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012002_g.zip",
+      "rootdir": "Limiti01012002_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012002_g",
+          "filename": "RipGeo01012002_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012002_g",
+          "filename": "Reg01012002_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov01012002_g",
+          "filename": "Prov01012002_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012002_g",
+          "filename": "Com01012002_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "20011021",
+      "url": "http://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti2001_g.zip",
+      "rootdir": "Limiti2001_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo2001_g",
+          "filename": "RipGeo2001_g",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg2001_g",
+          "filename": "Reg2001_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov2001_g",
+          "filename": "Prov2001_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com2001_g",
+          "filename": "Com2001_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "19911020",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti1991_g.zip",
+      "rootdir": "Limiti1991_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo1991_g",
+          "filename": "RipGeo1991_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg1991_g",
+          "filename": "Reg1991_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "Prov1991_g",
+          "filename": "Prov1991_g_WGS84",
+          "keys": {
+            "id": "COD_PROV",
+            "label": "DEN_PROV"
+          },
+          "fields": [
+            "DEN_PROV",
+            "SIGLA"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com1991_g",
+          "filename": "Com1991_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    }
+  ]
 }
