@@ -41,6 +41,38 @@ Il file di ANPR è quello originale arricchito delle denominazioni e dell'indica
 
 > Avvertenza: nel repository è incluso solo il codice sorgente dell'applicazione e non i file generati.
 
+## Risorse disponibili
+
+La tabella seguente riporta tutte le release disponibili con la rispettiva data di generazione.
+
+| Release | Data di ultima generazione |
+| -------- | ---------- |
+| 20240101 | 2024-04-06 |
+| 20230101 | 2024-04-06 |
+| 20220101 | 2024-04-06 |
+| 20210101 | 2024-03-13 |
+| 20200101 | 2024-03-13 |
+| 20190101 | 2024-03-13 |
+| 20180101 | 2024-03-13 |
+| 20170101 | 2024-03-13 |
+| 20160101 | 2024-03-13 |
+| 20150101 | 2024-03-13 |
+| 20140101 | 2024-03-13 |
+| 20130101 | 2024-03-13 |
+| 20120101 | 2024-03-13 |
+| 20111009 | 2024-03-13 |
+| 20100101 | 2024-03-13 |
+| 20090101 | 2024-03-13 |
+| 20080101 | 2024-03-13 |
+| 20070101 | 2024-03-13 |
+| 20060101 | 2024-03-13 |
+| 20050101 | 2024-03-13 |
+| 20040101 | 2024-03-13 |
+| 20030101 | 2024-03-13 |
+| 20020101 | 2024-03-13 |
+| 20011021 | 2024-03-13 |
+| 19911020 | 2024-03-13 |
+
 ## Design e stack tecnologico
 
 L'obiettivo di questo progetto è automatizzare completamente la generazione di risorse geografiche italiane utili in diversi ambiti di mapping e GIS a partire dai dati storici ufficiali rilasciati da ISTAT e ANPR. I task includono il download, l'omogeneizzazione di codifiche e formati, la correzione di errori di geometrie, la generazione di raggruppamenti di territori a tutti i livelli (es. i comuni di una regione), la conversione in diversi formati geografici e la generazione di mappe interattive per una fruizione semplificata di ognuno di essi.
