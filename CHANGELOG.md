@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [Unreleased]
+## [2.0] - 2024-04-08
 
 ### Added
 
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - interactive maps (index.html)
 - subdivision resources
 - reprojection to [EPSG:4326](https://epsg.io/?q=4326)
-- releases 20220101, 20230101
+- releases 20240101, 20230101, 20220101
 
 ### Changed
 
@@ -40,6 +40,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - static API with path `/v1/YYYYMMDD/FILE_FORMAT/DIVISION/`
 
 
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1...HEAD
-[1.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0...v1.1
-[1.0]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v1.0
+[2.0]: https://github.com/ondata/confini-amministrativi-istat/compare/v1.1...v2.0
+[1.1]: https://github.com/ondata/confini-amministrativi-istat/compare/v1.0...v1.1
+[1.0]: https://github.com/ondata/confini-amministrativi-istat/releases/tag/v1.0
