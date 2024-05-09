@@ -131,7 +131,7 @@ export function App() {
         return (
             <ol className="flex flex-col gap-6 mb-12">
                 {profiles.map((p, i) => (
-                    <ControlsItem id={p} label={labels[i]}>
+                    <ControlsItem key={p} id={p} label={labels[i]}>
                         <Select
                             id={p}
                             ref={(el) => (selectRefs.current[p] = el)}
