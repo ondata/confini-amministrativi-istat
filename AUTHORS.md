@@ -1,4 +1,4 @@
-Copyright (c) 2024 onData APS
+Copyright (c) 2024 OnData APS
 
 Owner
 -----
@@ -21,6 +21,8 @@ Andrea Borruso (https://github.com/aborruso)
 Gaetano Costa (https://github.com/GaetanoC01)
 
 Nicola Ghirardi (https://github.com/ghirardinicola)
+
+Alan Sprecacenere (https://github.com/tegola)
 
 Previous owner
 ------------
