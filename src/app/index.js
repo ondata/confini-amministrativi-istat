@@ -11,7 +11,7 @@ document.getElementById('year').innerText = new Date().getFullYear();
 // Init Swagger UI
 window.ui = SwaggerUIBundle({
     url: `${window.API_DOMAIN}/api/v2/openapi.v2.yml`,
-    dom_id: '#docs',
+    dom_id: '#api',
     deepLinking: true,
     presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
     plugins: [SwaggerUIBundle.plugins.DownloadUrl],
@@ -34,5 +34,5 @@ L.control.watermark = function (opts) {
 };
 
 // Init app
-const appRoot = createRoot(document.getElementById('app'));
+const appRoot = createRoot(document.getElementById('/map'));
 appRoot.render(<App />);
