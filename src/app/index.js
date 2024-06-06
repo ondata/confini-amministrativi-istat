@@ -88,6 +88,8 @@ window.API_DOMAIN = process.env.NODE_ENV !== 'production' ? 'http://localhost:80
             layer && map.removeLayer(layer);
             map.setView(initialCentroid, initialZoom);
         }
+
+        map.invalidateSize();
     };
 })();
 
