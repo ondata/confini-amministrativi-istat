@@ -20,6 +20,9 @@ Sito ufficiale: https://www.confini-amministrativi.it.
 
 Nel file `sources.json` ci sono i link a tutti gli shapefile rilasciati da ISTAT dal 1991 elencati in [questa tabella](https://www.istat.it/it/archivio/222527), il link all'[archivio storico dei comuni di ANPR](https://www.anpr.interno.it/portale/anpr-archivio-comuni.csv) e le risorse Linked Open Data del [progetto OntoPiA](https://schema.gov.it/).
 
+Lo schema del file di configurazione è descritto nel file `sources.schema.json` secondo lo standard [JSON Schema](https://json-schema.org/).
+La validità del file viene verifica a runtime prima dell'elaborazione. Per validare il file a mano: `bash run.sh validate`.
+
 Lo script `main.py` scarica gli archivi zip dal sito ISTAT, li decomprime e li elabora in cartelle nominate con la data di rilascio: `dist/api/v2/it/YYYYMMDD/`. Scarica anche il file di ANPR e lo arricchisce con i dati ISTAT contenuti negli shapefile.
 
 Al momento sono supportati i seguenti formati di output:
