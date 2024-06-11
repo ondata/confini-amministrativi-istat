@@ -3,7 +3,7 @@ import { App } from './App';
 
 // Constants
 window.API_DOMAIN =
-    process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : '';
+    process.env.NODE_ENV !== 'production' ? 'https://www.confini-amministrativi.it' : '';
 
 // Fill current year
 document.getElementById('year').innerText = new Date().getFullYear();

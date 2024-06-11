@@ -19,6 +19,29 @@ export function App() {
         );
     }
 
+    function CopyIcon() {
+        return (
+            <svg
+                className="fill-current w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 36 36">
+                <path d="M27,3.56A1.56,1.56,0,0,0,25.43,2H5.57A1.56,1.56,0,0,0,4,3.56V28.44A1.56,1.56,0,0,0,5.57,30h.52V4.07H27Z"></path>
+                <rect x="8" y="6" width="23" height="28" rx="1.5" ry="1.5"></rect>
+            </svg>
+        );
+    }
+
+    function DownloadIcon() {
+        return (
+            <svg
+                className="fill-current w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20">
+                <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+            </svg>
+        );
+    }
+
     function Controls() {
         const selectRefs = useRef({});
         const downloadRef = useRef();
@@ -163,31 +186,43 @@ export function App() {
                         
                         <li key="download" className="flex flex-col gap-2">
                             {downloadPath !== '#' ? (
-                                <a
-                                    className="bg-ored text-oblue-dark font-bold py-2 px-4 rounded inline-flex items-center justify-between"
-                                    target="_blank"
-                                    href={`${window.API_DOMAIN}${downloadPath}`}
-                                    download={`ondata_confini_amministrativi_${downloadPath
-                                        .replace(/^\//, '')
-                                        .replace(/\//g, '_')}`}>
-                                    <span>Download</span>
-                                    <svg
-                                        className="fill-current w-4 h-4 mr-2"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20">
-                                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                                    </svg>
-                                </a>
+                                <div className="flex flex-row gap-2">
+                                    <a
+                                        className="bg-ored text-oblue-dark font-bold py-2 px-4 rounded grow inline-flex items-center justify-between"
+                                        title="Download"
+                                        role="button"
+                                        target="_blank"
+                                        href={`${window.API_DOMAIN}${downloadPath}`}
+                                        download={`ondata_confini_amministrativi_${downloadPath
+                                            .replace(/^\//, '')
+                                            .replace(/\//g, '_')}`}>
+                                        <span>Download</span>
+                                        <DownloadIcon />
+                                    </a>
+
+                                    <a
+                                        className="bg-ored text-oblue-dark font-bold py-2 px-4 rounded inline-flex items-center justify-center"
+                                        title="Copy to clipboard"
+                                        role="button"
+                                        onClick={() => navigator.clipboard.writeText(`${window.API_DOMAIN}${downloadPath}`)}>
+                                        <CopyIcon />
+                                    </a>
+                                </div>
                             ) : (
-                                <button className="bg-oblue-dark text-oblue-light border-oblue-dark font-bold py-2 px-4 rounded inline-flex items-center justify-between opacity-50 cursor-not-allowed">
-                                    <span>Download</span>
-                                    <svg
-                                        className="fill-current w-4 h-4 mr-2"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20">
-                                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                                    </svg>
-                                </button>
+                                <div className="flex flex-row gap-2">
+                                    <button
+                                        className="bg-oblue-dark text-oblue-light border-oblue-dark font-bold py-2 px-4 rounded grow inline-flex items-center justify-between opacity-50 cursor-not-allowed"
+                                        aria-disabled>
+                                        <span>Download</span>
+                                        <DownloadIcon />
+                                    </button>
+
+                                    <button
+                                        className="bg-oblue-dark text-oblue-light border-oblue-dark font-bold py-2 px-4 rounded inline-flex items-center justify-center opacity-50 cursor-not-allowed"
+                                        aria-disabled>
+                                        <CopyIcon />
+                                    </button>
+                                </div>
                             )}
                         </li>
                     </ol>
@@ -228,7 +263,7 @@ export function App() {
 
     return (
         <main className="min-h-screen bg-oblue-light text-oblue-dark flex flex-row justify-center">
-            <section className="p-6 max-w-sm flex flex-col justify-between">
+            <section className="p-6 max-w-md flex flex-col justify-between">
                 <Controls />
             </section>
             <Map />
