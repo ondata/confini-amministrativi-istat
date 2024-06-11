@@ -15,6 +15,7 @@ DOCKER_VOLUME=$PWD:/app
 NGINX_VERSION=latest
 SWAGGER_UI_VERSION=v5.4.2
 SWAGGER_ED_VERSION=next-v5-unprivileged
+AJV_VERSION=5.0.0
 OAS_SPEC_VERSION=v2
 
 build () {
@@ -71,6 +72,16 @@ shell () {
     docker run --rm -it -v $DOCKER_VOLUME --entrypoint /bin/bash $DOCKER_IMAGE
 }
 
+validate () {
+    echo "Validate sources.json file..."
+    docker run --rm \
+        -v $PWD/sources.json:/opt/sources.json \
+        -v $PWD/sources.schema.min.json:/opt/sources.schema.json \
+        weibeld/ajv-cli:$AJV_VERSION \
+        ajv --spec draft2020 -c ajv-formats -s /opt/sources.schema.json -d /opt/sources.json
+    echo "... done!"
+}
+
 lint () {
     poetry run pre-commit run --files main.py
 }
@@ -88,6 +99,7 @@ help () {
     echo "- $0 documentation      # Run Swagger UI on port $SWAGGER_UI_PORT and Swagger Editor on port $SWAGGER_ED_PORT"    
     echo "- $0 deploy             # Deploy sample"
     echo "- $0 shell              # Open a shell inside the container"
+    echo "- $0 validate           # Validate sources.json file"
     echo "- $0 lint               # Run linter on code"
     echo "You can exit the running process with ctrl+c"
 }
@@ -121,6 +133,9 @@ case $ACTION in
         ;;
     shell)
         shell
+        ;;
+    validate)
+        validate
         ;;
     lint)
         lint

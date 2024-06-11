@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import subprocess
+import jsonschema
 from io import BytesIO, StringIO
 from pathlib import Path
 from urllib.request import urlopen
@@ -35,6 +36,7 @@ COUNTRY_NAME = os.getenv("COUNTRY_NAME", "Italia")
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", f"{DIST_DIR}/{PUBLIC_DIR}/{COUNTRY_CODE}")
 SOURCE_FILE = os.getenv("SOURCE_FILE", "sources.json")
 SOURCE_NAME = os.getenv("SOURCE_NAME")
+SCHEMA_FILE = os.getenv("SCHEMA_FILE", "sources.schema.min.json")
 SHAPEFILE_ENCODING = "UTF-8"
 SHAPEFILE_PROJECTION = "EPSG:4326" # WGS84 World: https://epsg.io/?q=4326
 SHAPEFILE_EXTENSIONS = [".dbf", ".prj", ".shp", ".shx", ".cpg"]
@@ -67,10 +69,22 @@ MIME_TYPES = [
 
 logging.basicConfig(level=logging.INFO)
 
-# Apro il file con tutte le risorse
+# Apro lo schema di validazione del file di configurazione
+with open(SCHEMA_FILE) as f:
+    sources_schema = json.load(f)
+
+# Apro il file di configurazione con tutte le risorse
 with open(SOURCE_FILE) as f:
     # Carico le risorse (JSON)
     sources = json.load(f)
+
+    # Valido il contenuto del file di configurazione
+    try:
+        jsonschema.validate(instance=sources, schema=sources_schema)
+    except jsonschema.exceptions.ValidationError as ex:
+        logging.error(ex)
+        exit(1)
+
     # Ciclo su tutte le risorse ISTAT
     for release in sources["istat"]:
         # Trasforma la lista di divisioni amministrative (comuni, province, ecc.) in un dizionario indicizzato

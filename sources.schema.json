@@ -1,0 +1,142 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.confini-amministrativi.it/sources.schema.json",
+    "title": "JSON Schema of sources - Confini Amministrativi Italiani",
+    "description": "JSON Schema of sources file for runtime validation.",
+    "type": "object",
+    "properties": {
+        "ontopia": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "divisions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/SimpleDivision"
+                    }
+                }
+            }
+        },
+        "anpr": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "charset": {
+                    "$ref": "#/$defs/IANACharacterSets"
+                },
+                "division": {
+                    "$ref": "#/$defs/SimpleDivision"
+                }
+            }
+        },
+        "istat": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "rootdir": {
+                        "type": "string"
+                    },
+                    "charset": {
+                        "$ref": "#/$defs/IANACharacterSets"
+                    },
+                    "srid": {
+                        "type": "string"
+                    },
+                    "divisions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/$defs/ExtendedDivision"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "$defs": {
+        "SimpleDivision": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri-reference"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "digits": {
+                    "type": "integer",
+                    "minimum": 1
+                }
+            }
+        },
+        "ExtendedDivision": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "dirname": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "keys": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "label": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "parents": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "IANACharacterSets": {
+            "$ref": "https://jenkin.dev/json-schema-bricks/IANACharacterSets.schema.min.json#/$defs/NameRegistry"
+        }
+    }
+}
