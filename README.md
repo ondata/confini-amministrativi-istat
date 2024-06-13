@@ -44,6 +44,14 @@ Il file di ANPR è quello originale arricchito delle denominazioni e dell'indica
 
 > Avvertenza: nel repository è incluso solo il codice sorgente dell'applicazione e non i file generati.
 
+### Tutorial
+
+Nella cartella `tutorials/` ci sono alcuni how-to che mostrano come usare le risorse di questo progetto in vari ambiti e con vari software:
+
+- [QGIS](https://github.com/ondata/confini-amministrativi-istat/blob/main/tutorials/qgis/README.md)
+
+Se usi queste risorse, contribuisci anche tu con un tutorial!
+
 ## Risorse disponibili
 
 La tabella seguente riporta tutte le release disponibili con la rispettiva data di generazione.
