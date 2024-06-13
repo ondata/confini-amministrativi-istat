@@ -204,7 +204,7 @@ export function App() {
                                         className="bg-ored text-oblue-dark font-bold py-2 px-4 rounded inline-flex items-center justify-center"
                                         title="Copy to clipboard"
                                         role="button"
-                                        onClick={() => navigator.clipboard.writeText(`${window.API_DOMAIN}${downloadPath}`)}>
+                                        onClick={() => navigator.clipboard.writeText(`${window.API_DOMAIN || window.location.origin}${downloadPath}`)}>
                                         <CopyIcon />
                                     </a>
                                 </div>
