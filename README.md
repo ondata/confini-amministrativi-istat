@@ -33,6 +33,8 @@ Al momento sono supportati i seguenti formati di output:
 * [GeoJSON](https://it.wikipedia.org/wiki/GeoJSON) con gli stessi dati dello shapefile
 * [TopoJSON](https://it.wikipedia.org/wiki/GeoJSON#TopoJSON) con gli stessi dati dello shapefile
 * [GeoPackage](https://en.wikipedia.org/wiki/GeoPackage) con gli stessi dati dello shapefile
+* [Keyhole Markup Language (KML)](https://developers.google.com/kml/documentation/kmlreference) con gli stessi dati dello shapefile
+* [Zipped Keyhole Markup Language (KMZ)](https://developers.google.com/kml/documentation/kmzarchives) con gli stessi dati dello shapefile
 * [GeoParquet](https://geoparquet.org/) con gli stessi dati dello shapefile
 * [Geobuf](https://github.com/cubao/geobuf-cpp) con gli stessi dati dello shapefile
 * [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) con i contorni in grafica vettoriale dello shapefile (linee nere e bianche, sfondo trasparente)

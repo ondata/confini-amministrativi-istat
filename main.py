@@ -23,6 +23,8 @@ index_tpl = tpl_env.get_template("map.html.j2")
 from pybind11_geobuf import Encoder
 geobuf = Encoder(max_precision=int(10**8))
 import geopandas as gpd
+import fiona
+fiona.supported_drivers['KML'] = 'rw'
 import pandas as pd
 import topojson
 from dbfread import DBF
@@ -45,6 +47,8 @@ MIME_TYPES = [
     ("GeoJSON", "geo.json", "application/geo+json"),
     ("TopoJSON", "topo.json", "application/json"),
     ("GeoPackage", "gpkg", "application/geopackage+vnd.sqlite3"),
+    ("KML", "kml", "application/vnd.google-earth.kml+xml"),
+    ("KMZ", "kmz", "application/vnd.google-earth.kmz"),
     ("GeoParquet", "geo.parquet", "application/vnd.apache.parquet"),
     ("Geobuf", "geo.pbf", "application/x-protobuf"),
 
@@ -505,6 +509,21 @@ for release in sources["istat"]: # noqa: C901
         # Converto in GeoPackage e salvo il file
         if not geopkg_filename.exists():
             gdf.to_file(geopkg_filename, driver="GPKG")
+
+        # Keyhole Markup Language - https://developers.google.com/kml/documentation/kmlreference
+        # File di output
+        kml_filename = shp_filename.with_suffix(".kml")
+        # Converto in KML e salvo il file
+        if not kml_filename.exists():
+            gdf.to_file(kml_filename, driver="KML")
+
+        # Zipped Keyhole Markup Language - https://developers.google.com/kml/documentation/kmzarchives
+        # File di output
+        kmz_filename = shp_filename.with_suffix(".kmz")
+        # Comprimo in KMZ e salvo il file
+        if not kmz_filename.exists():
+            with ZipFile(kmz_filename, "w", ZIP_DEFLATED, compresslevel=9) as zf:
+                zf.write(kml_filename, arcname=kml_filename.name)
 
         # GeoParquet - https://geoparquet.org/
         # File di output
