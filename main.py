@@ -487,9 +487,9 @@ for release in sources["istat"]: # noqa: C901
         # Comprimo i file di ogni divisione amministrativa
         zip_filename = shp_filename.with_suffix(".zip")
         if not zip_filename.exists():
-            with ZipFile(shp_filename.with_suffix(".zip"), "w", ZIP_DEFLATED, compresslevel=9) as zf:
+            with ZipFile(zip_filename, "w", ZIP_DEFLATED, compresslevel=9) as zf:
                 for item in shp_filename.parent.iterdir():
-                    if item.is_file() and item.stem == division and item.suffix in SHAPEFILE_EXTENSIONS:
+                    if item.is_file() and item.stem == shp_filename.stem and item.suffix in SHAPEFILE_EXTENSIONS:
                         zf.write(item, arcname=item.name)
 
         # Geojson - https://geojson.org/
