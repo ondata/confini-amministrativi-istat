@@ -58,6 +58,7 @@ La tabella seguente riporta tutte le release disponibili con la rispettiva data 
 
 | Release | Data di ultima generazione |
 | -------- | ---------- |
+| 20250101 | 2025-04-15 |
 | 20240101 | 2024-04-06 |
 | 20230101 | 2024-04-06 |
 | 20220101 | 2024-04-06 |
