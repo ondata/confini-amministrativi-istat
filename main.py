@@ -150,6 +150,11 @@ for release in sources["istat"]: # noqa: C901
             output_sqlite = Path(output_release, division["name"]).with_suffix(".sqlite")
             # Shapefile di output
             shp_filename = output_sqlite.with_suffix(".shp")
+            # Base path for shapefile
+            base_path = Path(output_release, division["name"])
+            # Add _WGS84 suffix for 2025 files
+            if "2025_g" in str(base_path):
+                base_path = base_path.with_name(f"{base_path.name}_WGS84")
             # Creo il db sqlite e poi lo inizializzo come db spaziale
             subprocess.run(
                 [
@@ -174,7 +179,7 @@ for release in sources["istat"]: # noqa: C901
                         [
                             "SELECT load_extension('mod_spatialite');",
                             # "-- importa shp come tabella virtuale",
-                            f"CREATE VIRTUAL TABLE \"{division['name']}\" USING VirtualShape('{Path(output_release, division['name'])}',{release['charset']},{release['srid']});",
+                            f"CREATE VIRTUAL TABLE \"{division['name']}\" USING VirtualShape('{base_path}',{release['charset']},{release['srid']});",
                             # "-- crea tabella con output check geometrico",
                             f"CREATE TABLE \"{division['name']}_check\" AS SELECT PKUID,GEOS_GetLastWarningMsg() msg,ST_AsText(GEOS_GetCriticalPointFromMsg()) punto FROM \"{division['name']}\" WHERE ST_IsValid(geometry) <> 1;",
                         ]
