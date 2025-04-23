@@ -72,6 +72,7 @@ MIME_TYPES = [
 ]
 
 logging.basicConfig(level=logging.INFO)
+logging.info(f"+++ START +++")
 
 # Apro lo schema di validazione del file di configurazione
 with open(SCHEMA_FILE) as f:
@@ -102,17 +103,16 @@ with open(SOURCE_FILE) as f:
     }
 
 # ISTAT - Unità territoriali originali
-logging.info("+++ ISTAT +++")
+logging.info("--- ISTAT ---")
 # Ciclo su tutte le risorse ISTAT
 for release in sources["istat"]: # noqa: C901
 
     if SOURCE_NAME and release["name"] != SOURCE_NAME:
         continue
 
-    logging.info(f"Processing {release['name']}...")
-
     # Cartella di output
     output_release = Path(OUTPUT_DIR, release["name"])
+    logging.info(f"Processing {release['name']} in {output_release}...")
 
     # Se non esiste...
     if not output_release.exists():
@@ -192,9 +192,7 @@ for release in sources["istat"]: # noqa: C901
                 ],
                 stderr=subprocess.DEVNULL,
             ))
-            if errors > 0:
-                logging.warning(f"!!! Errori {division['name']}: {errors} geometrie corrette")
-            # Creo una nuova tabella con geometrie eventualmente corrette
+            # Creo una nuova tabella con geometrie bidimensionali eventualmente corrette
             subprocess.run(
                 [
                     "sqlite3",
@@ -203,6 +201,7 @@ for release in sources["istat"]: # noqa: C901
                         [
                             "SELECT load_extension('mod_spatialite');",
                             f"CREATE table \"{division['name']}_clean\" AS SELECT * FROM \"{division['name']}\";",
+                            f"UPDATE \"{division['name']}_clean\" SET geometry = CastToXY(geometry);",
                             f"SELECT RecoverGeometryColumn('{division['name']}_clean','geometry',{release['srid']},'MULTIPOLYGON','XY');",
                             f"UPDATE \"{division['name']}_clean\" SET geometry = MakeValid(geometry) WHERE ST_IsValid(geometry) <> 1;",
                         ]
@@ -211,6 +210,18 @@ for release in sources["istat"]: # noqa: C901
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
+            # Conto gli elementi rilevati
+            items = int(subprocess.check_output(
+                [
+                    "sqlite3",
+                    output_sqlite,
+                    "\n".join([f"SELECT count(*) FROM \"{division['name']}_clean\""]),
+                ],
+                stderr=subprocess.DEVNULL,
+            ))
+            logging.info(f"There are {items} geometries in {division['name']}")
+            if errors > 0:
+                logging.warning(f"!!! Errors found in {division['name']}: {errors} geometries corrected out of {items}")
             # Creo uno shapefile con geometrie corrette e proiezione normalizzata
             subprocess.run(
                 [
@@ -675,6 +686,8 @@ for release in sources["istat"]: # noqa: C901
                         { "name": "Shapefile", "filename": zip_filename.name },
                         { "name": "GeoJSON", "filename": geojson_filename.name },
                         { "name": "TopoJSON", "filename": topojson_filename.name },
+                        { "name": "KML", "filename": kml_filename.name },
+                        { "name": "KMZ", "filename": kmz_filename.name },
                         { "name": "GeoPKG", "filename": geopkg_filename.name },
                         { "name": "GeoParquet", "filename": geoparquet_filename.name },
                         { "name": "Geobuf", "filename": geobuf_filename.name }
@@ -769,7 +782,7 @@ for release in sources["istat"]: # noqa: C901
 if not SOURCE_NAME:
 
     # ANPR - Archivio dei comuni
-    logging.info("+++ ANPR +++")
+    logging.info("--- ANPR ---")
     # Scarico il file dal permalink di ANPR
     with urlopen(sources["anpr"]["url"]) as res:
 
@@ -779,7 +792,7 @@ if not SOURCE_NAME:
         try:
             df = pd.read_csv(StringIO(res.read().decode(sources["anpr"]["charset"])), dtype=str)
         except pd.errors.ParserError as e:
-            logging.warning(f"!!! ANPR aggiornato non disponibile, uso la cache: {e}")
+            logging.warning(f"!!! Updated ANPR not available, using cache: {e}")
             try:
                 df = pd.read_csv(
                     Path(os.path.basename(sources["anpr"]["url"])).with_suffix(".csv"),
@@ -787,7 +800,7 @@ if not SOURCE_NAME:
                     dtype=str,
                 )
             except FileNotFoundError as e:
-                logging.error(f"!!! ANPR non disponibile: {e}")
+                logging.error(f"!!! ANPR not available: {e}")
                 exit(1)
 
         # Ciclo su tutte le risorse istat
@@ -862,3 +875,6 @@ if not SOURCE_NAME:
         )
         # Salvo il file arricchito
         df.to_csv(csv_filename, index=False)
+
+logging.info(f"+++ END +++")
+exit(0)
