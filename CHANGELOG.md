@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [2.1] - 2025-04-30
+
+### Added
+
+- new resource formats: KML, KMZ
+- release 20250101
+
+### Fixed
+
+- empty zips bug
+- qgis tutorial
+
+### Contributed
+
+- bug report to ISTAT [#41](https://github.com/ondata/confini-amministrativi-istat/issues/41#issuecomment-2826702261)
+- bug report to QGIS [#61561](https://github.com/qgis/QGIS/issues/61561)
+
 ## [2.0] - 2024-04-08
 
 ### Added

@@ -993,6 +993,294 @@ paths:
           description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
         '404':
           description: Resource not found
+  /{countryId}/{releaseId}/{division}.kml:
+    get:
+      tags:
+        - KML
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in Keyhole Markup Language format
+      description: Returns a single resource in Keyhole Markup Language format
+      operationId: getKMLResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kml+xml:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.kml:
+    get:
+      tags:
+        - KML
+      summary: Find resource by DIVISION ID in Keyhole Markup Language format
+      description: Returns a single resource in Keyhole Markup Language format
+      operationId: getKMLDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kml+xml:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.kml:
+    get:
+      tags:
+        - KML
+      summary: Find resource by DIVISION ID and SUBDIVISION in Keyhole Markup Language format
+      description: Returns a single resource in Keyhole Markup Language format
+      operationId: getKMLSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kml+xml:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}.kmz:
+    get:
+      tags:
+        - KMZ
+      summary: Find resource by COUNTRY, RELEASE and DIVISION in Zipped Keyhole Markup Language format
+      description: Returns a single resource in Zipped Keyhole Markup Language format
+      operationId: getKMZResourceByDivision
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kmz:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE or DIVISION parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}.kmz:
+    get:
+      tags:
+        - KMZ
+      summary: Find resource by DIVISION ID in Zipped Keyhole Markup Language format
+      description: Returns a single resource in Zipped Keyhole Markup Language format
+      operationId: getKMZDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division to return
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kmz:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION or DIVISION ID parameters supplied
+        '404':
+          description: Resource not found
+  /{countryId}/{releaseId}/{division}/{territoryId}/{subDivision}.kmz:
+    get:
+      tags:
+        - KMZ
+      summary: Find resource by DIVISION ID and SUBDIVISION in Zipped Keyhole Markup Language format
+      description: Returns a single resource in Zipped Keyhole Markup Language format
+      operationId: getKMZSubDivisionById
+      parameters:
+        - name: countryId
+          in: path
+          description: Country ISO 3166-1 alpha-2 code
+          example: "it"
+          required: true
+          schema:
+            $ref: '#/components/schemas/countryId'
+        - name: releaseId
+          in: path
+          description: Release ID in YYYYMMDD format
+          example: "20230101"
+          required: true
+          schema:
+            $ref: '#/components/schemas/releaseId'
+        - name: division
+          in: path
+          description: DIVISION of resource
+          example: "regioni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+        - name: territoryId
+          in: path
+          description: ID of division
+          example: "1"
+          required: true
+          schema:
+            $ref: '#/components/schemas/territoryId'
+        - name: subDivision
+          in: path
+          description: SUBDIVISION of resource
+          example: "comuni"
+          required: true
+          schema:
+            $ref: '#/components/schemas/Division'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/vnd.google-earth.kmz:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid COUNTRY, RELEASE, DIVISION, DIVISION ID or SUBDIVISION parameters supplied
+        '404':
+          description: Resource not found
   /{countryId}/{releaseId}/{division}.geo.parquet:
     get:
       tags:
