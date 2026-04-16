@@ -4,6 +4,8 @@ import os
 import re
 import subprocess
 import jsonschema
+import ssl
+import certifi
 from io import BytesIO, StringIO
 from pathlib import Path
 from urllib.request import urlopen
@@ -119,10 +121,10 @@ for release in sources["istat"]: # noqa: C901
         # ... la creo
         output_release.mkdir(parents=True, exist_ok=True)
 
-        logging.info(f"Downloading source data...")
+        logging.info(f"Downloading source data from {release['url']}...")
 
         # Scarico la risorsa remota
-        with urlopen(release["url"]) as res:
+        with urlopen(release["url"], context=ssl.create_default_context(cafile=certifi.where())) as res:
             # La leggo come archivio zip
             with ZipFile(BytesIO(res.read())) as zfile:
                 # Ciclo su ogni file e cartella nell'archivio

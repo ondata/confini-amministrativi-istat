@@ -41,6 +41,103 @@
   },
   "istat": [
     {
+      "name": "20260101",
+      "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2026/Limiti01012026_g.zip",
+      "rootdir": "Limiti01012026_g/",
+      "charset": "utf-8",
+      "srid": "32632",
+      "divisions": [
+        {
+          "name": "ripartizioni-geografiche",
+          "title": "Ripartizioni Geografiche",
+          "dirname": "RipGeo01012026_g",
+          "filename": "RipGeo01012026_g_WGS84",
+          "keys": {
+            "id": "COD_RIP",
+            "label": "DEN_RIP"
+          },
+          "fields": [
+            "DEN_RIP"
+          ],
+          "children": [
+            "regioni",
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "regioni",
+          "title": "Regioni",
+          "dirname": "Reg01012026_g",
+          "filename": "Reg01012026_g_WGS84",
+          "keys": {
+            "id": "COD_REG",
+            "label": "DEN_REG"
+          },
+          "fields": [
+            "DEN_REG"
+          ],
+          "parents": [
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "unita-territoriali-sovracomunali",
+            "comuni"
+          ]
+        },
+        {
+          "name": "unita-territoriali-sovracomunali",
+          "title": "Unità Territoriali Sovracomunali",
+          "dirname": "ProvCM01012026_g",
+          "filename": "ProvCM01012026_g_WGS84",
+          "keys": {
+            "id": "COD_UTS",
+            "label": "DEN_UTS"
+          },
+          "fields": [
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "SIGLA",
+            "TIPO_UTS"
+          ],
+          "parents": [
+            "regioni",
+            "ripartizioni-geografiche"
+          ],
+          "children": [
+            "comuni"
+          ]
+        },
+        {
+          "name": "comuni",
+          "title": "Comuni",
+          "dirname": "Com01012026_g",
+          "filename": "Com01012026_g_WGS84",
+          "keys": {
+            "id": "PRO_COM_T",
+            "label": "COMUNE"
+          },
+          "fields": [
+            "DEN_RIP",
+            "DEN_REG",
+            "DEN_PROV",
+            "DEN_CM",
+            "DEN_UTS",
+            "TIPO_UTS",
+            "COMUNE",
+            "COMUNE_A",
+            "CC_UTS"
+          ],
+          "parents": [
+            "unita-territoriali-sovracomunali",
+            "regioni",
+            "ripartizioni-geografiche"
+          ]
+        }
+      ]
+    },
+    {
       "name": "20250101",
       "url": "https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/2025/Limiti01012025_g.zip",
       "rootdir": "Limiti01012025_g/",
